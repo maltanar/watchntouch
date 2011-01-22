@@ -19,10 +19,15 @@ public:
     QUndoStack * getUndoStack();
     void addItem(QGraphicsItem * item);
     void registerAction();
+    void clear();
+
+    bool isModified();
+    void setModified(bool newValue);
 
 private:
     QUndoStack undoStack;
     DrawingAction *currentAction;
+    bool modified;
 
 signals:
 

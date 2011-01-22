@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     display = new PresentationDisplayWidget(this);
-    draw = new BaseDrawingWidget(this);
+    draw = new AnnotationWidget(this);
 
     QGroupBox *groupBox = new QGroupBox(this);
 
@@ -29,11 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->actionNext, SIGNAL(triggered()), display, SLOT(gotoNextSlide()));
     connect(ui->actionPrevious, SIGNAL(triggered()), display, SLOT(gotoPrevSlide()));
-    connect(display, SIGNAL(contentChanged(QString)), this, SLOT(contentChange(QString)));
-    connect(display, SIGNAL(contextChanged(QString)), this, SLOT(contextChange(QString)));
 
     connect(ui->actionUndo, SIGNAL(triggered()), draw->getDrawingData()->getUndoStack(),SLOT(undo()));
     connect(ui->actionRedo, SIGNAL(triggered()), draw->getDrawingData()->getUndoStack(),SLOT(redo()));
+
+    draw->attachToContentDisplay(display);
 
     display->selectContent("/home/maltanar/Downloads/cv.pdf");
     draw->setStyleSheet("background: transparent");
@@ -43,17 +43,4 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::contentChange(QString newcontent)
-{
-    qWarning() << display->getContentIdentifier();
-}
-
-void MainWindow::contextChange(QString newcontext)
-{
-    ContentMatcher m;
-    QString newAnnotation = m.matchingAnnotation(display->getContentIdentifier(), display->getContentContext());
-
-    draw->getDrawingData()->loadSVG(newAnnotation);
 }

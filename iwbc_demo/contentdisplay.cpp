@@ -19,21 +19,6 @@ QSize ContentDisplay::getContentSize()
     return contentSize;
 }
 
-QString ContentDisplay::getContentContext()
-{
-    return "0_0";
-}
-
-bool ContentDisplay::selectContent(QString location)
-{
-    contentLocation = location;
-    generateContentIdentifier();
-    emit contentChanged(getContentIdentifier());
-    emit contextChanged(getContentContext());
-
-    return true;
-}
-
 void ContentDisplay::generateContentIdentifier()
 {
     contentMD5 = generateFileMD5(contentLocation);
@@ -50,4 +35,9 @@ QString ContentDisplay::generateFileMD5(QString fileName)
     contentFile.close();
 
     return hashData;
+}
+
+ContentType ContentDisplay::getContentType()
+{
+    return contentType;
 }

@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "presentationdisplaywidget.h"
-#include "basedrawingwidget.h"
+#include "annotationwidget.h"
 
 namespace Ui {
     class MainWindow;
@@ -20,11 +20,10 @@ public:
 private:
     Ui::MainWindow *ui;
     PresentationDisplayWidget *display;
-    BaseDrawingWidget *draw;
+    AnnotationWidget *draw;
 
 public slots:
-    void contentChange(QString newcontent);
-    void contextChange(QString newcontext);
+
 };
 
 #endif // MAINWINDOW_H

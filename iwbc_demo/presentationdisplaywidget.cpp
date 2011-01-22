@@ -8,6 +8,7 @@ PresentationDisplayWidget::PresentationDisplayWidget(QWidget *parent) :
     currentSlide = 0;
     slideCount = 0;
     scaleFactor = 1.0;
+    contentType = CONTENTTYPE_PRESENTATION;
 
     doc = NULL;
 }
@@ -51,6 +52,7 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
         delete oldDocument;
         contentLocation = fileName;
         generateContentIdentifier();
+        contentSize = doc->page(0)->pageSize();
         emit contentChanged(getContentIdentifier());
         doc->setRenderHint(Poppler::Document::Antialiasing);
         doc->setRenderHint(Poppler::Document::TextAntialiasing);

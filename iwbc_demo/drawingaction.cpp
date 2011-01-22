@@ -18,7 +18,6 @@ void DrawingAction::redo()
     // TODO this function is executed when the item is pushed on the undo stack, and we add the QGraphicsItem's already before
     // the push, resulting in two adds (the second fails and doesn't do anywthing but this consumes some CPU time)
     // implement the QUndoCommand ID scene for grouping steps inside the command
-    // BAD WORKAROUND: items may already be added to the scene, check this first to see if it has a scene
     if(steps.count() > 0)
         if(steps.at(0)->scene() != 0)
             return;

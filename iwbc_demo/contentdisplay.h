@@ -13,10 +13,11 @@ public:
 
     QString getContentIdentifier(); // return MD5 hash of content
     QSize getContentSize(); // return dimensions of content
+    ContentType getContentType(); // return type of content
 
     // the virtual functions below will be overloaded by ContentDisplay subclasses
-    virtual QString getContentContext(); // content context system - see SDD 4.1.2
-    virtual bool selectContent(QString location);   // content selection and loading
+    virtual QString getContentContext() = 0; // content context system - see SDD 4.1.2
+    virtual bool selectContent(QString location) = 0;   // content selection and loading
 
 protected:
     QString contentMD5;

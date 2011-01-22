@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     drawingdata.cpp \
     drawingaction.cpp \
     basedrawingwidget.cpp \
-    transparentstackedlayout.cpp
+    transparentstackedlayout.cpp \
+    annotationwidget.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -30,6 +31,7 @@ HEADERS  += mainwindow.h \
     drawingdata.h \
     drawingaction.h \
     basedrawingwidget.h \
-    transparentstackedlayout.h
+    transparentstackedlayout.h \
+    annotationwidget.h
 
 FORMS    += mainwindow.ui
