@@ -1,8 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QStackedLayout>
+#include <QHBoxLayout>
 #include <QGroupBox>
+#include <QDir>
 #include "contentselector.h"
+#include "googledocsaccess.h"
+
+RecentlyUsed *recentlyUsed;
+GoogleDocsAccess *googleDocsAccess;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,18 +16,20 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    initGlobals();
+
     display = new PresentationDisplayWidget(this);
     draw = new AnnotationWidget(this);
 
-    QGroupBox *groupBox = new QGroupBox(this);
-
-    groupBox->setFlat(true);
+    groupBox = new QWidget(this);
 
     QStackedLayout *layout = new QStackedLayout();
 
     layout->addWidget(display);
     layout->addWidget(draw);
     layout->setStackingMode(QStackedLayout::StackAll);
+    layout->setAlignment(display, Qt::AlignHCenter);
+    layout->setAlignment(draw, Qt::AlignHCenter);
     groupBox->setLayout(layout);
 
     ui->scrollArea->setWidget(groupBox);
@@ -34,14 +42,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     draw->attachToContentDisplay(display);
     draw->setStyleSheet("background: transparent");
-
-    openContent();
 }
 
 
 
 MainWindow::~MainWindow()
 {
+    deleteGlobals();
     delete ui;
 }
 
@@ -53,7 +60,11 @@ void MainWindow::openContent()
         return;
 
     // TODO check content type before loading?
+    // TODO the code below won't apply once we have fit to height/width options
+    // set desired image size to a bit smaller than the scroll area size
+    display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
     display->selectContent(csel.getSelectedContent());
+    groupBox->resize(display->getContentSize());
     draw->raise();
 }
 
@@ -61,3 +72,43 @@ void MainWindow::on_actionOpen_triggered()
 {
     openContent();
 }
+
+void MainWindow::initGlobals()
+{
+    // create the config directory
+    QString configDirPath= qApp->applicationDirPath() + "/" + QString(CONFIG_DIR);
+
+    QDir configDir(configDirPath);
+    // check if annotations directory exists
+    if(!configDir.exists()) {
+        // directory does not exist, create it
+        configDir.mkdir(configDirPath);
+    }
+
+    recentlyUsed = new RecentlyUsed();
+    googleDocsAccess = new GoogleDocsAccess();
+}
+
+void MainWindow::deleteGlobals()
+{
+    delete recentlyUsed; recentlyUsed = NULL;
+    delete googleDocsAccess; googleDocsAccess = NULL;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    // do an empty content change to save any modified items
+    draw->contentChanged("");
+    event->accept();
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    exit(0);
+}
+
+void MainWindow::on_actionFreehand_triggered()
+{
+    draw->setDrawingMode(DRAWINGMODE_FREEHAND);
+}
+

@@ -6,6 +6,9 @@ AnnotationWidget::AnnotationWidget(QWidget *parent) :
     BaseDrawingWidget(parent)
 {
     currentContentDisplay = NULL;
+
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 void AnnotationWidget::contentChanged(QString newContent)
@@ -29,8 +32,7 @@ void AnnotationWidget::contextChanged(QString newContext)
     if(QFile::exists(getCurrentAnnotation())) {
         getDrawingData()->loadSVG(getCurrentAnnotation());
     } else {
-        getDrawingData()->clear(); // TODO reset undo stack and modified status here
-        // TODO we need to set the annotation size here as well
+        getDrawingData()->clear();
     }
 }
 

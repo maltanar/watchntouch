@@ -2,6 +2,8 @@
 #define APPGLOBALS_H
 
 #include <QDebug>
+#include <recentlyused.h>
+#include <googledocsaccess.h>
 
 typedef enum _ContentType {
     CONTENTTYPE_UNDEFINED,
@@ -10,7 +12,6 @@ typedef enum _ContentType {
     CONTENTTYPE_WEBPAGE
 } ContentType;
 
-// TODO make sure config dir exists
 #define CONFIG_DIR              "configuration"
 
 #define ANNOTATION_DIRECTORY    "annotations"
@@ -20,7 +21,8 @@ typedef enum _ContentType {
 #define NUM_RECENT_ITEMS        5
 #define RECENT_ITEMS_STORAGE    CONFIG_DIR"/recent.txt"
 
-
+extern class RecentlyUsed *recentlyUsed;
+extern class GoogleDocsAccess *googleDocsAccess;
 
 
 #endif // APPGLOBALS_H

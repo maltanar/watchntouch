@@ -29,7 +29,7 @@
          <x>0</x>
          <y>0</y>
          <width>555</width>
-         <height>305</height>
+         <height>327</height>
         </rect>
        </property>
       </widget>
@@ -59,8 +59,9 @@
    <addaction name="actionPrevious"/>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
+   <addaction name="actionFreehand"/>
+   <addaction name="actionExit"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionNext">
    <property name="text">
     <string>Next</string>
@@ -99,6 +100,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionFreehand">
+   <property name="text">
+    <string>Freehand</string>
    </property>
   </action>
  </widget>

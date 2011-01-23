@@ -7,6 +7,13 @@ RecentlyUsed::RecentlyUsed() :
 {
     capacity = NUM_RECENT_ITEMS;
     itemStorageFileName = qApp->applicationDirPath() + "/" + QString(RECENT_ITEMS_STORAGE);
+
+    readFromStorage();
+}
+
+RecentlyUsed::~RecentlyUsed()
+{
+    writeToStorage();
 }
 
 void RecentlyUsed::readFromStorage()
@@ -39,7 +46,13 @@ void RecentlyUsed::addRecentItem(QString title, QString url)
 {
     QString newItemText = "%1\t%2";
     newItemText = newItemText.arg(title).arg(url);
+    // check to see if list already contains this item
+    int oldIndex = lastIndexOf(newItemText);
+    if(oldIndex != -1)
+        removeAt(oldIndex); // remove old instance
+    // place entry at the beginning of the list
     prepend(newItemText);
+    // shrink to fit to capacity
     while(size() > capacity)
         removeLast();
 }

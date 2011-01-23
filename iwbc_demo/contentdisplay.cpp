@@ -41,3 +41,18 @@ ContentType ContentDisplay::getContentType()
 {
     return contentType;
 }
+
+QString ContentDisplay::getContentTitle()
+{
+    return contentTitle;
+}
+
+void ContentDisplay::setDesiredSize(QSize newSize)
+{
+    desiredSize = newSize;
+}
+
+QSize ContentDisplay::getDesiredSize()
+{
+    return desiredSize;
+}

@@ -22,7 +22,6 @@ public:
 
 private:
     Ui::ContentSelector *ui;
-    RecentlyUsed recentlyUsed;
     QLabel *recentItem[NUM_RECENT_ITEMS];
     QString selectedContent;
 
@@ -33,6 +32,7 @@ public slots:
     void recentItemClicked(QString url);
 
 private slots:
+    void on_login_clicked();
     void on_cancelButton_clicked();
     void on_browseButton_clicked();
 };

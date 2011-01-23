@@ -53,6 +53,11 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
         contentLocation = fileName;
         generateContentIdentifier();
         contentSize = doc->page(0)->pageSize();
+        contentTitle = doc->info("Title");
+        if(contentTitle == "")
+            contentTitle = fileName.right(fileName.length()-fileName.lastIndexOf("/"));
+        // TODO add to the recent list in a more proper place
+        recentlyUsed->addRecentItem(contentTitle, fileName);
         emit contentChanged(getContentIdentifier());
         doc->setRenderHint(Poppler::Document::Antialiasing);
         doc->setRenderHint(Poppler::Document::TextAntialiasing);
@@ -83,7 +88,12 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
     // TODO retrieve page from PresentationLoader instead
     // TODO fit to width / height options while rendering need consideration
 
-    pageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(), scaleFactor * QLabel::physicalDpiY());
+    pageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
+                                                    scaleFactor * QLabel::physicalDpiY());
+
+    pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    contentSize = pageImage.size();
 
     setPixmap(QPixmap::fromImage(pageImage));
 

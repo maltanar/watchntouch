@@ -22,8 +22,6 @@ private:
 
     QString getCurrentAnnotation();
 
-    // TODO we can't monitor window closing on widget level, do it on window level instead
-
 signals:
 
 public slots:

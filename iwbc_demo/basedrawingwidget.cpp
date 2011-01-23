@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QGraphicsLineItem>
 
+
 BaseDrawingWidget::BaseDrawingWidget(QWidget *parent) :
     QGraphicsView(parent)
 {
@@ -12,6 +13,7 @@ BaseDrawingWidget::BaseDrawingWidget(QWidget *parent) :
     // set the default options for drawing
     drawingPen = DEFAULT_DRAWING_PEN;
     drawingBrush = DEFAULT_DRAWING_BRUSH;
+    eraserPen = QPen(Qt::transparent);
     drawingMode = DRAWINGMODE_FREEHAND;
 }
 
@@ -105,9 +107,9 @@ void BaseDrawingWidget::drawingEnd(QPointF endPoint)
 
 void BaseDrawingWidget::resizeEvent(QResizeEvent * event)
 {
-    // TODO this size-50 is a bad workaround, make it better
-    if(scene() != NULL) {
-        scene()->setSceneRect(0,0,width() - 50,height() - 50);
+    if(drawingData != NULL) {
+        drawingData->setSceneRect(0,0,width(),height());
+        qWarning() << "view:" << geometry() << "scene: " << drawingData->sceneRect();
     }
 
     QGraphicsView::resizeEvent(event);

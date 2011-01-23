@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui svg
+QT       += core gui svg xml network
 
 TARGET = iwbc_demo
 TEMPLATE = app
@@ -23,7 +23,9 @@ SOURCES += main.cpp\
     transparentstackedlayout.cpp \
     annotationwidget.cpp \
     recentlyused.cpp \
-    contentselector.cpp
+    contentselector.cpp \
+    googledocsaccess.cpp \
+    googledocentry.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -36,7 +38,9 @@ HEADERS  += mainwindow.h \
     transparentstackedlayout.h \
     annotationwidget.h \
     recentlyused.h \
-    contentselector.h
+    contentselector.h \
+    googledocsaccess.h \
+    googledocentry.h
 
 FORMS    += mainwindow.ui \
     contentselector.ui

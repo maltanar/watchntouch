@@ -9,6 +9,7 @@ class RecentlyUsed : public QStringList
 {
 public:
     explicit RecentlyUsed();
+    ~RecentlyUsed();
     void readFromStorage();
     void writeToStorage();
     void addRecentItem(QString title, QString url);

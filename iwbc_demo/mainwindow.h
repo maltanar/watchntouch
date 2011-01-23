@@ -21,13 +21,21 @@ private:
     Ui::MainWindow *ui;
     PresentationDisplayWidget *display;
     AnnotationWidget *draw;
+    QWidget *groupBox;
 
     void openContent();
+    void initGlobals();
+    void deleteGlobals();
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 public slots:
 
 
 private slots:
+    void on_actionFreehand_triggered();
+    void on_actionExit_triggered();
     void on_actionOpen_triggered();
 };
 

@@ -8,6 +8,7 @@
 // define the default tools for drawing
 #define DEFAULT_DRAWING_PEN     QPen(Qt::black)
 #define DEFAULT_DRAWING_BRUSH   QBrush(Qt::transparent, Qt::SolidPattern)
+#define DEFAULT_ERASER          QPen(Qt::red)
 
 typedef enum _DrawingMode {
     DRAWINGMODE_FREEHAND,
@@ -50,6 +51,7 @@ private:
     DrawingData * drawingData;
     QPen drawingPen;
     QBrush drawingBrush;
+    QPen eraserPen;
     DrawingMode drawingMode;
     QGraphicsItem * currentItem;
 
