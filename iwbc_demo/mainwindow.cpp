@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "contentmatcher.h"
 #include <QStackedLayout>
 #include <QGroupBox>
+#include "contentselector.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QStackedLayout *layout = new QStackedLayout();
 
-
     layout->addWidget(display);
     layout->addWidget(draw);
     layout->setStackingMode(QStackedLayout::StackAll);
@@ -34,13 +33,31 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionRedo, SIGNAL(triggered()), draw->getDrawingData()->getUndoStack(),SLOT(redo()));
 
     draw->attachToContentDisplay(display);
-
-    display->selectContent("/home/maltanar/Downloads/cv.pdf");
     draw->setStyleSheet("background: transparent");
-    draw->raise();
+
+    openContent();
 }
+
+
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::openContent()
+{
+    ContentSelector csel;
+    if(csel.exec() != QDialog::Accepted)
+        // no content selected, do nothing
+        return;
+
+    // TODO check content type before loading?
+    display->selectContent(csel.getSelectedContent());
+    draw->raise();
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    openContent();
 }

@@ -14,11 +14,14 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QScrollArea" name="scrollArea">
       <property name="widgetResizable">
-       <bool>true</bool>
+       <bool>false</bool>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
       <widget class="QWidget" name="scrollAreaWidgetContents">
        <property name="geometry">
@@ -51,6 +54,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionOpen"/>
    <addaction name="actionNext"/>
    <addaction name="actionPrevious"/>
    <addaction name="actionUndo"/>
@@ -87,6 +91,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>

@@ -22,8 +22,13 @@ private:
     PresentationDisplayWidget *display;
     AnnotationWidget *draw;
 
+    void openContent();
+
 public slots:
 
+
+private slots:
+    void on_actionOpen_triggered();
 };
 
 #endif // MAINWINDOW_H

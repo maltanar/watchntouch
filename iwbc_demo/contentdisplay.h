@@ -18,6 +18,7 @@ public:
     // the virtual functions below will be overloaded by ContentDisplay subclasses
     virtual QString getContentContext() = 0; // content context system - see SDD 4.1.2
     virtual bool selectContent(QString location) = 0;   // content selection and loading
+    // TODO update recently used list once content is opened
 
 protected:
     QString contentMD5;

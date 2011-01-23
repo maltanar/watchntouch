@@ -21,7 +21,9 @@ SOURCES += main.cpp\
     drawingaction.cpp \
     basedrawingwidget.cpp \
     transparentstackedlayout.cpp \
-    annotationwidget.cpp
+    annotationwidget.cpp \
+    recentlyused.cpp \
+    contentselector.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -32,6 +34,9 @@ HEADERS  += mainwindow.h \
     drawingaction.h \
     basedrawingwidget.h \
     transparentstackedlayout.h \
-    annotationwidget.h
+    annotationwidget.h \
+    recentlyused.h \
+    contentselector.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    contentselector.ui

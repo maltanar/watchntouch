@@ -28,7 +28,5 @@ QString ContentMatcher::matchingAnnotation(QString contentId, QString context)
         contentDir.mkdir(contentDirPath);
     }
 
-    qWarning() << contentDirPath + "/" + annotationPrefix + context + annotationExtension;
-
     return contentDirPath + "/" + annotationPrefix + context + annotationExtension;
 }
