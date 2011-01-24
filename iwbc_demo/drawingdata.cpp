@@ -37,7 +37,7 @@ void DrawingData::loadSVG(QString fileName)
     // TODO QGraphicsSvgItem is rendered as a bitmap on the view...we'd prefer to have it vectoral
     QGraphicsSvgItem *svgContent = new QGraphicsSvgItem(fileName);
     clear();
-    addItem(svgContent);
+    QGraphicsScene::addItem(svgContent);
 
     setModified(false);
 }
