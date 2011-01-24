@@ -45,7 +45,7 @@ void ContentSelector::loadRecentlyUsedList()
     for(int i=0; i < recentlyUsed->size(); i++) {
         recentlyUsed->getRecentItem(i, title, url);
         recentItem[i]->setToolTip(url);
-        recentItem[i]->setText(QString("<a href='%1' style='%2'><b>&gt; %3</b><br>%4</a>").arg(url,style,title,url));
+        recentItem[i]->setText(QString("<a href='%1' style='%2'><b>&gt; %3</b><br>%4</a>").arg(url,style,title,url.length() > 50 ? url.left(47)+"..." : url));
     }
 }
 
@@ -84,6 +84,8 @@ void ContentSelector::on_cancelButton_clicked()
 
 void ContentSelector::on_login_clicked()
 {
+    // TODO logout and clear
+    // TODO make status of open content dialog persistent?
     if(googleDocsAccess->login(ui->username->text(), ui->password->text())) {
         ui->statusMsg->setText("Login succeeded!");
         googleDocsAccess->fetchList();
@@ -96,7 +98,23 @@ void ContentSelector::on_login_clicked()
             ui->presentatonList->addItem(currentItem);
         }
 
-        ui->presentatonList->setVisible(true);
+        ui->gdocsBox->setVisible(true);
     } else
         ui->statusMsg->setText("Login failed!");
+}
+
+void ContentSelector::on_openGDoc_clicked()
+{
+    if(ui->presentatonList->currentItem())
+        openGoogleDoc(ui->presentatonList->currentItem()->data(Qt::UserRole).toString());
+}
+
+void ContentSelector::openGoogleDoc(QString googleDocId)
+{
+    QString targetFileName =  qApp->applicationDirPath() + "/" +CACHE_DIR + "/" + googleDocId + ".pdf";
+    if(googleDocsAccess->downloadPresentation(googleDocId, targetFileName, "pdf"))
+        selectContent(targetFileName);
+    else
+        // TODO display error message
+        ;
 }

@@ -26,6 +26,7 @@ private:
     void openContent();
     void initGlobals();
     void deleteGlobals();
+    void createAppSubdir(QString subdirName);
 
 protected:
     void closeEvent(QCloseEvent *event);

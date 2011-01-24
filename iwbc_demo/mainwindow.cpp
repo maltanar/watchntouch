@@ -76,14 +76,9 @@ void MainWindow::on_actionOpen_triggered()
 void MainWindow::initGlobals()
 {
     // create the config directory
-    QString configDirPath= qApp->applicationDirPath() + "/" + QString(CONFIG_DIR);
-
-    QDir configDir(configDirPath);
-    // check if annotations directory exists
-    if(!configDir.exists()) {
-        // directory does not exist, create it
-        configDir.mkdir(configDirPath);
-    }
+    createAppSubdir(CONFIG_DIR);
+    // create the cache directory
+    createAppSubdir(CACHE_DIR);
 
     recentlyUsed = new RecentlyUsed();
     googleDocsAccess = new GoogleDocsAccess();
@@ -104,7 +99,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_actionExit_triggered()
 {
-    exit(0);
+    close();
 }
 
 void MainWindow::on_actionFreehand_triggered()
@@ -112,3 +107,14 @@ void MainWindow::on_actionFreehand_triggered()
     draw->setDrawingMode(DRAWINGMODE_FREEHAND);
 }
 
+void MainWindow::createAppSubdir(QString subdirName)
+{
+    QString dirPath= qApp->applicationDirPath() + "/" + subdirName;
+
+    QDir dir(dirPath);
+    // check if annotations directory exists
+    if(!dir.exists()) {
+        // directory does not exist, create it
+        dir.mkdir(dirPath);
+    }
+}

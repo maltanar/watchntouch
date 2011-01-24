@@ -131,6 +131,7 @@ bool GoogleDocsAccess::fetchList()
 
     documentList.clear();
     GoogleDocEntry entry;
+    qWarning() << "number of documents:" << entryList.count();
     for(int i = 0; i < entryList.count(); i++)
     {
         entry.importFromXMLNode(entryList.at(i));

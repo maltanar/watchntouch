@@ -27,11 +27,13 @@ private:
 
     void loadRecentlyUsedList();
     void selectContent(QString content);
+    void openGoogleDoc(QString googleDocId);
 
 public slots:
     void recentItemClicked(QString url);
 
 private slots:
+    void on_openGDoc_clicked();
     void on_login_clicked();
     void on_cancelButton_clicked();
     void on_browseButton_clicked();

@@ -12,14 +12,15 @@ typedef enum _ContentType {
     CONTENTTYPE_WEBPAGE
 } ContentType;
 
-#define CONFIG_DIR              "configuration"
+#define CONFIG_DIR              QString("configuration")
+#define CACHE_DIR               QString("cache")
 
 #define ANNOTATION_DIRECTORY    "annotations"
 #define ANNOTATION_PREFIX       "annotation_"
 #define ANNOTATION_EXTENSION    ".wta"
 
 #define NUM_RECENT_ITEMS        5
-#define RECENT_ITEMS_STORAGE    CONFIG_DIR"/recent.txt"
+#define RECENT_ITEMS_STORAGE    CONFIG_DIR + QString("/recent.txt")
 
 extern class RecentlyUsed *recentlyUsed;
 extern class GoogleDocsAccess *googleDocsAccess;
