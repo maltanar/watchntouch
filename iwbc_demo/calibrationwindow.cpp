@@ -10,7 +10,7 @@
 #include <X11/extensions/XTest.h>
 
 CalibrationWindow::CalibrationWindow(QWidget *parent) :
-    QMainWindow(parent, Qt::FramelessWindowHint),
+    QDialog(parent, Qt::FramelessWindowHint),
     ui(new Ui::CalibrationWindow)
 {
     // UI
@@ -34,7 +34,6 @@ CalibrationWindow::CalibrationWindow(QWidget *parent) :
 
 
     // show connection instructions in fullscreen
-    showFullScreen();
     ui->instructions->move(0,0);
     ui->instructions->resize(qApp->desktop()->size());
     ui->instructions->raise();
@@ -230,7 +229,7 @@ bool CalibrationWindow::event(QEvent *event)
     if(event->type() == QEvent::Resize)
         repositionItems();
 
-    return QMainWindow::event(event);
+    return QDialog::event(event);
 }
 
 void CalibrationWindow::calibrationPointReceived(QPoint p)
@@ -240,8 +239,14 @@ void CalibrationWindow::calibrationPointReceived(QPoint p)
 
 void CalibrationWindow::calibrationComplete()
 {
+    qWarning() << "calibration is now completed";
+    emit initComplete();
+    close();
+
+    return;
+
     // calibration is complete, create drawing area if it does not exist
-    // TODO remove this for the demo?
+    // TODO add option for recalibration and re-enable
     if(!draw) {
         qWarning() << "leleloooy looy loy";
         draw = new BaseDrawingWidget(this);

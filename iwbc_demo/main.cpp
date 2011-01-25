@@ -1,14 +1,17 @@
 #include <QtGui/QApplication>
 #include "mainwindow.h"
-
-#include "recentlyused.h"
+#include "calibrationwindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
     MainWindow w;
-    w.showFullScreen();
+    CalibrationWindow c;
+
+    w.connect(&c, SIGNAL(initComplete()), SLOT(showFullScreen()));
+
+    c.showFullScreen();
 
     return a.exec();
 }

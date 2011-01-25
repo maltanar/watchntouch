@@ -1,7 +1,7 @@
 #ifndef CALIBRATIONWINDOW_H
 #define CALIBRATIONWINDOW_H
 
-#include <QMainWindow>
+#include <QDialog>
 #include <QPixmap>
 #include <QDesktopWidget>
 
@@ -31,7 +31,7 @@ namespace Ui {
     class CalibrationWindow;
 }
 
-class CalibrationWindow : public QMainWindow
+class CalibrationWindow : public QDialog
 {
     Q_OBJECT
 
@@ -74,6 +74,8 @@ public slots:
     void connected();
     void calibrationComplete();
 
+signals:
+    void initComplete();
 };
 
 #endif // CALIBRATIONWINDOW_H

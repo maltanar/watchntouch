@@ -28,11 +28,9 @@ private:
     void deleteGlobals();
     void createAppSubdir(QString subdirName);
 
+
 protected:
     void closeEvent(QCloseEvent *event);
-
-public slots:
-
 
 private slots:
     void on_actionFreehand_triggered();
