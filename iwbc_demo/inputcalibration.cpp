@@ -127,6 +127,8 @@ QPoint InputCalibration::mapFromWiimoteToScreen(QPoint inputPoint)
 {
     // if calibration was not performed, return the same point
     // TODO transformation ı duzelt, sadece ust ve sag kenar degil dort kenari da kullanır hale getir.
+    // TODO Utku: mouse release olunca bu smoothPoints'in sifirlanmasi lazim, yoksa arayi da dolduruyor
+    // TODO Utku: kagidin kenarlari ekranin kenarlarina denk gelmiyor, nedendir?
     if(!isCalibrated)
         return inputPoint;
 

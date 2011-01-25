@@ -76,6 +76,9 @@ public slots:
 
 signals:
     void initComplete();
+
+private slots:
+    void on_acceptSettings_clicked();
 };
 
 #endif // CALIBRATIONWINDOW_H

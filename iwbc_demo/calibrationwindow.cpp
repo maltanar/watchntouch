@@ -21,6 +21,8 @@ CalibrationWindow::CalibrationWindow(QWidget *parent) :
     calibrationPointWidth = calibrationPointHeight = 100;
     calibrationPointTouchCount = 0;
 
+    ui->acceptSettings->hide();
+
     QImage initial, touched;
     initial.load(":/images/touchpointred.png");
     touched.load(":/images/touchpointgreen.png");
@@ -125,6 +127,9 @@ void CalibrationWindow::repositionItems()
 
     // reposition calibration point 4 to lower left hand corner
     ui->calibrationPoint4->move(0, height - calibrationPointHeight  - HEIGHT_FIX);
+
+    // reposition accept calibration button to screen center
+    ui->acceptSettings->move((width-ui->acceptSettings->width())/2,(height-ui->acceptSettings->height())/2 );
 }
 
 // sets the status of the calibration points
@@ -240,8 +245,12 @@ void CalibrationWindow::calibrationPointReceived(QPoint p)
 void CalibrationWindow::calibrationComplete()
 {
     qWarning() << "calibration is now completed";
-    emit initComplete();
-    close();
+    // hide all calibration points
+    setCalibrationPointTouchStatus(-1);
+    // hide instructions
+    ui->instructions->hide();
+    // show accept button
+    ui->acceptSettings->show();
 
     return;
 
@@ -255,6 +264,11 @@ void CalibrationWindow::calibrationComplete()
         draw->show();
     }
 
-    // hide all calibration points
-    setCalibrationPointTouchStatus(-1);
+
+}
+
+void CalibrationWindow::on_acceptSettings_clicked()
+{
+    emit initComplete();
+    hide();
 }
