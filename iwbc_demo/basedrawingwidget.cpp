@@ -200,3 +200,8 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
         break;
     }
 }
+
+void BaseDrawingWidget::setDrawingColor(QColor color)
+{
+    drawingPen.setColor(color);
+}

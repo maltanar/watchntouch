@@ -7,9 +7,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     MainWindow w;
-    //CalibrationWindow c;
+    CalibrationWindow c;
 
-    //w.connect(&c, SIGNAL(initComplete()), SLOT(showFullScreen()));
+    w.connect(&c, SIGNAL(initComplete()), SLOT(showFullScreen()));
 
     w.showFullScreen();
 

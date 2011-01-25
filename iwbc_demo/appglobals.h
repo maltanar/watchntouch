@@ -25,5 +25,25 @@ typedef enum _ContentType {
 extern class RecentlyUsed *recentlyUsed;
 extern class GoogleDocsAccess *googleDocsAccess;
 
+// define the default tools for drawing
+#define DEFAULT_DRAWING_PEN     QPen(Qt::black)
+#define DEFAULT_DRAWING_BRUSH   QBrush(Qt::transparent, Qt::SolidPattern)
+#define DEFAULT_ERASER          QPen(Qt::red)
+
+typedef enum _DrawingMode {
+    DRAWINGMODE_FREEHAND,
+    DRAWINGMODE_ERASER,
+    DRAWINGMODE_STRAIGHTLINE,
+    DRAWINGMODE_ARROW,
+    DRAWINGMODE_RECTANGLE,
+    DRAWINGMODE_ELLIPSE
+} DrawingMode;
+
+typedef enum _DrawingState {
+    DRAWINGSTATE_START,
+    DRAWINGSTATE_UPDATE,
+    DRAWINGSTATE_END
+} DrawingState;
+
 
 #endif // APPGLOBALS_H

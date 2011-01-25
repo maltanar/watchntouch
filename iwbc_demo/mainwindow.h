@@ -25,7 +25,6 @@ private:
     QWidget *groupBox;
     ContextMenu *contextMenu;
 
-    void openContent();
     void initGlobals();
     void deleteGlobals();
     void createAppSubdir(QString subdirName);
@@ -38,7 +37,11 @@ private slots:
     void on_actionFreehand_triggered();
     void on_actionExit_triggered();
     void on_actionOpen_triggered();
-    void ccp(QPoint p);
+    void showContextMenu(QPoint p);
+
+public slots:
+    void openContent();
+    void saveContent();
 };
 
 #endif // MAINWINDOW_H

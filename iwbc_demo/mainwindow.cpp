@@ -43,9 +43,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionRedo, SIGNAL(triggered()), draw->getDrawingData()->getUndoStack(),SLOT(redo()));
 
     draw->attachToContentDisplay(display);
-    draw->setStyleSheet("background: transparent");
+    //draw->setStyleSheet("background: transparent");
+
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(ccp(QPoint)));
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(showContextMenu(QPoint)));
+    connect(contextMenu, SIGNAL(undo()), draw->getDrawingData()->getUndoStack(), SLOT(undo()));
+    connect(contextMenu, SIGNAL(redo()), draw->getDrawingData()->getUndoStack(), SLOT(redo()));
+    connect(contextMenu, SIGNAL(toolSelected(DrawingMode)), draw, SLOT(setDrawingMode(DrawingMode)));
+    connect(contextMenu, SIGNAL(open()), this, SLOT(openContent()));
+    connect(contextMenu, SIGNAL(save()), this, SLOT(saveContent()));
+    connect(contextMenu, SIGNAL(colorSelected(QColor)), draw, SLOT(setDrawingColor(QColor)));
 }
 
 MainWindow::~MainWindow()
@@ -68,6 +75,11 @@ void MainWindow::openContent()
     display->selectContent(csel.getSelectedContent());
     groupBox->resize(display->getContentSize());
     draw->raise();
+}
+
+void MainWindow::saveContent()
+{
+    // TODO add save function to drawing
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -94,6 +106,7 @@ void MainWindow::deleteGlobals()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    // TODO add save function to drawing
     // do an empty content change to save any modified items
     draw->contentChanged("");
     event->accept();
@@ -121,9 +134,9 @@ void MainWindow::createAppSubdir(QString subdirName)
     }
 }
 
-void MainWindow::ccp(QPoint p)
+void MainWindow::showContextMenu(QPoint p)
 {
     qWarning() << "caylar da caymis hani...o zaman context menu acalim";
-    contextMenu->move(p);
+    contextMenu->move(p - QPoint(contextMenu->width()/2, contextMenu->height()/2));
     contextMenu->show();
 }
