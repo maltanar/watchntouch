@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
     w.connect(&c, SIGNAL(initComplete()), SLOT(showFullScreen()));
 
-    w.showFullScreen();
+    c.showFullScreen();
 
     return a.exec();
 }

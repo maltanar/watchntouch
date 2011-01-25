@@ -5,8 +5,6 @@
 
 #include "inputcalibration.h"
 
-// TODO add Utku's smoothing code
-
 // class constructor
 // - get screen width/height and store them
 InputCalibration::InputCalibration()
@@ -20,6 +18,8 @@ InputCalibration::InputCalibration()
 
     pointCounter = 0;
     sampleCounterForCurrentPoint = 0;
+    smoothCounter = 0;
+    full = false;
 }
 
 // specify a new set of calibration points
@@ -112,7 +112,7 @@ double InputCalibration::getCalibratedDistance(QPoint p1, QPoint p2, QPoint p3) 
 
     // distance btwn x,y to the found line. ax + by + c / sqrt(a*a + b*b); here we have y = mx + n --> mx + n - y = 0;
 
-    distance1 =  abs( (m * x + (-1) * y + n) ) / sqrt(m * m + 1);
+    distance1 =  fabs( (m * x + (-1) * y + n) ) / sqrt(m * m + 1);
 
     distance2 = sqrt( (p1.x() - x)*(p1.x() - x) + (p1.y() - y)*(p1.y() - y) );
 
@@ -130,7 +130,46 @@ QPoint InputCalibration::mapFromWiimoteToScreen(QPoint inputPoint)
     if(!isCalibrated)
         return inputPoint;
 
-    int x = inputPoint.x(), y = inputPoint.y();
+    int x = inputPoint.x();
+    int y = inputPoint.y();
+
+    if(smoothCounter < 10 && !full) {
+        smoothPoints[smoothCounter] = QPoint(x,y);
+        smoothCounter++;
+        for(int i = 0 ; i < smoothCounter ; i++) {
+            x += smoothPoints[i].x();
+            y += smoothPoints[i].y();
+        }
+
+        x /= smoothCounter;
+        y /= smoothCounter;
+    }
+    if(smoothCounter < 10 && full) {
+        smoothPoints[smoothCounter] = QPoint(x,y);
+        smoothCounter++;
+
+        for(int i = 0 ; i < 10 ; i++) {
+            x += smoothPoints[i].x();
+            y += smoothPoints[i].y();
+        }
+
+        x /= 10;
+        y /= 10;
+    }
+    else if(smoothCounter >= 10){
+        full = true;
+        smoothCounter = 0;
+
+        smoothPoints[smoothCounter] = QPoint(x,y);
+        smoothCounter++;
+        for(int i = 0 ; i < 10 ; i++) {
+            x += smoothPoints[i].x();
+            y += smoothPoints[i].y();
+        }
+
+        x /= 10;
+        y /= 10;
+    }
 
     //printf("gelen point %d %d\n",x,y);
 
