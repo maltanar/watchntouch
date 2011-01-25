@@ -15,6 +15,8 @@ BaseDrawingWidget::BaseDrawingWidget(QWidget *parent) :
     drawingBrush = DEFAULT_DRAWING_BRUSH;
     eraserPen = QPen(Qt::transparent);
     drawingMode = DRAWINGMODE_FREEHAND;
+    // set background as transparent
+    setStyleSheet("background: transparent");
 }
 
 BaseDrawingWidget::~BaseDrawingWidget()
@@ -24,17 +26,20 @@ BaseDrawingWidget::~BaseDrawingWidget()
 
 void BaseDrawingWidget::mouseMoveEvent (QMouseEvent * event)
 {
-    drawingUpdate(mapToScene(event->pos()));
+    if(event->buttons() & Qt::LeftButton)
+        drawingUpdate(mapToScene(event->pos()));
 }
 
 void BaseDrawingWidget::mousePressEvent (QMouseEvent * event)
 {
-    drawingStart(mapToScene(event->pos()));
+    if(event->button() == Qt::LeftButton)
+        drawingStart(mapToScene(event->pos()));
 }
 
 void BaseDrawingWidget::mouseReleaseEvent (QMouseEvent * event)
 {
-    drawingEnd(mapToScene(event->pos()));
+    if(event->button() == Qt::LeftButton)
+        drawingEnd(mapToScene(event->pos()));
 }
 
 void BaseDrawingWidget::drawLineAction(QPointF from, QPointF to)

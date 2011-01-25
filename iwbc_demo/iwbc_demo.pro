@@ -10,7 +10,8 @@ TARGET = iwbc_demo
 TEMPLATE = app
 
 INCLUDEPATH  += /usr/include/poppler/qt4
-LIBS         += -L/usr/lib -lpoppler-qt4
+
+LIBS         += -L/usr/lib -lpoppler-qt4 -lwiiuse -lX11 -lXtst -lXext -Wall -pipe -fPIC -funroll-loops
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -25,7 +26,10 @@ SOURCES += main.cpp\
     recentlyused.cpp \
     contentselector.cpp \
     googledocsaccess.cpp \
-    googledocentry.cpp
+    googledocentry.cpp \
+    irthread.cpp \
+    inputcalibration.cpp \
+    calibrationwindow.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -40,7 +44,14 @@ HEADERS  += mainwindow.h \
     recentlyused.h \
     contentselector.h \
     googledocsaccess.h \
-    googledocentry.h
+    googledocentry.h \
+    irthread.h \
+    inputcalibration.h \
+    calibrationwindow.h
 
 FORMS    += mainwindow.ui \
-    contentselector.ui
+    contentselector.ui \
+    calibrationwindow.ui
+
+RESOURCES += \
+    resources.qrc
