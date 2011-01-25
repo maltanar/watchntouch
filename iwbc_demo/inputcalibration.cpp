@@ -112,7 +112,7 @@ double InputCalibration::getCalibratedDistance(QPoint p1, QPoint p2, QPoint p3) 
 
     // distance btwn x,y to the found line. ax + by + c / sqrt(a*a + b*b); here we have y = mx + n --> mx + n - y = 0;
 
-    distance1 =  fabs( (m * x + (-1) * y + n) ) / sqrt(m * m + 1);
+    distance1 =  abs( (m * x + (-1) * y + n) ) / sqrt(m * m + 1);
 
     distance2 = sqrt( (p1.x() - x)*(p1.x() - x) + (p1.y() - y)*(p1.y() - y) );
 
@@ -135,7 +135,7 @@ QPoint InputCalibration::mapFromWiimoteToScreen(QPoint inputPoint)
     int x = inputPoint.x();
     int y = inputPoint.y();
 
-    if(smoothCounter < 10 && !full) {
+    /*if(smoothCounter < 10 && !full) {
         smoothPoints[smoothCounter] = QPoint(x,y);
         smoothCounter++;
         for(int i = 0 ; i < smoothCounter ; i++) {
@@ -171,7 +171,7 @@ QPoint InputCalibration::mapFromWiimoteToScreen(QPoint inputPoint)
 
         x /= 10;
         y /= 10;
-    }
+    }*/
 
     //printf("gelen point %d %d\n",x,y);
 
@@ -200,7 +200,7 @@ QPoint InputCalibration::mapFromWiimoteToScreen(QPoint inputPoint)
     //x = ((x - calibrationPoints[3].x()) * screenWidth)  / (double)(calibrationPoints[2].x() - calibrationPoints[3].x()) ;
     //y = (((y - calibrationPoints[0].y() )* screenHeight) / (double)( calibrationPoints[3].y() - calibrationPoints[0].y())) ;
 
-    return QPoint(x,y);
+    return QPoint(x,y-(screenHeight/2));
 }
 
 void InputCalibration::processWiimotePoint(QPoint inputPoint)

@@ -53,6 +53,23 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(contextMenu, SIGNAL(open()), this, SLOT(openContent()));
     connect(contextMenu, SIGNAL(save()), this, SLOT(saveContent()));
     connect(contextMenu, SIGNAL(colorSelected(QColor)), draw, SLOT(setDrawingColor(QColor)));
+    connect(contextMenu, SIGNAL(penWidthIncrease()), draw, SLOT(increasePenWidth()));
+    connect(contextMenu, SIGNAL(penWidthDecrease()), draw, SLOT(decreasePenWidth()));
+
+    /*filter = new QjtMouseGestureFilter(Qt::MidButton);
+    dl << Left;
+    g = new QjtMouseGesture( dl, filter );
+    filter->addGesture( g );
+    display->connect( g, SIGNAL(gestured()), SLOT(gotoPrevSlide()) );
+
+    dl.clear();
+    dl << Right;
+    g = new QjtMouseGesture( dl, filter );
+    filter->addGesture( g );
+    display->connect( g, SIGNAL(gestured()), SLOT(gotoNextSlide()) );
+
+    this->installEventFilter( filter );*/
+
 }
 
 MainWindow::~MainWindow()

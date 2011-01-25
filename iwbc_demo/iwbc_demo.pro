@@ -30,7 +30,10 @@ SOURCES += main.cpp\
     irthread.cpp \
     inputcalibration.cpp \
     calibrationwindow.cpp \
-    contextmenu.cpp
+    contextmenu.cpp \
+    QjtMouseGestureFilter.cpp \
+    QjtMouseGesture.cpp \
+    mousegesturerecognizer.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -49,7 +52,10 @@ HEADERS  += mainwindow.h \
     irthread.h \
     inputcalibration.h \
     calibrationwindow.h \
-    contextmenu.h
+    contextmenu.h \
+    QjtMouseGestureFilter.h \
+    QjtMouseGesture.h \
+    mousegesturerecognizer.h
 
 FORMS    += mainwindow.ui \
     contentselector.ui \

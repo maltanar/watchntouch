@@ -127,18 +127,19 @@ void IRThread::run()
                     if (wiimotes[0]->ir.dot[0].visible) {
                         if(previous[0] == false) {
                             previous[0] = true;
-                            emit IRInputReceived(wiimotes[0]->ir.dot[0].x, wiimotes[0]->ir.dot[0].y,0,MOUSE_PRESSED,visiblePointCount);
-                            previousPoint = QPoint(wiimotes[0]->ir.dot[0].x,wiimotes[0]->ir.dot[0].y);
+                            emit IRInputReceived(wiimotes[0]->ir.dot[0].rx, wiimotes[0]->ir.dot[0].ry,0,MOUSE_PRESSED,visiblePointCount);
+                            previousPoint = QPoint(wiimotes[0]->ir.dot[0].rx,wiimotes[0]->ir.dot[0].ry);
                         }
                         else if(previous[0] == true) {
-                            emit IRInputReceived(wiimotes[0]->ir.dot[0].x, wiimotes[0]->ir.dot[0].y,0,MOUSE_MOVE,visiblePointCount);
-                            previousPoint = QPoint(wiimotes[0]->ir.dot[0].x,wiimotes[0]->ir.dot[0].y);
+                            emit IRInputReceived(wiimotes[0]->ir.dot[0].rx, wiimotes[0]->ir.dot[0].ry,0,MOUSE_MOVE,visiblePointCount);
+                            previousPoint = QPoint(wiimotes[0]->ir.dot[0].rx,wiimotes[0]->ir.dot[0].ry);
                         }
                     }
                     else if(previous[0] == true) {
                         previous[0] = false;
-                        emit IRInputReceived(wiimotes[0]->ir.dot[0].x, wiimotes[0]->ir.dot[0].y,0,MOUSE_RELEASED,visiblePointCount);
-                        previousPoint = QPoint(wiimotes[0]->ir.dot[0].x,wiimotes[0]->ir.dot[0].y);
+                        //emit IRInputReceived(wiimotes[0]->ir.dot[0].rx, wiimotes[0]->ir.dot[0].ry,0,MOUSE_RELEASED,visiblePointCount);
+                        //previousPoint = QPoint(wiimotes[0]->ir.dot[0].rx,wiimotes[0]->ir.dot[0].ry);
+                        emit IRInputReceived(previousPoint.x(), previousPoint.y(), 0, MOUSE_RELEASED, visiblePointCount);
                     }
                     else if(previous[0] == false) {
                         // do nothing

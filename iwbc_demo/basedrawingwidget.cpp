@@ -205,3 +205,13 @@ void BaseDrawingWidget::setDrawingColor(QColor color)
 {
     drawingPen.setColor(color);
 }
+
+void BaseDrawingWidget::increasePenWidth()
+{
+    drawingPen.setWidth(drawingPen.width()+1);
+}
+
+void BaseDrawingWidget::decreasePenWidth()
+{
+    drawingPen.setWidth(drawingPen.width() > 2 ? drawingPen.width()-1 : 1);
+}

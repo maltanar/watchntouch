@@ -6,6 +6,9 @@
 #include "annotationwidget.h"
 #include "contextmenu.h"
 
+#include "QjtMouseGestureFilter.h"
+#include "QjtMouseGesture.h"
+
 namespace Ui {
     class MainWindow;
 }
@@ -24,6 +27,9 @@ private:
     AnnotationWidget *draw;
     QWidget *groupBox;
     ContextMenu *contextMenu;
+    QjtMouseGestureFilter *filter;
+    QjtMouseGesture *g;
+    DirectionList dl;
 
     void initGlobals();
     void deleteGlobals();

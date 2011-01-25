@@ -51,6 +51,8 @@ public slots:
     void setDrawingPen(QPen pen);
     void setDrawingMode(DrawingMode mode);
     void setDrawingColor(QColor color);
+    void increasePenWidth();
+    void decreasePenWidth();
 
 };
 
