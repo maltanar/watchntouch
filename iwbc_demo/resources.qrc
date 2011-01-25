@@ -4,5 +4,41 @@
         <file alias="touchpointgreen.png">resources/touch point green.png</file>
         <file alias="connection.png">resources/connection.png</file>
         <file alias="calibration_instruct.png">resources/2 transparent.png</file>
+        <file>resources/arrow.png</file>
+        <file>resources/arrow_on.png</file>
+        <file>resources/close.png</file>
+        <file>resources/close_on.png</file>
+        <file>resources/color.png</file>
+        <file>resources/color_black.png</file>
+        <file>resources/color_blue.png</file>
+        <file>resources/color_on.png</file>
+        <file>resources/color_red.png</file>
+        <file>resources/color_white.png</file>
+        <file>resources/eraser.png</file>
+        <file>resources/eraser_decrease.png</file>
+        <file>resources/eraser_eraseallpages.png</file>
+        <file>resources/eraser_erasepage.png</file>
+        <file>resources/eraser_increase.png</file>
+        <file>resources/eraser_on.png</file>
+        <file>resources/pen.png</file>
+        <file>resources/pen_on.png</file>
+        <file>resources/penwidth.png</file>
+        <file>resources/penwidth_decrease.png</file>
+        <file>resources/penwidth_increase.png</file>
+        <file>resources/penwidth_on.png</file>
+        <file>resources/redo.png</file>
+        <file>resources/redo_on.png</file>
+        <file>resources/shape.png</file>
+        <file>resources/shape_circle.png</file>
+        <file>resources/shape_on.png</file>
+        <file>resources/shape_rectangle.png</file>
+        <file>resources/shape_triangle.png</file>
+        <file>resources/undo.png</file>
+        <file>resources/undo_on.png</file>
+        <file>resources/wt.png</file>
+        <file>resources/wt_on.png</file>
+        <file>resources/wt_open.png</file>
+        <file>resources/wt_print.png</file>
+        <file>resources/wt_save.png</file>
     </qresource>
 </RCC>

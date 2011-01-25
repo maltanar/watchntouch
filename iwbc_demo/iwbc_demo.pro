@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     googledocentry.cpp \
     irthread.cpp \
     inputcalibration.cpp \
-    calibrationwindow.cpp
+    calibrationwindow.cpp \
+    contextmenu.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -47,11 +48,13 @@ HEADERS  += mainwindow.h \
     googledocentry.h \
     irthread.h \
     inputcalibration.h \
-    calibrationwindow.h
+    calibrationwindow.h \
+    contextmenu.h
 
 FORMS    += mainwindow.ui \
     contentselector.ui \
-    calibrationwindow.ui
+    calibrationwindow.ui \
+    contextmenu.ui
 
 RESOURCES += \
     resources.qrc

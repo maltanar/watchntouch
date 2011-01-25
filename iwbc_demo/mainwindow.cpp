@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     display = new PresentationDisplayWidget(this);
     draw = new AnnotationWidget(this);
+    contextMenu = new ContextMenu(this);
+    contextMenu->hide();
 
     groupBox = new QWidget(this);
 
@@ -42,9 +44,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     draw->attachToContentDisplay(display);
     draw->setStyleSheet("background: transparent");
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(ccp(QPoint)));
 }
-
-
 
 MainWindow::~MainWindow()
 {
@@ -117,4 +119,11 @@ void MainWindow::createAppSubdir(QString subdirName)
         // directory does not exist, create it
         dir.mkdir(dirPath);
     }
+}
+
+void MainWindow::ccp(QPoint p)
+{
+    qWarning() << "caylar da caymis hani...o zaman context menu acalim";
+    contextMenu->move(p);
+    contextMenu->show();
 }

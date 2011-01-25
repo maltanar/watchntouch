@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "presentationdisplaywidget.h"
 #include "annotationwidget.h"
+#include "contextmenu.h"
 
 namespace Ui {
     class MainWindow;
@@ -22,6 +23,7 @@ private:
     PresentationDisplayWidget *display;
     AnnotationWidget *draw;
     QWidget *groupBox;
+    ContextMenu *contextMenu;
 
     void openContent();
     void initGlobals();
@@ -36,6 +38,7 @@ private slots:
     void on_actionFreehand_triggered();
     void on_actionExit_triggered();
     void on_actionOpen_triggered();
+    void ccp(QPoint p);
 };
 
 #endif // MAINWINDOW_H
