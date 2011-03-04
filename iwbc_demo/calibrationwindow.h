@@ -46,6 +46,11 @@ public:
     QMutex mutex;
     int calibrationPointTouchCount;
 
+    QPointF smoothPoints[10];
+    int smoothCounter;
+    bool full;
+
+
 private:
     Ui::CalibrationWindow *ui;
     QPixmap calibrationPointImageInitial;
