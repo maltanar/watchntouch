@@ -212,6 +212,8 @@ void CalibrationWindow::inputReceived(int x,int y,int i,int type,int visibleCoun
         if(smoothCounter < 10 && !full) { // ilk 10 nokta
             smoothPoints[smoothCounter] = QPoint(newx,newy);
             smoothCounter++;
+            newx = 0;
+            newy = 0;
             for(int i = 0 ; i < smoothCounter ; i++) {
                 newx += smoothPoints[i].x();
                 newy += smoothPoints[i].y();
@@ -223,7 +225,8 @@ void CalibrationWindow::inputReceived(int x,int y,int i,int type,int visibleCoun
         else if(smoothCounter < 10 && full) {
             smoothPoints[smoothCounter] = QPoint(newx,newy);
             smoothCounter++;
-
+            newx = 0;
+            newy = 0;
             for(int i = 0 ; i < 10 ; i++) {
                 newx += smoothPoints[i].x();
                 newy += smoothPoints[i].y();
@@ -238,6 +241,8 @@ void CalibrationWindow::inputReceived(int x,int y,int i,int type,int visibleCoun
 
             smoothPoints[smoothCounter] = QPoint(newx,newy);
             smoothCounter++;
+            newx = 0;
+            newy = 0;
             for(int i = 0 ; i < 10 ; i++) {
                 newx += smoothPoints[i].x();
                 newy += smoothPoints[i].y();
