@@ -14,6 +14,7 @@ typedef enum _ContentType {
 
 #define CONFIG_DIR              QString("configuration")
 #define CACHE_DIR               QString("cache")
+#define TOOLS_DIR               QString("tools")
 
 #define ANNOTATION_DIRECTORY    "annotations"
 #define ANNOTATION_PREFIX       "annotation_"

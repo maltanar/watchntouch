@@ -110,6 +110,8 @@ void MainWindow::initGlobals()
     createAppSubdir(CONFIG_DIR);
     // create the cache directory
     createAppSubdir(CACHE_DIR);
+    // create the tools directory
+    createAppSubdir(TOOLS_DIR);
 
     recentlyUsed = new RecentlyUsed();
     googleDocsAccess = new GoogleDocsAccess();

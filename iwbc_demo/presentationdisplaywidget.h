@@ -24,6 +24,7 @@ private:
 
     Poppler::Document *doc;
     bool loadPDF(QString fileName);
+    QString convertToPDF(QString inputFile);
 
 signals:
 

@@ -1,6 +1,9 @@
 #include "presentationdisplaywidget.h"
 
 #include <QDebug>
+#include <QProcess>
+#include <QFileInfo>
+#include <QMessageBox>
 
 PresentationDisplayWidget::PresentationDisplayWidget(QWidget *parent) :
     ContentDisplay(parent)
@@ -28,12 +31,14 @@ bool PresentationDisplayWidget::selectContent(QString location)
     // TODO the identification-conversion functionality should reside in PresentationLoader
     // so the code below is only temporary, it'll move into other classes
 
+    qWarning() << "PresentationDisplayWidget::selectContent requested to open" << location;
+
     if(location.endsWith(".pdf")) {
         return loadPDF(location);
     } else if(location.endsWith(".odp")) {
-        // TODO handle ODP loading
+        return loadPDF(convertToPDF(location));
     } else if(location.endsWith(".ppt")) {
-        // TODO handle PPT loading
+        return loadPDF(convertToPDF(location));
     } else {
         // TODO display error - unsupported presentation format
         return false;
@@ -42,10 +47,61 @@ bool PresentationDisplayWidget::selectContent(QString location)
     return false;
 }
 
+QString PresentationDisplayWidget::convertToPDF(QString inputFile)
+{
+    // try to convert the given file to PDF
+    QFileInfo f(inputFile);
+    QString inputFileChecksum = ContentDisplay::generateFileMD5(inputFile);
+    QString targetFile = qApp->applicationDirPath() + "/" +CACHE_DIR + "/" + f.baseName() + "_" + inputFileChecksum + ".pdf";
+
+
+    // TODO check if OpenOffice exists first!
+    // TODO should we do this restart every time?
+    // start the OpenOffice.org server
+    QProcess openOfficeService;
+    openOfficeService.start("soffice -invisible -accept=\"socket,port=8100;urp;\"");
+
+    qWarning() << "target filename for conversion: " << targetFile;
+
+
+    if(!QFile(targetFile).exists()) {
+        // target PDF file does not exist, we didn't convert this before or removed
+        // it from the cache, so now we have to convert again
+        QStringList args;
+        args.append(qApp->applicationDirPath() + "/" +TOOLS_DIR + "/DocumentConverter.py");
+        args.append(inputFile);
+        args.append(targetFile);
+
+        QProcess p;
+        // TODO display error message if python or DocumentConverter.py does not exist
+        p.start("python", args);
+        // TODO display some sort of progress message
+        p.waitForFinished(-1);
+
+        QString output = p.readAllStandardOutput() + " " + p.readAllStandardError();
+
+        if(output.trimmed() != "") {
+            // some error occured during the conversion
+            // display error message
+            QMessageBox errMsg;
+            errMsg.setText("An error occured while trying to open this file:\n"+output.trimmed());
+            errMsg.show();
+            return "";
+        } else {
+            // the conversion was successful
+            return targetFile;
+        }
+    } else
+        return targetFile; // converted file already exists
+}
+
 bool PresentationDisplayWidget::loadPDF(QString fileName)
 {
     // TODO this function will move to PresentationLoader
     Poppler::Document *oldDocument = doc;
+
+    if(fileName == "")
+        return false;
 
     doc = Poppler::Document::load(fileName);
     if (doc) {
