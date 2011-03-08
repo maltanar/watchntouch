@@ -143,13 +143,11 @@ void MainWindow::on_actionFreehand_triggered()
 
 void MainWindow::createAppSubdir(QString subdirName)
 {
-    QString dirPath= qApp->applicationDirPath() + "/" + subdirName;
-
-    QDir dir(dirPath);
+    QDir dir(subdirName);
     // check if annotations directory exists
     if(!dir.exists()) {
         // directory does not exist, create it
-        dir.mkdir(dirPath);
+        dir.mkpath(subdirName);
     }
 }
 

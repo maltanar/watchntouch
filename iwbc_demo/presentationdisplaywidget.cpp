@@ -52,7 +52,7 @@ QString PresentationDisplayWidget::convertToPDF(QString inputFile)
     // try to convert the given file to PDF
     QFileInfo f(inputFile);
     QString inputFileChecksum = ContentDisplay::generateFileMD5(inputFile);
-    QString targetFile = qApp->applicationDirPath() + "/" +CACHE_DIR + "/" + f.baseName() + "_" + inputFileChecksum + ".pdf";
+    QString targetFile = CACHE_DIR + "/" + f.baseName() + "_" + inputFileChecksum + ".pdf";
 
 
     // TODO check if OpenOffice exists first!
@@ -68,7 +68,7 @@ QString PresentationDisplayWidget::convertToPDF(QString inputFile)
         // target PDF file does not exist, we didn't convert this before or removed
         // it from the cache, so now we have to convert again
         QStringList args;
-        args.append(qApp->applicationDirPath() + "/" +TOOLS_DIR + "/DocumentConverter.py");
+        args.append(TOOLS_DIR + "/DocumentConverter.py");
         args.append(inputFile);
         args.append(targetFile);
 

@@ -111,7 +111,7 @@ void ContentSelector::on_openGDoc_clicked()
 
 void ContentSelector::openGoogleDoc(QString googleDocId)
 {
-    QString targetFileName =  qApp->applicationDirPath() + "/" +CACHE_DIR + "/" + googleDocId + ".pdf";
+    QString targetFileName =  CACHE_DIR + "/" + googleDocId + ".pdf";
     if(googleDocsAccess->downloadPresentation(googleDocId, targetFileName, "pdf"))
         selectContent(targetFileName);
     else

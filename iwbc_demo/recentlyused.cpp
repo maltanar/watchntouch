@@ -6,7 +6,7 @@ RecentlyUsed::RecentlyUsed() :
     QStringList()
 {
     capacity = NUM_RECENT_ITEMS;
-    itemStorageFileName = qApp->applicationDirPath() + "/" + QString(RECENT_ITEMS_STORAGE);
+    itemStorageFileName = QString(RECENT_ITEMS_STORAGE);
 
     readFromStorage();
 }

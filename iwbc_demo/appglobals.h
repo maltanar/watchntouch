@@ -12,13 +12,13 @@ typedef enum _ContentType {
     CONTENTTYPE_WEBPAGE
 } ContentType;
 
-#define CONFIG_DIR              QString("configuration")
-#define CACHE_DIR               QString("cache")
-#define TOOLS_DIR               QString("tools")
+#define CONFIG_DIR              qApp->applicationDirPath() + "/" + QString("configuration")
+#define CACHE_DIR               qApp->applicationDirPath() + "/" + QString("cache")
+#define TOOLS_DIR               qApp->applicationDirPath() + "/" + QString("tools")
 
-#define ANNOTATION_DIRECTORY    "annotations"
-#define ANNOTATION_PREFIX       "annotation_"
-#define ANNOTATION_EXTENSION    ".wta"
+#define ANNOTATION_DIR          qApp->applicationDirPath() + "/" + QString("annotations")
+#define ANNOTATION_PREFIX       QString("annotation_")
+#define ANNOTATION_EXTENSION    QString(".wta")
 
 #define NUM_RECENT_ITEMS        5
 #define RECENT_ITEMS_STORAGE    CONFIG_DIR + QString("/recent.txt")
