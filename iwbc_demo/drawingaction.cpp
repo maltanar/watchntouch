@@ -10,7 +10,6 @@ DrawingAction::DrawingAction(DrawingData *scene, QUndoCommand *parent) :
 
 void DrawingAction::undo()
 {
-    qWarning() << "undoing" << prevPixmap.size() << undoRect;
     QPainter p(parentScene->getStage());
     p.setCompositionMode(QPainter::CompositionMode_SourceIn);
     p.drawPixmap(undoRect.topLeft(),prevPixmap);
@@ -29,6 +28,8 @@ void DrawingAction::redo()
 void DrawingAction::setActions(QPicture actions)
 {
     drawingActions = actions;
+    // detach from shared data, otherwise all redo steps end up being the same
+    drawingActions.detach();
 }
 
 void DrawingAction::setPrevPixmap(QPixmap prev, QRect rect)
