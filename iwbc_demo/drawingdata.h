@@ -5,8 +5,10 @@
 #include <QSvgGenerator>
 #include <QList>
 #include <QUndoStack>
+#include <QPixmap>
 
 #include "drawingaction.h"
+#include "appglobals.h"
 
 class DrawingData : public QGraphicsScene
 {
@@ -24,10 +26,16 @@ public:
     bool isModified();
     void setModified(bool newValue);
 
+    QPixmap * getStage();
+
+protected:
+    void drawBackground ( QPainter * painter, const QRectF & rect );
+
 private:
     QUndoStack undoStack;
     DrawingAction *currentAction;
     bool modified;
+    QPixmap *stage;
 
 signals:
 

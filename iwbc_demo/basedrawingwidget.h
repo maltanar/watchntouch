@@ -3,6 +3,8 @@
 
 #include <QGraphicsView>
 #include <QResizeEvent>
+#include <QPicture>
+#include <QPainter>
 #include "drawingdata.h"
 #include "appglobals.h"
 
@@ -33,12 +35,13 @@ private:
     DrawingData * drawingData;
     QPen drawingPen;
     QBrush drawingBrush;
-    QPen eraserPen;
     DrawingMode drawingMode;
     QGraphicsItem * currentItem;
+    QPixmap * stage;
 
+    QPicture picture;
+    QPainter picturePainter;
 
-    void drawLineAction(QPointF from, QPointF to);
     void drawingStart(QPointF startPoint);
     void drawingUpdate(QPointF updatePoint);
     void drawingEnd(QPointF endPoint);

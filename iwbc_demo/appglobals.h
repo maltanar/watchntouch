@@ -2,6 +2,7 @@
 #define APPGLOBALS_H
 
 #include <QDebug>
+#include <QDesktopWidget>
 #include <recentlyused.h>
 #include <googledocsaccess.h>
 
@@ -12,6 +13,13 @@ typedef enum _ContentType {
     CONTENTTYPE_WEBPAGE
 } ContentType;
 
+// constants and/or shortcuts
+#define SCREEN_WIDTH            qApp->desktop()->width()
+#define SCREEN_HEIGHT           qApp->desktop()->height()
+
+#define ERASER_SIZE             5
+
+// W&T specific directories
 #define CONFIG_DIR              qApp->applicationDirPath() + "/" + QString("configuration")
 #define CACHE_DIR               qApp->applicationDirPath() + "/" + QString("cache")
 #define TOOLS_DIR               qApp->applicationDirPath() + "/" + QString("tools")

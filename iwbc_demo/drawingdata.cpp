@@ -13,6 +13,8 @@ DrawingData::DrawingData(QObject *parent) :
 {
     currentAction = new DrawingAction(this);
     modified = false;
+    stage = new QPixmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+    stage->fill(Qt::transparent);
 }
 
 void DrawingData::saveSVG(QString fileName)
@@ -49,9 +51,9 @@ QUndoStack * DrawingData::getUndoStack()
 
 void DrawingData::addItem(QGraphicsItem * item)
 {
-    currentAction->addDrawingStep(item);
+    //currentAction->addDrawingStep(item);
     QGraphicsScene::addItem(item);
-    setModified(true);
+    //setModified(true);
 }
 
 void DrawingData::registerAction()
@@ -76,6 +78,22 @@ void DrawingData::clear()
     undoStack.clear();
     setModified(false);
 
-    delete currentAction;
+    if(currentAction) delete currentAction;
     currentAction =  new DrawingAction(this);
+
+    // clear the stage pixmap
+    stage->fill(Qt::transparent);
+}
+
+QPixmap * DrawingData::getStage()
+{
+    return stage;
+}
+
+void DrawingData::drawBackground ( QPainter * painter, const QRectF & rect )
+{
+    // draw the stage pixmap as the scene background
+    // the stage pixmap is where we do all the user-created drawing
+    painter->setClipRect(rect);
+    painter->drawPixmap(0,0, *stage);
 }
