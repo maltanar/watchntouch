@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui svg xml network
+QT       += core gui xml network
 
 TARGET = iwbc_demo
 TEMPLATE = app

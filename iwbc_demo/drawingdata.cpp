@@ -1,9 +1,6 @@
 #include "drawingdata.h"
 
 #include <QDateTime>
-#include <QSvgGenerator>
-#include <QSvgRenderer>
-#include <QGraphicsSvgItem>
 #include <QPainter>
 
 #include <QDebug>
@@ -17,29 +14,19 @@ DrawingData::DrawingData(QObject *parent) :
     stage->fill(Qt::transparent);
 }
 
-void DrawingData::saveSVG(QString fileName)
+void DrawingData::saveImage(QString fileName)
 {
     // TODO do not save anything if annotation is empty, maybe delete old file?
-    QSvgGenerator svgGen;
-    svgGen.setFileName(fileName);
-    svgGen.setSize(sceneRect().size().toSize());
-    svgGen.setTitle("Watch and Touch Drawing");
-    svgGen.setDescription(QDateTime::currentDateTime().toString());
-
-    QPainter svgPainter;
-    svgPainter.begin(&svgGen);
-    render(&svgPainter);
-    svgPainter.end();
-
+    qWarning() << "saving to" << fileName;
+    stage->save(fileName, "png");
     setModified(false);
 }
 
-void DrawingData::loadSVG(QString fileName)
+void DrawingData::loadImage(QString fileName)
 {
-    // TODO QGraphicsSvgItem is rendered as a bitmap on the view...we'd prefer to have it vectoral
-    QGraphicsSvgItem *svgContent = new QGraphicsSvgItem(fileName);
     clear();
-    QGraphicsScene::addItem(svgContent);
+    // TODO should check for the file's resolution and upscale/downscale to current if needed
+    stage->load(fileName, "png");
 
     setModified(false);
 }
@@ -47,13 +34,6 @@ void DrawingData::loadSVG(QString fileName)
 QUndoStack * DrawingData::getUndoStack()
 {
     return &undoStack;
-}
-
-void DrawingData::addItem(QGraphicsItem * item)
-{
-    //currentAction->addDrawingStep(item);
-    QGraphicsScene::addItem(item);
-    //setModified(true);
 }
 
 void DrawingData::registerAction()

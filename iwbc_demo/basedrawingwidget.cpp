@@ -242,11 +242,13 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
     if(state == DRAWINGSTATE_END) {
         // finalize the painting on the QPicture
         picturePainter.end();
+        // TODO do this with some kind of registration function
         // commit the QPicture onto the stage
         QPainter p;
         p.begin(getDrawingData()->getStage());
         picture.play(&p);
         p.end();
+        getDrawingData()->setModified(true);
         // update the stage
         getDrawingData()->update(picture.boundingRect().adjusted(-drawingPen.width()-5,
                                                              -drawingPen.width()-5,
