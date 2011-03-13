@@ -36,8 +36,16 @@ QUndoStack * DrawingData::getUndoStack()
     return &undoStack;
 }
 
-void DrawingData::registerAction()
+void DrawingData::registerAction(QPicture actions)
 {
+    QRect boundingRect = actions.boundingRect().adjusted(-2,-2,2,2);
+    // backup the area to be painted, to be used for undo'ing later
+    QPixmap areaToChange = stage->copy(boundingRect);
+    areaToChange.save("undo.png");
+    // set the properties of this drawing step for undo/redo
+    currentAction->setActions(actions);
+    currentAction->setPrevPixmap(areaToChange, boundingRect);
+    // add to the undo stack
     undoStack.push(currentAction);
     currentAction =  new DrawingAction(this);
 }

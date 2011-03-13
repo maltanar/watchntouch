@@ -1,6 +1,8 @@
 #include "drawingaction.h"
 
-DrawingAction::DrawingAction(QGraphicsScene *scene, QUndoCommand *parent) :
+#include <QPainter>
+
+DrawingAction::DrawingAction(DrawingData *scene, QUndoCommand *parent) :
     QUndoCommand(parent)
 {
     parentScene = scene;
@@ -8,26 +10,29 @@ DrawingAction::DrawingAction(QGraphicsScene *scene, QUndoCommand *parent) :
 
 void DrawingAction::undo()
 {
-    for(int i = 0; i < steps.count(); i++) {
-        parentScene->removeItem(steps.at(i));
-    }
+    qWarning() << "undoing" << prevPixmap.size() << undoRect;
+    QPainter p(parentScene->getStage());
+    p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    p.drawPixmap(undoRect.topLeft(),prevPixmap);
+    p.end();
+    parentScene->update();
 }
 
 void DrawingAction::redo()
 {
-    // TODO this function is executed when the item is pushed on the undo stack, and we add the QGraphicsItem's already before
-    // the push, resulting in two adds (the second fails and doesn't do anywthing but this consumes some CPU time)
-    // implement the QUndoCommand ID scene for grouping steps inside the command
-    if(steps.count() > 0)
-        if(steps.at(0)->scene() != 0)
-            return;
-
-    for(int i = 0; i < steps.count(); i++) {
-        parentScene->addItem(steps.at(i));
-    }
+    QPainter p(parentScene->getStage());
+    drawingActions.play(&p);
+    p.end();
+    parentScene->update();
 }
 
-void DrawingAction::addDrawingStep(QGraphicsItem *newItem)
+void DrawingAction::setActions(QPicture actions)
 {
-    steps.append(newItem);
+    drawingActions = actions;
+}
+
+void DrawingAction::setPrevPixmap(QPixmap prev, QRect rect)
+{
+    prevPixmap = prev;
+    undoRect = rect;
 }

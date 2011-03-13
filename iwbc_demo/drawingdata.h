@@ -5,9 +5,12 @@
 #include <QList>
 #include <QUndoStack>
 #include <QPixmap>
+#include <QPicture>
 
 #include "drawingaction.h"
 #include "appglobals.h"
+
+class DrawingAction;
 
 class DrawingData : public QGraphicsScene
 {
@@ -18,7 +21,7 @@ public:
     void loadImage(QString fileName);
 
     QUndoStack * getUndoStack();
-    void registerAction();
+    void registerAction(QPicture actions);
     void clear();
 
     bool isModified();
