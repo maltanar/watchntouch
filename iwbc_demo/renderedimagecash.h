@@ -14,10 +14,10 @@ public:
     explicit RenderedImageCash(QObject *parent = 0);
     void run(); // From QThread
 
-    QImage cash[3];
+    QImage cash[7];
     int currentSlideNo;
-    int prevSlideNo;
-    qreal scaleFactor;
+    int slideCount;
+
     Poppler::Document *doc;
     QString fileName;
 

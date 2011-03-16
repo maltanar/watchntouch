@@ -10,7 +10,7 @@ RenderedImageCash::RenderedImageCash(QObject *parent) :
     QThread(parent)
 {
     currentSlideNo = 0;
-    prevSlideNo = 0;
+    slideCount = 0;
     doc = NULL;
 }
 
@@ -21,15 +21,14 @@ void RenderedImageCash::run() {
     doc = Poppler::Document::load(fileName);
 
     int anumber;
-    for(int i = 0; i < 3; i++) {
-        anumber = currentSlideNo - 1 + i;
-        if(anumber <= 0)
+    for(int i = 0; i < 7; i++) {
+        anumber = currentSlideNo - 3 + i;
+        qWarning() << "i, anumber: " << i << anumber;
+        if(anumber <= 0 || anumber > slideCount)
             ;
         else
             cash[i] = doc->page(anumber - 1)->renderToImage(120,120);
     }
-
-    prevSlideNo = currentSlideNo;
 
     qWarning() << "thred bitti!";
 

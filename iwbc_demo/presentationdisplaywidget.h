@@ -19,6 +19,7 @@ public:
 private:
     int currentSlide;
     int slideCount;
+    int index;
     qreal scaleFactor;
     RenderedImageCash c;
     bool first;
