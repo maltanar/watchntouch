@@ -2,6 +2,7 @@
 #define PRESENTATIONDISPLAYWIDGET_H
 
 #include "contentdisplay.h"
+#include "renderedimagecash.h"
 #include <poppler-qt4.h>
 
 class PresentationDisplayWidget : public ContentDisplay
@@ -19,7 +20,8 @@ private:
     int currentSlide;
     int slideCount;
     qreal scaleFactor;
-
+    RenderedImageCash c;
+    bool first;
     void generateContentIdentifier();
 
     Poppler::Document *doc;

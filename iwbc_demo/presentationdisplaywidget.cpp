@@ -4,16 +4,19 @@
 #include <QProcess>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <cmath>
 
 PresentationDisplayWidget::PresentationDisplayWidget(QWidget *parent) :
     ContentDisplay(parent)
-{
+{    
     currentSlide = 0;
     slideCount = 0;
     scaleFactor = 1.0;
     contentType = CONTENTTYPE_PRESENTATION;
 
     doc = NULL;
+
+    first = true;
 }
 
 PresentationDisplayWidget::~PresentationDisplayWidget()
@@ -104,6 +107,7 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
         return false;
 
     doc = Poppler::Document::load(fileName);
+    c.fileName = fileName;
     if (doc) {
         delete oldDocument;
         contentLocation = fileName;
@@ -118,7 +122,7 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
         doc->setRenderHint(Poppler::Document::Antialiasing);
         doc->setRenderHint(Poppler::Document::TextAntialiasing);
         currentSlide = 0;
-        slideCount = doc->numPages();
+        slideCount = doc->numPages();                
         gotoSlide(1);
     }
     return doc != 0;
@@ -139,23 +143,104 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
     if(slideNo == currentSlide)
         return;
 
-    QImage pageImage;
+    qWarning() << "---------- SLIDE NO " << slideNo << " ---------------";
 
     // TODO retrieve page from PresentationLoader instead
-    // TODO fit to width / height options while rendering need consideration
+    // TODO fit to width / height options while rendering need consideration,
 
-    pageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
-                                                    scaleFactor * QLabel::physicalDpiY());
+    bool isInCash = false;
+    for(int i = -1 ; i < 2; i++) {
+        if(currentSlide + i == slideNo)
+            isInCash = true;
+    }
 
-    pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QImage pageImage;
 
-    contentSize = pageImage.size();
+    if(first) {
+        qWarning() << "ilk girdi";
+        first = false;
+        pageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
+                                                               scaleFactor * QLabel::physicalDpiY());
+        pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-    setPixmap(QPixmap::fromImage(pageImage));
+        contentSize = pageImage.size();
 
-    // TODO do error checking
-    currentSlide = slideNo;
-    emit contextChanged(getContentContext());
+        setPixmap(QPixmap::fromImage(pageImage));
+
+        // TODO do error checking
+        currentSlide = slideNo;
+        emit contextChanged(getContentContext());
+
+        // change cash accordingly
+        c.currentSlideNo = slideNo;
+        c.start();
+        qWarning() << "ilk cikti";
+
+    }
+    else {
+        //while(c.isRunning())
+          //  usleep(1000);
+        if(!c.isRunning()) {
+            qWarning() << "c run etmiyor girdi";
+
+            if(isInCash) {
+                qWarning() << "cash ten aldi " << slideNo;
+                if(slideNo - currentSlide < 0)
+                    pageImage = c.cash[0];
+                else
+                    pageImage = c.cash[2];
+            }
+            else {
+                qWarning() << "tekrar yukledi";
+                pageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
+                                                                       scaleFactor * QLabel::physicalDpiY());
+            }
+
+            pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+            contentSize = pageImage.size();
+
+            setPixmap(QPixmap::fromImage(pageImage));
+
+
+            // TODO do error checking
+            currentSlide = slideNo;
+            emit contextChanged(getContentContext());
+
+            // change cash accordingly
+            c.currentSlideNo = slideNo;
+            c.start();
+            qWarning() << "c run etmiyor cikti";
+
+        }
+        else {
+            qWarning() << "c run ediyor girdi";
+
+            pageImage = doc->page(slideNo-1)->renderToImage(120,120);
+
+            pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+            contentSize = pageImage.size();
+
+            setPixmap(QPixmap::fromImage(pageImage));
+
+            // TODO do error checking
+            currentSlide = slideNo;
+            emit contextChanged(getContentContext());
+
+            // change cash accordingly
+
+            qWarning() << "terminate etti ve " << slideNo << " ile yeniden baslatacak";
+
+            c.exit(0);
+            c.currentSlideNo = slideNo;
+            c.start();
+
+            qWarning() << "c run ediyor cikti";
+
+        }
+    }
+
 }
 
 void PresentationDisplayWidget::generateContentIdentifier()

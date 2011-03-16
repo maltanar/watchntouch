@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     contextmenu.cpp \
     QjtMouseGestureFilter.cpp \
     QjtMouseGesture.cpp \
-    mousegesturerecognizer.cpp
+    mousegesturerecognizer.cpp \
+    renderedimagecash.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -55,7 +56,8 @@ HEADERS  += mainwindow.h \
     contextmenu.h \
     QjtMouseGestureFilter.h \
     QjtMouseGesture.h \
-    mousegesturerecognizer.h
+    mousegesturerecognizer.h \
+    renderedimagecash.h
 
 FORMS    += mainwindow.ui \
     contentselector.ui \

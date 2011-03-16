@@ -153,7 +153,7 @@ void MainWindow::createAppSubdir(QString subdirName)
 
 void MainWindow::showContextMenu(QPoint p)
 {
-    qWarning() << "caylar da caymis hani...o zaman context menu acalim";
+    qWarning() << "caylar da caymis hani...o zaman context menu acalim. hoppala yavrum kokakola.";
     contextMenu->move(p - QPoint(contextMenu->width()/2, contextMenu->height()/2));
     contextMenu->show();
 }

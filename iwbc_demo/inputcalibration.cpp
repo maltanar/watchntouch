@@ -96,22 +96,14 @@ void InputCalibration::addCalibrationSample(QPoint newPoint)
         one.clear();
         two.clear();
 
+        // state the polygons that are to be transformed - from one ---> two
         one << calibrationPoints[0] << calibrationPoints[1] << calibrationPoints[2] << calibrationPoints[3];
-        two << QPointF(0.0,0.0) << QPointF(screenWidth,0.0) << QPointF(screenWidth,screenHeight) <<  QPointF(0.0,screenHeight);
+        two << QPointF(0.0,0.0) << QPointF(screenWidth,0.0) << QPointF(screenWidth,screenHeight) <<  QPointF(0.0,screenHeight);        
 
-        //qreal x1,y1,x2,y2;
-
-        //one.boundingRect().getCoords(&x1,&y1,&x2,&y2);
-
-        //qWarning() << "RECT one " << x1 << y1 << x2 << y2 << one.isClosed() << one.first() << one.last();
-
-        //two.boundingRect().getCoords(&x1,&y1,&x2,&y2);
-
-        //qWarning() << "RECT two " << x1 << y1 << x2 << y2 << two.isClosed() << two.first() << two.last();
-
+        // set transformation affine
         transform.toAffine();
         bool wtf = t.quadToQuad(one,two,transform);
-        qWarning() << "TRANSFORM " << wtf;
+        qWarning() << "TRANSFORM operation is " << wtf;
 
     }
 }
@@ -121,7 +113,6 @@ void InputCalibration::addCalibrationSample(QPoint newPoint)
 QPoint InputCalibration::mapFromWiimoteToScreen(QPoint inputPoint)
 {
     // if calibration was not performed, return the same point
-    // TODO Utku: mouse release olunca bu smoothPoints'in sifirlanmasi lazim, yoksa arayi da dolduruyor    
 
     if(!isCalibrated)
         return inputPoint;
