@@ -107,6 +107,7 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
     if(fileName == "")
         return false;
 
+    first = true;
     doc = Poppler::Document::load(fileName);
     c.fileName = fileName;
     if (doc) {
