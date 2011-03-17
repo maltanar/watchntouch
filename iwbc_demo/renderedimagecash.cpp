@@ -4,6 +4,7 @@
 #include <QProcess>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QImageReader>
 
 
 RenderedImageCash::RenderedImageCash(QObject *parent) :
@@ -12,25 +13,46 @@ RenderedImageCash::RenderedImageCash(QObject *parent) :
     currentSlideNo = 0;
     slideCount = 0;
     doc = NULL;
+    areImagesReady = false;
 }
 
 void RenderedImageCash::run() {
 
-    qWarning() << "thread basladi";
+    qWarning() << "cash thread basladi";
 
     doc = Poppler::Document::load(fileName);
-
-    int anumber;
-    for(int i = 0; i < 7; i++) {
-        anumber = currentSlideNo - 3 + i;
-        qWarning() << "i, anumber: " << i << anumber;
-        if(anumber <= 0 || anumber > slideCount)
-            ;
-        else
-            cash[i] = doc->page(anumber - 1)->renderToImage(120,120);
+    if(!areImagesReady) {
+        int anumber;
+        for(int i = 0; i < 7; i++) {
+            anumber = currentSlideNo - 3 + i;
+            qWarning() << "i, anumber: " << i << anumber;
+            if(anumber <= 0 || anumber > slideCount)
+                ;
+            else
+                cash[i] = doc->page(anumber - 1)->renderToImage(120,120);
+        }
     }
-
-    qWarning() << "thred bitti!";
+    else {
+        qWarning() << "file dan okuyacak";
+        int anumber;
+        for(int i = 0; i < 7; i++) {
+            anumber = currentSlideNo - 3 + i;
+            QString s;
+            s = s.setNum(anumber);
+            QString imageDirPath = IMAGE_DIR;
+            imageDirPath.append("/").append(s).append(".png");
+            QImageReader r(imageDirPath,"png");
+            qWarning() << "i, anumber: " << i << anumber;
+            if(anumber <= 0 || anumber > slideCount)
+                ;
+            else
+                r.read(&cash[i]);
+        }
+    }
+    qWarning() << "cash thred bitti!";
 
 }
 
+void RenderedImageCash::imagesAreReady() {
+    areImagesReady = true;
+}

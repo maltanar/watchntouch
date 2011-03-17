@@ -3,6 +3,7 @@
 
 #include "contentdisplay.h"
 #include "renderedimagecash.h"
+#include "loadrenderedimagestofiles.h"
 #include <poppler-qt4.h>
 
 class PresentationDisplayWidget : public ContentDisplay
@@ -22,6 +23,8 @@ private:
     int index;
     qreal scaleFactor;
     RenderedImageCash c;
+    LoadRenderedImagesToFiles loader;
+
     bool first;
     void generateContentIdentifier();
 

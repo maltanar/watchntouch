@@ -25,6 +25,7 @@ typedef enum _ContentType {
 #define TOOLS_DIR               qApp->applicationDirPath() + "/" + QString("tools")
 
 #define ANNOTATION_DIR          qApp->applicationDirPath() + "/" + QString("annotations")
+#define IMAGE_DIR               qApp->applicationDirPath() + "/" + QString("images");   // for rendered images.
 #define ANNOTATION_PREFIX       QString("annotation_")
 #define ANNOTATION_EXTENSION    QString(".wta")
 

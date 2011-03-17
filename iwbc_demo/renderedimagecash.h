@@ -17,6 +17,7 @@ public:
     QImage cash[7];
     int currentSlideNo;
     int slideCount;
+    bool areImagesReady;
 
     Poppler::Document *doc;
     QString fileName;
@@ -24,6 +25,7 @@ public:
 signals:
 
 public slots:
+    void imagesAreReady();
 
 };
 

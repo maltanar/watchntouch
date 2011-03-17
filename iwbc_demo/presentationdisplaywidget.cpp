@@ -1,4 +1,5 @@
 #include "presentationdisplaywidget.h"
+#include "loadrenderedimagestofiles.h"
 
 #include <QDebug>
 #include <QProcess>
@@ -18,6 +19,8 @@ PresentationDisplayWidget::PresentationDisplayWidget(QWidget *parent) :
     doc = NULL;
 
     first = true;
+
+    QObject::connect(&loader,SIGNAL(imagesAreReady()),&c,SLOT(imagesAreReady()));
 }
 
 PresentationDisplayWidget::~PresentationDisplayWidget()
@@ -107,10 +110,12 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
     if(fileName == "")
         return false;
 
-    first = true;
-    doc = Poppler::Document::load(fileName);
-    c.fileName = fileName;
+    doc = Poppler::Document::load(fileName);    
     if (doc) {
+        loader.fileName = c.fileName = fileName;
+        first = true;
+        c.areImagesReady = false;
+
         delete oldDocument;
         contentLocation = fileName;
         generateContentIdentifier();
@@ -124,7 +129,8 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
         doc->setRenderHint(Poppler::Document::Antialiasing);
         doc->setRenderHint(Poppler::Document::TextAntialiasing);
         currentSlide = 0;
-        c.slideCount = slideCount = doc->numPages();
+        loader.slideCount = c.slideCount = slideCount = doc->numPages();
+        loader.start();
         gotoSlide(1);
     }
     return doc != 0;
