@@ -27,9 +27,8 @@ void DrawingAction::redo()
 
 void DrawingAction::setActions(QPicture actions)
 {
-    drawingActions = actions;
-    // detach from shared data, otherwise all redo steps end up being the same
-    drawingActions.detach();
+    // manually copy data, otherwise all redo steps end up being the same
+    drawingActions.setData(actions.data(), actions.size());
 }
 
 void DrawingAction::setPrevPixmap(QPixmap prev, QRect rect)
