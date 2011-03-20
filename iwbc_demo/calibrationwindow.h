@@ -5,6 +5,11 @@
 #include <QPixmap>
 #include <QDesktopWidget>
 
+#include <QPainter>
+#include <QEvent>
+#include <QCoreApplication>
+#include <QDesktopWidget>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <QWaitCondition>
@@ -16,11 +21,8 @@
 #include "basedrawingwidget.h"
 #include "wiiuse.h"
 #include "inputcalibration.h"
-
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 #include "irthread.h"
+
 
 #define HEIGHT_FIX  20  // TODO set this according to platform
 #define MAX_WIIMOTES    1
@@ -46,19 +48,13 @@ public:
     QMutex mutex;
     int calibrationPointTouchCount;
 
-    QPointF smoothPoints[10];
-    int smoothCounter;
-    bool full;
-
-
 private:
     Ui::CalibrationWindow *ui;
     QPixmap calibrationPointImageInitial;
     QPixmap calibrationPointImageTouched;
     InputCalibration mapper;
-    int calibrationPointWidth, calibrationPointHeight;    
-    Window root_window;
-    Display * dpy;
+    int calibrationPointWidth, calibrationPointHeight;
+
     QPoint prevPoint;
     BaseDrawingWidget *draw;
     IRThread *receiver;
@@ -66,9 +62,6 @@ private:
 
     void repositionItems();
     void setCalibrationPointTouchStatus(int touchedCount);
-    void mouseMove(int button, QPoint p);
-    void mousePress(int button, QPoint p);
-    void mouseRelease(int button, QPoint p);
 
 protected:
     bool event(QEvent *event);    

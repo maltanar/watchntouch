@@ -2,6 +2,8 @@
 #include <QCryptographicHash>
 #include <QFile>
 
+#include "appglobals.h"
+
 ContentDisplay::ContentDisplay(QWidget *parent) :
     QLabel(parent)
 {

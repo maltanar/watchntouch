@@ -1,6 +1,6 @@
 #ifndef CONTENTSELECTOR_H
 #define CONTENTSELECTOR_H
-
+#include "appglobals.h"
 #include <QDialog>
 #include <QLabel>
 #include "recentlyused.h"

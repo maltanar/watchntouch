@@ -3,6 +3,8 @@
 #include <QDir>
 #include <QApplication>
 
+#include "appglobals.h"
+
 ContentMatcher::ContentMatcher()
 {
     annotationDirPath = ANNOTATION_DIR;

@@ -3,8 +3,7 @@
 
 #include <QDebug>
 #include <QDesktopWidget>
-#include <recentlyused.h>
-#include <googledocsaccess.h>
+#include <QApplication>
 
 typedef enum _ContentType {
     CONTENTTYPE_UNDEFINED,
@@ -18,6 +17,10 @@ typedef enum _ContentType {
 #define SCREEN_HEIGHT           qApp->desktop()->height()
 
 #define ERASER_SIZE             5
+
+#define MOUSE_PRESSED   0
+#define MOUSE_MOVE      1
+#define MOUSE_RELEASED  2
 
 // W&T specific directories
 #define CONFIG_DIR              qApp->applicationDirPath() + "/" + QString("configuration")
@@ -34,6 +37,7 @@ typedef enum _ContentType {
 
 extern class RecentlyUsed *recentlyUsed;
 extern class GoogleDocsAccess *googleDocsAccess;
+extern class EventGenerator *eventGenerator;
 
 // define the default tools for drawing
 #define DEFAULT_DRAWING_PEN     QPen(Qt::black)

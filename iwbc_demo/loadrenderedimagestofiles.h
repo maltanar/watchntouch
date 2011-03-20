@@ -4,8 +4,6 @@
 #include <QThread>
 #include <poppler-qt4.h>
 
-#include "appglobals.h"
-
 class LoadRenderedImagesToFiles : public QThread
 {
     Q_OBJECT

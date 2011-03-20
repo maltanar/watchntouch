@@ -4,6 +4,8 @@
 #include <QVBoxLayout>
 #include <QFileDialog>
 
+#include "googledocsaccess.h"
+
 ContentSelector::ContentSelector(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ContentSelector)

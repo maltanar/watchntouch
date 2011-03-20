@@ -1,12 +1,12 @@
 #ifndef BASEDRAWINGWIDGET_H
 #define BASEDRAWINGWIDGET_H
-
+#include "appglobals.h"
 #include <QGraphicsView>
 #include <QResizeEvent>
 #include <QPicture>
 #include <QPainter>
 #include "drawingdata.h"
-#include "appglobals.h"
+
 
 
 class BaseDrawingWidget : public QGraphicsView

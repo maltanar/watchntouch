@@ -1,9 +1,8 @@
 #ifndef CONTENTDISPLAY_H
 #define CONTENTDISPLAY_H
-
+#include "appglobals.h"
 #include <QLabel>
 
-#include "appglobals.h"
 
 class ContentDisplay : public QLabel
 {

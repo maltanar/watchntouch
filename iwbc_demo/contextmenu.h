@@ -1,9 +1,10 @@
 #ifndef CONTEXTMENU_H
 #define CONTEXTMENU_H
 
+#include "appglobals.h"
 #include <QWidget>
 #include <QPushButton>
-#include "appglobals.h"
+
 
 namespace Ui {
     class ContextMenu;

@@ -2,6 +2,8 @@
 #include <QDir>
 #include "loadrenderedimagestofiles.h"
 
+#include "appglobals.h"
+
 LoadRenderedImagesToFiles::LoadRenderedImagesToFiles(QObject *parent) :
     QThread(parent)
 {     

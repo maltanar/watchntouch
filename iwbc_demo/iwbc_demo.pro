@@ -35,7 +35,8 @@ SOURCES += main.cpp\
     QjtMouseGesture.cpp \
     mousegesturerecognizer.cpp \
     renderedimagecash.cpp \
-    loadrenderedimagestofiles.cpp
+    loadrenderedimagestofiles.cpp \
+    eventgenerator.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -59,7 +60,8 @@ HEADERS  += mainwindow.h \
     QjtMouseGesture.h \
     mousegesturerecognizer.h \
     renderedimagecash.h \
-    loadrenderedimagestofiles.h
+    loadrenderedimagestofiles.h \
+    eventgenerator.h
 
 FORMS    += mainwindow.ui \
     contentselector.ui \

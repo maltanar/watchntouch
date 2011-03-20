@@ -8,7 +8,6 @@
 #include <QPicture>
 
 #include "drawingaction.h"
-#include "appglobals.h"
 
 class DrawingAction;
 

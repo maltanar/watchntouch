@@ -3,7 +3,8 @@
 #include <QDateTime>
 #include <QPainter>
 
-#include <QDebug>
+#include "appglobals.h"
+
 
 DrawingData::DrawingData(QObject *parent) :
     QGraphicsScene(parent)

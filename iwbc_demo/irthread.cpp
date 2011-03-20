@@ -7,6 +7,7 @@
 #include "calibrationwindow.h"
 // TODO this class should be renamed to InputReceiver
 
+#include "appglobals.h"
 
 IRThread::IRThread()
 {

@@ -6,9 +6,13 @@
 #include <QDir>
 #include "contentselector.h"
 #include "googledocsaccess.h"
+#include "eventgenerator.h"
+
+#include "appglobals.h"
 
 RecentlyUsed *recentlyUsed;
 GoogleDocsAccess *googleDocsAccess;
+EventGenerator *eventGenerator;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -56,19 +60,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(contextMenu, SIGNAL(penWidthIncrease()), draw, SLOT(increasePenWidth()));
     connect(contextMenu, SIGNAL(penWidthDecrease()), draw, SLOT(decreasePenWidth()));
 
-    /*filter = new QjtMouseGestureFilter(Qt::MidButton);
     dl << Left;
-    g = new QjtMouseGesture( dl, filter );
-    filter->addGesture( g );
+    g = new QjtMouseGesture( dl, this);
+    eventGenerator->addGesture( g );
     display->connect( g, SIGNAL(gestured()), SLOT(gotoPrevSlide()) );
 
     dl.clear();
     dl << Right;
-    g = new QjtMouseGesture( dl, filter );
-    filter->addGesture( g );
+    g = new QjtMouseGesture( dl, this );
+    eventGenerator->addGesture( g );
     display->connect( g, SIGNAL(gestured()), SLOT(gotoNextSlide()) );
-
-    this->installEventFilter( filter );*/
 
 }
 
@@ -115,12 +116,14 @@ void MainWindow::initGlobals()
 
     recentlyUsed = new RecentlyUsed();
     googleDocsAccess = new GoogleDocsAccess();
+    eventGenerator = new EventGenerator();
 }
 
 void MainWindow::deleteGlobals()
 {
     delete recentlyUsed; recentlyUsed = NULL;
     delete googleDocsAccess; googleDocsAccess = NULL;
+    delete eventGenerator; eventGenerator = NULL;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

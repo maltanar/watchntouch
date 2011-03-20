@@ -1,6 +1,8 @@
 #include "contextmenu.h"
 #include "ui_contextmenu.h"
 
+#include "appglobals.h"
+
 ContextMenu::ContextMenu(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ContextMenu)

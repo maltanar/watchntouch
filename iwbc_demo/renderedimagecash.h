@@ -2,9 +2,9 @@
 #define RENDEREDIMAGECASH_H
 
 #include <QThread>
+#include <QImage>
 #include <poppler-qt4.h>
 
-#include "contentdisplay.h"
 
 class RenderedImageCash : public QThread
 {

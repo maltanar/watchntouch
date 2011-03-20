@@ -4,6 +4,8 @@
 #include <QMouseEvent>
 #include <QGraphicsLineItem>
 
+#include "appglobals.h"
+
 
 BaseDrawingWidget::BaseDrawingWidget(QWidget *parent) :
     QGraphicsView(parent)

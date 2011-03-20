@@ -2,6 +2,8 @@
 
 #include <QFile>
 
+#include "appglobals.h"
+
 RecentlyUsed::RecentlyUsed() :
     QStringList()
 {

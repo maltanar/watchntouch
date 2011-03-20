@@ -14,11 +14,6 @@
 #define HEIGHT_FIX  20  // TODO set this according to platform
 #define MAX_WIIMOTES    1
 
-// TODO move these to appglobals
-#define MOUSE_PRESSED 0
-#define MOUSE_MOVE 1
-#define MOUSE_RELEASED 2
-
 class IRThread : public QThread
 {
 

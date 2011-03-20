@@ -7,6 +7,8 @@
 #include <QMessageBox>
 #include <cmath>
 
+#include "recentlyused.h"
+
 PresentationDisplayWidget::PresentationDisplayWidget(QWidget *parent) :
     ContentDisplay(parent)
 {    
