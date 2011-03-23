@@ -225,6 +225,29 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
             break;
 
         case DRAWINGMODE_ERASER:
+            if(state == DRAWINGSTATE_START) {
+                QGraphicsRectItem * newEraseRect = new QGraphicsRectItem(QRectF(lastPoint, QSizeF(drawingPen.width()+5, drawingPen.width()+5)), 0, getDrawingData());
+                currentItem = newEraseRect;
+                newEraseRect->setPen(QPen(Qt::transparent));
+                newEraseRect->setBrush(QBrush(Qt::white));
+            }
+
+            else if(state == DRAWINGSTATE_UPDATE) {
+                QGraphicsRectItem * newEraseRect = new QGraphicsRectItem(currentItem, getDrawingData());
+                newEraseRect->setRect(QRectF(lastPoint, QSizeF(drawingPen.width()+5, drawingPen.width()+5)));
+                newEraseRect->setPen(QPen(Qt::transparent));
+                newEraseRect->setBrush(QBrush(Qt::white));
+            }
+
+            else {
+                QGraphicsRectItem * newEraseRect = new QGraphicsRectItem(currentItem, getDrawingData());
+                newEraseRect->setRect(QRectF(lastPoint, QSizeF(drawingPen.width()+5, drawingPen.width()+5)));
+                newEraseRect->setPen(QPen(Qt::transparent));
+                newEraseRect->setBrush(QBrush(Qt::white));
+                // remove the temporary QGraphicsItem
+                getDrawingData()->removeItem(currentItem);
+             }
+            // common in all cases for the eraser:
             // we have to set a specific composition mode for the eraser
             // back up the current value
             prevCompMode = picturePainter.compositionMode();
