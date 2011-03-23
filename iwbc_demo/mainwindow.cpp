@@ -236,3 +236,11 @@ void MainWindow::showContextMenu(QPoint p)
     contextMenu->move(p - QPoint(contextMenu->width()/2, contextMenu->height()/2));
     contextMenu->show();
 }
+
+void MainWindow::on_actionScreencasting_triggered()
+{
+    if(!sc.isRunning())
+        sc.startScreencasting();
+    else
+        sc.stopScreencasting();
+}

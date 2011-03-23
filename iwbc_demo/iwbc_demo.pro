@@ -37,6 +37,7 @@ SOURCES += main.cpp\
     renderedimagecash.cpp \
     loadrenderedimagestofiles.cpp \
     eventgenerator.cpp \
+    screencasting.cpp \
     screenshot.cpp
 
 HEADERS  += mainwindow.h \
@@ -63,6 +64,7 @@ HEADERS  += mainwindow.h \
     renderedimagecash.h \
     loadrenderedimagestofiles.h \
     eventgenerator.h \
+    screencasting.h \
     screenshot.h
 
 FORMS    += mainwindow.ui \

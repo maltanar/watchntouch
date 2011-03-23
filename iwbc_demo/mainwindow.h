@@ -5,6 +5,7 @@
 #include "presentationdisplaywidget.h"
 #include "annotationwidget.h"
 #include "contextmenu.h"
+#include "screencasting.h"
 
 #include "QjtMouseGesture.h"
 #include "screenshot.h"
@@ -29,6 +30,7 @@ private:
     ContextMenu *contextMenu;
     QjtMouseGesture *g;
     DirectionList dl;
+    Screencasting sc;
     Screenshot * scrnsht;
 
     void initGlobals();
@@ -40,6 +42,7 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
+    void on_actionScreencasting_triggered();
     void on_actionFreehand_triggered();
     void on_actionExit_triggered();
     void on_actionOpen_triggered();
