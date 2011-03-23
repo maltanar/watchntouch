@@ -40,6 +40,15 @@ QUndoStack * DrawingData::getUndoStack()
 void DrawingData::registerAction(QPicture actions)
 {
     QRect boundingRect = actions.boundingRect().adjusted(-2,-2,2,2);
+    // fix negative / too large coordinates
+    if(boundingRect.x() < 0)
+        boundingRect.setX(0);
+    if(boundingRect.y() < 0)
+        boundingRect.setY(0);
+    if(boundingRect.x() > width())
+        boundingRect.setX(width());
+    if(boundingRect.y() > height())
+        boundingRect.setY(height());
     // backup the area to be painted, to be used for undo'ing later
     QPixmap areaToChange = stage->copy(boundingRect);
     areaToChange.save("undo.png");

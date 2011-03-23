@@ -94,6 +94,15 @@ void BaseDrawingWidget::drawingStart(QPointF startPoint)
 
 void BaseDrawingWidget::drawingUpdate(QPointF updatePoint)
 {
+    if(updatePoint.x() < 0)
+        updatePoint.setX(0);
+    if(updatePoint.y() < 0)
+        updatePoint.setY(0);
+    if(updatePoint.x() > drawingData->width())
+        updatePoint.setX(drawingData->width());
+    if(updatePoint.y() > drawingData->height())
+        updatePoint.setY(drawingData->height());
+
     handleDrawingState(DRAWINGSTATE_UPDATE, updatePoint);
     mousePrevPoint = updatePoint;
 }
