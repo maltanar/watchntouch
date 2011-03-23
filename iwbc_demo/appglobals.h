@@ -30,6 +30,7 @@ typedef enum _ContentType {
 #define ANNOTATION_DIR          qApp->applicationDirPath() + "/" + QString("annotations")
 #define IMAGE_DIR               qApp->applicationDirPath() + "/" + QString("images");   // for rendered images.
 #define SKETCH_DIR              qApp->applicationDirPath() + "/" + QString("sketch");   // for sketch.
+#define SCREENSHOT_DIR              qApp->applicationDirPath() + "/" + QString("screenshot");   // for sketch.
 #define ANNOTATION_PREFIX       QString("annotation_")
 #define ANNOTATION_EXTENSION    QString(".wta")
 

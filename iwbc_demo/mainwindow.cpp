@@ -152,7 +152,13 @@ void MainWindow::getScreenshot()
     showFullScreen();
 
     QString format = "png";
-    QString fileName = SKETCH_DIR;
+    QString screenshotDirPath = SCREENSHOT_DIR;
+    QDir screenshotDir(screenshotDirPath);
+    if(!screenshotDir.exists()) {
+        screenshotDir.mkdir(screenshotDirPath);
+    }
+
+    QString fileName = screenshotDirPath;
     fileName = fileName.append("/screenshot.png");
     if (!fileName.isEmpty())
        originalPixmap.save(fileName, format.toAscii());

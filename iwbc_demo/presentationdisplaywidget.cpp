@@ -61,7 +61,7 @@ bool PresentationDisplayWidget::selectContent(QString location)
 
 bool PresentationDisplayWidget::loadScreenShot()
 {
-    QString path = SKETCH_DIR;
+    QString path = SCREENSHOT_DIR;
     path.append("/screenshot.png");
     QImage pageImage;
     QImageReader reader(path,"png");
