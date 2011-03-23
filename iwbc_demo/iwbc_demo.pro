@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     mousegesturerecognizer.cpp \
     renderedimagecash.cpp \
     loadrenderedimagestofiles.cpp \
-    eventgenerator.cpp
+    eventgenerator.cpp \
+    screenshot.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -61,12 +62,14 @@ HEADERS  += mainwindow.h \
     mousegesturerecognizer.h \
     renderedimagecash.h \
     loadrenderedimagestofiles.h \
-    eventgenerator.h
+    eventgenerator.h \
+    screenshot.h
 
 FORMS    += mainwindow.ui \
     contentselector.ui \
     calibrationwindow.ui \
-    contextmenu.ui
+    contextmenu.ui \
+    screenshot.ui
 
 RESOURCES += \
     resources.qrc

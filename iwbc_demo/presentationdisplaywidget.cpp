@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <cmath>
+#include <QImageReader>
 
 #include "recentlyused.h"
 
@@ -48,12 +49,29 @@ bool PresentationDisplayWidget::selectContent(QString location)
         return loadPDF(convertToPDF(location));
     } else if(location.endsWith(".ppt")) {
         return loadPDF(convertToPDF(location));
+    } else if(location.endsWith("scrn")) {
+        return loadScreenShot();
     } else {
         // TODO display error - unsupported presentation format
         return false;
     }
 
     return false;
+}
+
+bool PresentationDisplayWidget::loadScreenShot()
+{
+    QString path = SKETCH_DIR;
+    path.append("/screenshot.png");
+    QImage pageImage;
+    QImageReader reader(path,"png");
+    reader.read(&pageImage);
+    pageImage = pageImage.scaled(getDesiredSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    setContentSize(pageImage.size());
+    setPixmap(QPixmap::fromImage(pageImage));
+
+    emit contextChanged(getContentContext());
 }
 
 QString PresentationDisplayWidget::convertToPDF(QString inputFile)

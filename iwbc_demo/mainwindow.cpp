@@ -7,6 +7,8 @@
 #include <QImageWriter>
 #include <QPrinter>
 #include <QFile>
+#include <QPixmap>
+#include <QTimer>
 #include "contentselector.h"
 #include "googledocsaccess.h"
 #include "eventgenerator.h"
@@ -28,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     display = new PresentationDisplayWidget(this);
     draw = new AnnotationWidget(this);
     contextMenu = new ContextMenu(this);
+    scrnsht = new Screenshot(this);
+    scrnsht->hide();
     contextMenu->hide();
 
     groupBox = new QWidget(this);
@@ -60,9 +64,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(contextMenu, SIGNAL(open()), this, SLOT(openContent()));
     connect(contextMenu, SIGNAL(save()), this, SLOT(saveContent()));
     connect(contextMenu, SIGNAL(sketch()), this, SLOT(openSketch()));
+    connect(contextMenu, SIGNAL(screenshot()), this, SLOT(openScreenshot()));
     connect(contextMenu, SIGNAL(colorSelected(QColor)), draw, SLOT(setDrawingColor(QColor)));
     connect(contextMenu, SIGNAL(penWidthIncrease()), draw, SLOT(increasePenWidth()));
     connect(contextMenu, SIGNAL(penWidthDecrease()), draw, SLOT(decreasePenWidth()));
+    connect(scrnsht,SIGNAL(goBack()),this,SLOT(getScreenshot()));
 
     dl << Left;
     g = new QjtMouseGesture( dl, this);
@@ -104,7 +110,7 @@ void MainWindow::openSketch()
     QString sketchDirPath = SKETCH_DIR;
     QDir sketchDir(sketchDirPath);
     QString path;
-    path.append(sketchDirPath).append("/").append("sketch.pdf");
+    path.append(sketchDirPath).append("/sketch.pdf");
     if(!sketchDir.exists()) {
         sketchDir.mkdir(sketchDirPath);
 
@@ -128,8 +134,36 @@ void MainWindow::openSketch()
     display->selectContent(path);
     groupBox->resize(display->getContentSize());
     draw->raise();
+}
+
+void MainWindow::openScreenshot()
+{
+    hide();
+    scrnsht->show();
+    //QTimer::singleShot(500, this, SLOT(getScreenshot()));
+}
+
+void MainWindow::getScreenshot()
+{
+    scrnsht->hide();
+    usleep(5000);
+
+    QPixmap originalPixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
+    showFullScreen();
+
+    QString format = "png";
+    QString fileName = SKETCH_DIR;
+    fileName = fileName.append("/screenshot.png");
+    if (!fileName.isEmpty())
+       originalPixmap.save(fileName, format.toAscii());
+
+    display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
+    display->selectContent("screenshot.scrn");      // just to communicate internally, no such a file extension !
+    groupBox->resize(display->getContentSize());
+    draw->raise();
 
 }
+
 
 void MainWindow::saveContent()
 {

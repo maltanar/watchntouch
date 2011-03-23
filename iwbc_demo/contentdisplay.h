@@ -12,6 +12,7 @@ public:
 
     QString getContentIdentifier(); // return MD5 hash of content
     QSize getContentSize(); // return dimensions of content
+    void setContentSize(QSize newSize);
     ContentType getContentType(); // return type of content
     QString getContentTitle();  // return title of content
 

@@ -7,6 +7,7 @@
 #include "contextmenu.h"
 
 #include "QjtMouseGesture.h"
+#include "screenshot.h"
 
 namespace Ui {
     class MainWindow;
@@ -28,6 +29,7 @@ private:
     ContextMenu *contextMenu;
     QjtMouseGesture *g;
     DirectionList dl;
+    Screenshot * scrnsht;
 
     void initGlobals();
     void deleteGlobals();
@@ -47,6 +49,8 @@ public slots:
     void openContent();
     void saveContent();
     void openSketch();
+    void openScreenshot();
+    void getScreenshot();
 };
 
 #endif // MAINWINDOW_H

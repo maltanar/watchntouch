@@ -98,6 +98,11 @@ void ContextMenu::on_sketch_clicked()
     emit sketch();
 }
 
+void ContextMenu::on_scrnshot_clicked()
+{
+    emit screenshot();
+}
+
 void ContextMenu::on_print_clicked()
 {
     emit print();

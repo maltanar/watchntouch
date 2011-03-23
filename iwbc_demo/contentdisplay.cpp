@@ -21,6 +21,11 @@ QSize ContentDisplay::getContentSize()
     return contentSize;
 }
 
+void ContentDisplay::setContentSize(QSize newSize)
+{
+    contentSize = newSize;
+}
+
 void ContentDisplay::generateContentIdentifier()
 {
     contentMD5 = generateFileMD5(contentLocation);
