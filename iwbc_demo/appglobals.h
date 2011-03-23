@@ -42,7 +42,7 @@ extern class GoogleDocsAccess *googleDocsAccess;
 extern class EventGenerator *eventGenerator;
 
 // define the default tools for drawing
-#define DEFAULT_DRAWING_PEN     QPen(Qt::black)
+#define DEFAULT_DRAWING_PEN     QPen(QBrush(Qt::black, Qt::SolidPattern), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
 #define DEFAULT_DRAWING_BRUSH   QBrush(Qt::transparent, Qt::SolidPattern)
 #define DEFAULT_ERASER          QPen(Qt::red)
 
