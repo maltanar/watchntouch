@@ -4,6 +4,9 @@
 #include <QHBoxLayout>
 #include <QGroupBox>
 #include <QDir>
+#include <QImageWriter>
+#include <QPrinter>
+#include <QFile>
 #include "contentselector.h"
 #include "googledocsaccess.h"
 #include "eventgenerator.h"
@@ -56,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(contextMenu, SIGNAL(toolSelected(DrawingMode)), draw, SLOT(setDrawingMode(DrawingMode)));
     connect(contextMenu, SIGNAL(open()), this, SLOT(openContent()));
     connect(contextMenu, SIGNAL(save()), this, SLOT(saveContent()));
+    connect(contextMenu, SIGNAL(sketch()), this, SLOT(openSketch()));
     connect(contextMenu, SIGNAL(colorSelected(QColor)), draw, SLOT(setDrawingColor(QColor)));
     connect(contextMenu, SIGNAL(penWidthIncrease()), draw, SLOT(increasePenWidth()));
     connect(contextMenu, SIGNAL(penWidthDecrease()), draw, SLOT(decreasePenWidth()));
@@ -93,6 +97,38 @@ void MainWindow::openContent()
     display->selectContent(csel.getSelectedContent());
     groupBox->resize(display->getContentSize());
     draw->raise();
+}
+
+void MainWindow::openSketch()
+{
+    QString sketchDirPath = SKETCH_DIR;
+    QDir sketchDir(sketchDirPath);
+    QString path;
+    path.append(sketchDirPath).append("/").append("sketch.pdf");
+    if(!sketchDir.exists()) {
+        sketchDir.mkdir(sketchDirPath);
+
+        QFile sketch_file(path);
+        sketch_file.open(QIODevice::ReadWrite | QIODevice::Text);
+
+        QPrinter printer;
+        printer.setOutputFormat(QPrinter::PdfFormat);
+        printer.setOutputFileName(path);
+        printer.setFullPage(true);
+        printer.setOrientation(printer.Landscape);
+
+        QPainter painter;
+        if (! painter.begin(&printer)) { // failed to open file
+            qWarning("failed to open file, is it writable?");
+            return;
+        }
+        painter.end();
+    }
+    display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
+    display->selectContent(path);
+    groupBox->resize(display->getContentSize());
+    draw->raise();
+
 }
 
 void MainWindow::saveContent()

@@ -93,6 +93,11 @@ void ContextMenu::on_save_clicked()
     emit save();
 }
 
+void ContextMenu::on_sketch_clicked()
+{
+    emit sketch();
+}
+
 void ContextMenu::on_print_clicked()
 {
     emit print();

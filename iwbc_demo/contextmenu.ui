@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>211</width>
-    <height>365</height>
+    <width>268</width>
+    <height>399</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,16 +25,13 @@
    </property>
    <item>
     <widget class="QWidget" name="wtBox" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>201</width>
-       <height>51</height>
-      </size>
+     <property name="enabled">
+      <bool>true</bool>
      </property>
      <property name="maximumSize">
       <size>
-       <width>201</width>
-       <height>51</height>
+       <width>402</width>
+       <height>50</height>
       </size>
      </property>
      <widget class="QPushButton" name="open">
@@ -158,6 +155,32 @@
       </property>
       <property name="flat">
        <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="sketch">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>0</y>
+        <width>51</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Sketch</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="scrnshot">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>0</y>
+        <width>51</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Scrnsht</string>
       </property>
      </widget>
     </widget>

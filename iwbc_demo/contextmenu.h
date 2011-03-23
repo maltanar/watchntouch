@@ -41,6 +41,7 @@ private slots:
     void on_print_clicked();
     void on_save_clicked();
     void on_open_clicked();
+    void on_sketch_clicked();
     void on_wt_toggled(bool checked);
     void on_color_toggled(bool checked);
     void on_shape_toggled(bool checked);
@@ -54,6 +55,7 @@ signals:
     void penWidthDecrease();
     void open();
     void save();
+    void sketch();
     void print();
     void undo();
     void redo();

@@ -46,6 +46,7 @@ private slots:
 public slots:
     void openContent();
     void saveContent();
+    void openSketch();
 };
 
 #endif // MAINWINDOW_H
