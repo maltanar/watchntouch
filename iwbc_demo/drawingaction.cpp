@@ -11,7 +11,7 @@ DrawingAction::DrawingAction(DrawingData *scene, QUndoCommand *parent) :
 void DrawingAction::undo()
 {
     QPainter p(parentScene->getStage());
-    p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    p.setCompositionMode(QPainter::CompositionMode_Source);
     p.drawPixmap(undoRect.topLeft(),prevPixmap);
     p.end();
     parentScene->update();
