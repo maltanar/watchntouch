@@ -3,6 +3,8 @@
 
 #include <QDateTime>
 #include <QMessageBox>
+#include <QFile>
+#include <QFileDialog>
 
 Screencasting::Screencasting(QObject *parent) :
     QObject(parent)
@@ -46,6 +48,9 @@ void Screencasting::processStateChanged(QProcess::ProcessState newState)
 
 void Screencasting::stopScreencasting()
 {
+    qint64 finalFileSize = 0;
+    QString baseMsg = "A screencast of %2 %1 has been recorded. Would you like to keep this file?";
+    QMessageBox msg;
     if(m_isRunning) {
         // wait three seconds before termination to make sure the latest
         // events are also recorded
@@ -53,7 +58,39 @@ void Screencasting::stopScreencasting()
         sleep(3);
         // TODO find a better way to stop the recording
         m_backendProcess.terminate();
-        // TODO IMPORTANT report status and ask if user wants to save the output
+        QFile outputFile(m_targetFileName);
+        if(!outputFile.exists()) {
+            // TODO file does not exist, report error!
+        } else {
+            // calculate file size in kilobytes
+            finalFileSize = outputFile.size() / 1024;
+            // if file is > 1024 KB convert to megabytes
+            if(finalFileSize > 1024) {
+                finalFileSize = finalFileSize / 1024;
+                baseMsg = baseMsg.arg("MB");
+            } else
+                baseMsg = baseMsg.arg("KB");
+            // insert the file size into the message
+            baseMsg = baseMsg.arg(finalFileSize);
+            // set up the messagebox
+            msg.setText(baseMsg);
+            msg.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+            msg.setDefaultButton(QMessageBox::Yes);
+            if(msg.exec() == QMessageBox::Yes) {
+                // ask the user for the saving location
+                QString path = QFileDialog::getExistingDirectory(0, "Select a directory to save screencast");
+                if(path != "") {
+                    QFileInfo fi(outputFile);
+                    outputFile.copy(path + "/" + fi.fileName());
+                    msg.setText("Screencast saved to \n" + path + "/" + fi.fileName());
+                    msg.setStandardButtons(QMessageBox::Ok);
+                    msg.exec();
+                    // the old copy will be removed after we fall through the if block
+                }
+            }
+            // remove copy of file in the local dir
+            outputFile.remove();
+        }
     }
 }
 
