@@ -157,32 +157,6 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="sketch">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>0</y>
-        <width>51</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Sketch</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="scrnshot">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>0</y>
-        <width>51</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Scrnsht</string>
-      </property>
-     </widget>
     </widget>
    </item>
    <item>

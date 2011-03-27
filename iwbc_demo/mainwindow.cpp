@@ -96,13 +96,19 @@ void MainWindow::openContent()
         // no content selected, do nothing
         return;
 
-    // TODO check content type before loading?
-    // TODO the code below won't apply once we have fit to height/width options
-    // set desired image size to a bit smaller than the scroll area size
-    display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
-    display->selectContent(csel.getSelectedContent());
-    groupBox->resize(display->getContentSize());
-    draw->raise();
+    if(csel.getSelectedContent() == "$screenshot$") {
+        openScreenshot();
+    } else if (csel.getSelectedContent() == "$newsketch$") {
+        openSketch();
+    } else {
+        // TODO check content type before loading?
+        // TODO the code below won't apply once we have fit to height/width options
+        // set desired image size to a bit smaller than the scroll area size
+        display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
+        display->selectContent(csel.getSelectedContent());
+        groupBox->resize(display->getContentSize());
+        draw->raise();
+    }
 }
 
 void MainWindow::openSketch()

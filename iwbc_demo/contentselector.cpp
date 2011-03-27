@@ -119,3 +119,18 @@ void ContentSelector::openGoogleDoc(QString googleDocId)
     else
         displayErrorMessage("Could not open the Google document with the specified ID: \n" + googleDocId);
 }
+
+void ContentSelector::on_newSketch_clicked()
+{
+    selectContent("$newsketch$");
+}
+
+void ContentSelector::on_openSketch_clicked()
+{
+
+}
+
+void ContentSelector::on_takeScreenshot_clicked()
+{
+    selectContent("$screenshot$");
+}
