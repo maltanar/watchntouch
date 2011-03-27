@@ -30,9 +30,9 @@ void ContextMenu::on_close_clicked()
 
 void ContextMenu::on_penwidth_toggled(bool checked)
 {
+    hideSubmenus();
     ui->penWidthBox->setVisible(checked);
     if(checked) {
-        hideSubmenus();
         openedGroup = ui->penwidth;
         resizeToMin();
     }
@@ -40,9 +40,9 @@ void ContextMenu::on_penwidth_toggled(bool checked)
 
 void ContextMenu::on_shape_toggled(bool checked)
 {
+    hideSubmenus();
     ui->shapeBox->setVisible(checked);
     if(checked) {
-        hideSubmenus();
         openedGroup = ui->shape;
         resizeToMin();
     }
@@ -50,9 +50,9 @@ void ContextMenu::on_shape_toggled(bool checked)
 
 void ContextMenu::on_color_toggled(bool checked)
 {
+    hideSubmenus();
     ui->colorBox->setVisible(checked);
     if(checked) {
-        hideSubmenus();
         openedGroup = ui->color;
         resizeToMin();
     }
@@ -60,9 +60,9 @@ void ContextMenu::on_color_toggled(bool checked)
 
 void ContextMenu::on_wt_toggled(bool checked)
 {
+    hideSubmenus();
     ui->wtBox->setVisible(checked);
     if(checked) {
-        hideSubmenus();
         openedGroup = ui->wt;
         resizeToMin();
     }
