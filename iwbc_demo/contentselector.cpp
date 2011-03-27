@@ -117,6 +117,5 @@ void ContentSelector::openGoogleDoc(QString googleDocId)
     if(googleDocsAccess->downloadPresentation(googleDocId, targetFileName, "pdf"))
         selectContent(targetFileName);
     else
-        // TODO display error message
-        ;
+        displayErrorMessage("Could not open the Google document with the specified ID: \n" + googleDocId);
 }

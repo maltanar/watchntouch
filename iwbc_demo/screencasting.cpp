@@ -24,14 +24,12 @@ void Screencasting::startScreencasting()
 {
     if(!m_isRunning) {
         m_commandLine = m_baseCommandLine.replace("{TARGET_FILE}", m_targetFileName);
-        qWarning() << "starting" << m_commandLine;
-        // TODO show info about starting screencast
         m_backendProcess.start(m_commandLine);
         m_backendProcess.waitForStarted();
 
         if(m_backendProcess.state() == QProcess::NotRunning) {
             // we have a problem
-            // TODO log error
+            displayErrorMessage("Could not start specified screencasting backend");
             return;
         }
 
@@ -41,7 +39,7 @@ void Screencasting::startScreencasting()
 
 void Screencasting::processStateChanged(QProcess::ProcessState newState)
 {
-    qWarning() << "backend process has a new state:" << newState;
+    // qWarning() << "backend process has a new state:" << newState;
     // TODO IMPORTANT do state change monitoring thingies here
 }
 
@@ -60,7 +58,8 @@ void Screencasting::stopScreencasting()
         m_backendProcess.terminate();
         QFile outputFile(m_targetFileName);
         if(!outputFile.exists()) {
-            // TODO file does not exist, report error!
+            displayErrorMessage("An error occured while obtaining the recorded screencast");
+            return;
         } else {
             // calculate file size in kilobytes
             finalFileSize = outputFile.size() / 1024;
@@ -82,9 +81,7 @@ void Screencasting::stopScreencasting()
                 if(path != "") {
                     QFileInfo fi(outputFile);
                     outputFile.copy(path + "/" + fi.fileName());
-                    msg.setText("Screencast saved to \n" + path + "/" + fi.fileName());
-                    msg.setStandardButtons(QMessageBox::Ok);
-                    msg.exec();
+                    displayInfoMessage("Screencast saved to \n" + path + "/" + fi.fileName());
                     // the old copy will be removed after we fall through the if block
                 }
             }

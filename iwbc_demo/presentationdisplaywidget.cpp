@@ -52,7 +52,7 @@ bool PresentationDisplayWidget::selectContent(QString location)
     } else if(location.endsWith("scrn")) {
         return loadScreenShot();
     } else {
-        // TODO display error - unsupported presentation format
+        displayErrorMessage("Unsupported presentation format!");
         return false;
     }
 
@@ -102,6 +102,10 @@ QString PresentationDisplayWidget::convertToPDF(QString inputFile)
         QProcess p;
         // TODO display error message if python or DocumentConverter.py does not exist
         p.start("python", args);
+        if(p.state() == QProcess::NotRunning) {
+            displayErrorMessage("Error while trying to convert document to PDF");
+            return "";
+        }
         // TODO display some sort of progress message
         p.waitForFinished(-1);
 
@@ -109,10 +113,7 @@ QString PresentationDisplayWidget::convertToPDF(QString inputFile)
 
         if(output.trimmed() != "") {
             // some error occured during the conversion
-            // display error message
-            QMessageBox errMsg;
-            errMsg.setText("An error occured while trying to open this file:\n"+output.trimmed());
-            errMsg.show();
+            displayErrorMessage("An error occured while trying to convert this file:\n"+output.trimmed());
             return "";
         } else {
             // the conversion was successful

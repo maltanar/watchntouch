@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QApplication>
+#include <QMessageBox>
 
 typedef enum _ContentType {
     CONTENTTYPE_UNDEFINED,
@@ -65,6 +66,9 @@ typedef enum _DrawingState {
     DRAWINGSTATE_UPDATE,
     DRAWINGSTATE_END
 } DrawingState;
+
+void displayErrorMessage(QString messageText, QString messageTitle = "Error");
+void displayInfoMessage(QString messageText, QString messageTitle = "Information");
 
 
 #endif // APPGLOBALS_H

@@ -51,7 +51,6 @@ void DrawingData::registerAction(QPicture actions)
         boundingRect.setY(height());
     // backup the area to be painted, to be used for undo'ing later
     QPixmap areaToChange = stage->copy(boundingRect);
-    areaToChange.save("undo.png");
     // set the properties of this drawing step for undo/redo
     currentAction->setActions(actions);
     currentAction->setPrevPixmap(areaToChange, boundingRect);
