@@ -46,4 +46,7 @@
         <file>resources/accept.png</file>
         <file>resources/record.png</file>
     </qresource>
+    <qresource prefix="/tools">
+        <file alias="DocumentConverter.py">tools/DocumentConverter.py</file>
+    </qresource>
 </RCC>

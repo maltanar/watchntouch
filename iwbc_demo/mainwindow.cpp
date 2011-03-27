@@ -189,7 +189,14 @@ void MainWindow::initGlobals()
     createAppSubdir(CACHE_DIR);
     // create the tools directory
     createAppSubdir(TOOLS_DIR);
-
+    // extract the document converter script
+    if(!QFile::exists(DOC_CONVERTER_PATH)) {
+        QFile docConverter(DOC_CONVERTER_RES);
+        docConverter.open(QFile::ReadOnly);
+        docConverter.copy(DOC_CONVERTER_PATH);
+        docConverter.close();
+    }
+    // create the globally used classes
     recentlyUsed = new RecentlyUsed();
     googleDocsAccess = new GoogleDocsAccess();
     eventGenerator = new EventGenerator();

@@ -95,7 +95,7 @@ QString PresentationDisplayWidget::convertToPDF(QString inputFile)
         // target PDF file does not exist, we didn't convert this before or removed
         // it from the cache, so now we have to convert again
         QStringList args;
-        args.append(TOOLS_DIR + "/DocumentConverter.py");
+        args.append(DOC_CONVERTER_PATH);
         args.append(inputFile);
         args.append(targetFile);
 
