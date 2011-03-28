@@ -6,7 +6,7 @@
 #include "appglobals.h"
 
 CalibrationWindow::CalibrationWindow(QWidget *parent) :
-    QDialog(parent, Qt::FramelessWindowHint),
+    QMainWindow(parent),
     ui(new Ui::CalibrationWindow)
 {
     // UI
@@ -180,7 +180,7 @@ bool CalibrationWindow::event(QEvent *event)
     if(event->type() == QEvent::Resize)
         repositionItems();
 
-    return QDialog::event(event);
+    return QMainWindow::event(event);
 }
 
 void CalibrationWindow::calibrationPointReceived(QPoint p)
