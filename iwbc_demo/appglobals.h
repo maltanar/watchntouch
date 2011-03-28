@@ -2,9 +2,8 @@
 #define APPGLOBALS_H
 
 #include <QDebug>
-#include <QDesktopWidget>
-#include <QApplication>
-#include <QMessageBox>
+#include <recentlyused.h>
+#include <googledocsaccess.h>
 
 typedef enum _ContentType {
     CONTENTTYPE_UNDEFINED,
@@ -13,42 +12,21 @@ typedef enum _ContentType {
     CONTENTTYPE_WEBPAGE
 } ContentType;
 
-// W&T specific directories
-#define CONFIG_DIR              qApp->applicationDirPath() + "/" + QString("configuration")
-#define CACHE_DIR               qApp->applicationDirPath() + "/" + QString("cache")
-#define TOOLS_DIR               qApp->applicationDirPath() + "/" + QString("tools")
+#define CONFIG_DIR              QString("configuration")
+#define CACHE_DIR               QString("cache")
 
-#define ANNOTATION_DIR          qApp->applicationDirPath() + "/" + QString("annotations")
-#define IMAGE_DIR               qApp->applicationDirPath() + "/" + QString("images");   // for rendered images.
-#define SKETCH_DIR              qApp->applicationDirPath() + "/" + QString("sketch");   // for sketch.
-#define SCREENSHOT_DIR          qApp->applicationDirPath() + "/" + QString("screenshot");   // for sketch.
-
-// constants and/or shortcuts
-#define SCREEN_WIDTH            qApp->desktop()->width()
-#define SCREEN_HEIGHT           qApp->desktop()->height()
-
-#define ERASER_SIZE             5
-
-#define MOUSE_PRESSED   0
-#define MOUSE_MOVE      1
-#define MOUSE_RELEASED  2
-
-#define ANNOTATION_PREFIX       QString("annotation_")
-#define ANNOTATION_EXTENSION    QString(".wta")
-
-#define DOC_CONVERTER_FNAME     QString("DocumentConverter.py")
-#define DOC_CONVERTER_PATH      TOOLS_DIR + QString("/") + DOC_CONVERTER_FNAME
-#define DOC_CONVERTER_RES       QString(":/tools/") + DOC_CONVERTER_FNAME
+#define ANNOTATION_DIRECTORY    "annotations"
+#define ANNOTATION_PREFIX       "annotation_"
+#define ANNOTATION_EXTENSION    ".wta"
 
 #define NUM_RECENT_ITEMS        5
 #define RECENT_ITEMS_STORAGE    CONFIG_DIR + QString("/recent.txt")
 
 extern class RecentlyUsed *recentlyUsed;
 extern class GoogleDocsAccess *googleDocsAccess;
-extern class EventGenerator *eventGenerator;
 
 // define the default tools for drawing
-#define DEFAULT_DRAWING_PEN     QPen(QBrush(Qt::black, Qt::SolidPattern), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
+#define DEFAULT_DRAWING_PEN     QPen(Qt::black)
 #define DEFAULT_DRAWING_BRUSH   QBrush(Qt::transparent, Qt::SolidPattern)
 #define DEFAULT_ERASER          QPen(Qt::red)
 
@@ -66,9 +44,6 @@ typedef enum _DrawingState {
     DRAWINGSTATE_UPDATE,
     DRAWINGSTATE_END
 } DrawingState;
-
-void displayErrorMessage(QString messageText, QString messageTitle = "Error");
-void displayInfoMessage(QString messageText, QString messageTitle = "Information");
 
 
 #endif // APPGLOBALS_H

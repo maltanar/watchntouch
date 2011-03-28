@@ -2,13 +2,11 @@
 
 #include <QFile>
 
-#include "appglobals.h"
-
 RecentlyUsed::RecentlyUsed() :
     QStringList()
 {
     capacity = NUM_RECENT_ITEMS;
-    itemStorageFileName = QString(RECENT_ITEMS_STORAGE);
+    itemStorageFileName = qApp->applicationDirPath() + "/" + QString(RECENT_ITEMS_STORAGE);
 
     readFromStorage();
 }

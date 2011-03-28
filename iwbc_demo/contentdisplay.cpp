@@ -2,8 +2,6 @@
 #include <QCryptographicHash>
 #include <QFile>
 
-#include "appglobals.h"
-
 ContentDisplay::ContentDisplay(QWidget *parent) :
     QLabel(parent)
 {
@@ -21,11 +19,6 @@ QSize ContentDisplay::getContentSize()
     return contentSize;
 }
 
-void ContentDisplay::setContentSize(QSize newSize)
-{
-    contentSize = newSize;
-}
-
 void ContentDisplay::generateContentIdentifier()
 {
     contentMD5 = generateFileMD5(contentLocation);
@@ -35,7 +28,7 @@ QString ContentDisplay::generateFileMD5(QString fileName)
 {
     QFile contentFile(fileName);
     if(!contentFile.open(QFile::ReadOnly)) {
-        displayErrorMessage("Could not open content file: \n" + fileName);
+        // TODO log error
         return QString("");
     }
     QString hashData(QCryptographicHash::hash(contentFile.readAll(), QCryptographicHash::Md5).toHex().constData());

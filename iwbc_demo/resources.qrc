@@ -44,9 +44,5 @@
         <file>resources/next.png</file>
         <file>resources/prev.png</file>
         <file>resources/accept.png</file>
-        <file>resources/record.png</file>
-    </qresource>
-    <qresource prefix="/tools">
-        <file alias="DocumentConverter.py">tools/DocumentConverter.py</file>
     </qresource>
 </RCC>

@@ -4,8 +4,6 @@
 #include <QVBoxLayout>
 #include <QFileDialog>
 
-#include "googledocsaccess.h"
-
 ContentSelector::ContentSelector(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ContentSelector)
@@ -66,7 +64,7 @@ QString ContentSelector::getSelectedContent()
 void ContentSelector::on_browseButton_clicked()
 {
     // TODO what to do for filters for a generic case?
-    QString fileName = QFileDialog::getOpenFileName(this, "Select content", "","Presentation files (*.pdf *.ppt *.odp)");
+    QString fileName = QFileDialog::getOpenFileName(this, "Select content", "","PDF files (*.pdf)");
     selectContent(fileName);
 }
 
@@ -113,24 +111,10 @@ void ContentSelector::on_openGDoc_clicked()
 
 void ContentSelector::openGoogleDoc(QString googleDocId)
 {
-    QString targetFileName =  CACHE_DIR + "/" + googleDocId + ".pdf";
+    QString targetFileName =  qApp->applicationDirPath() + "/" +CACHE_DIR + "/" + googleDocId + ".pdf";
     if(googleDocsAccess->downloadPresentation(googleDocId, targetFileName, "pdf"))
         selectContent(targetFileName);
     else
-        displayErrorMessage("Could not open the Google document with the specified ID: \n" + googleDocId);
-}
-
-void ContentSelector::on_newSketch_clicked()
-{
-    selectContent("$newsketch$");
-}
-
-void ContentSelector::on_openSketch_clicked()
-{
-
-}
-
-void ContentSelector::on_takeScreenshot_clicked()
-{
-    selectContent("$screenshot$");
+        // TODO display error message
+        ;
 }

@@ -1,29 +1,16 @@
 #include "presentationdisplaywidget.h"
-#include "loadrenderedimagestofiles.h"
 
 #include <QDebug>
-#include <QProcess>
-#include <QFileInfo>
-#include <QMessageBox>
-#include <cmath>
-#include <QImageReader>
-
-#include "recentlyused.h"
 
 PresentationDisplayWidget::PresentationDisplayWidget(QWidget *parent) :
     ContentDisplay(parent)
-{    
+{
     currentSlide = 0;
     slideCount = 0;
     scaleFactor = 1.0;
-    index = 0;
     contentType = CONTENTTYPE_PRESENTATION;
 
     doc = NULL;
-
-    first = true;
-
-    QObject::connect(&loader,SIGNAL(imagesAreReady()),&c,SLOT(imagesAreReady()));
 }
 
 PresentationDisplayWidget::~PresentationDisplayWidget()
@@ -41,86 +28,18 @@ bool PresentationDisplayWidget::selectContent(QString location)
     // TODO the identification-conversion functionality should reside in PresentationLoader
     // so the code below is only temporary, it'll move into other classes
 
-    qWarning() << "PresentationDisplayWidget::selectContent requested to open" << location;
-
     if(location.endsWith(".pdf")) {
         return loadPDF(location);
     } else if(location.endsWith(".odp")) {
-        return loadPDF(convertToPDF(location));
+        // TODO handle ODP loading
     } else if(location.endsWith(".ppt")) {
-        return loadPDF(convertToPDF(location));
-    } else if(location.endsWith("scrn")) {
-        return loadScreenShot();
+        // TODO handle PPT loading
     } else {
-        displayErrorMessage("Unsupported presentation format!");
+        // TODO display error - unsupported presentation format
         return false;
     }
 
     return false;
-}
-
-bool PresentationDisplayWidget::loadScreenShot()
-{
-    QString path = SCREENSHOT_DIR;
-    path.append("/screenshot.png");
-    QImage pageImage;
-    QImageReader reader(path,"png");
-    reader.read(&pageImage);
-    pageImage = pageImage.scaled(getDesiredSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-    setContentSize(pageImage.size());
-    setPixmap(QPixmap::fromImage(pageImage));
-
-    emit contextChanged(getContentContext());
-}
-
-QString PresentationDisplayWidget::convertToPDF(QString inputFile)
-{
-    // try to convert the given file to PDF
-    QFileInfo f(inputFile);
-    QString inputFileChecksum = ContentDisplay::generateFileMD5(inputFile);
-    QString targetFile = CACHE_DIR + "/" + f.baseName() + "_" + inputFileChecksum + ".pdf";
-
-
-    // TODO check if OpenOffice exists first!
-    // TODO should we do this restart every time?
-    // start the OpenOffice.org server
-    QProcess openOfficeService;
-    openOfficeService.start("soffice -invisible -accept=\"socket,port=8100;urp;\"");
-
-    qWarning() << "target filename for conversion: " << targetFile;
-
-
-    if(!QFile(targetFile).exists()) {
-        // target PDF file does not exist, we didn't convert this before or removed
-        // it from the cache, so now we have to convert again
-        QStringList args;
-        args.append(DOC_CONVERTER_PATH);
-        args.append(inputFile);
-        args.append(targetFile);
-
-        QProcess p;
-        // TODO display error message if python or DocumentConverter.py does not exist
-        p.start("python", args);
-        if(p.state() == QProcess::NotRunning) {
-            displayErrorMessage("Error while trying to convert document to PDF");
-            return "";
-        }
-        // TODO display some sort of progress message
-        p.waitForFinished(-1);
-
-        QString output = p.readAllStandardOutput() + " " + p.readAllStandardError();
-
-        if(output.trimmed() != "") {
-            // some error occured during the conversion
-            displayErrorMessage("An error occured while trying to convert this file:\n"+output.trimmed());
-            return "";
-        } else {
-            // the conversion was successful
-            return targetFile;
-        }
-    } else
-        return targetFile; // converted file already exists
 }
 
 bool PresentationDisplayWidget::loadPDF(QString fileName)
@@ -128,15 +47,8 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
     // TODO this function will move to PresentationLoader
     Poppler::Document *oldDocument = doc;
 
-    if(fileName == "")
-        return false;
-
-    doc = Poppler::Document::load(fileName);    
+    doc = Poppler::Document::load(fileName);
     if (doc) {
-        loader.fileName = c.fileName = fileName;
-        first = true;
-        c.areImagesReady = false;
-
         delete oldDocument;
         contentLocation = fileName;
         generateContentIdentifier();
@@ -150,8 +62,7 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
         doc->setRenderHint(Poppler::Document::Antialiasing);
         doc->setRenderHint(Poppler::Document::TextAntialiasing);
         currentSlide = 0;
-        loader.slideCount = c.slideCount = slideCount = doc->numPages();
-        loader.start();
+        slideCount = doc->numPages();
         gotoSlide(1);
     }
     return doc != 0;
@@ -172,89 +83,23 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
     if(slideNo == currentSlide)
         return;
 
-    qWarning() << "---------- SLIDE NO " << slideNo << " ---------------";
-
-    // TODO retrieve page from PresentationLoader instead
-    // TODO fit to width / height options while rendering need consideration,
-
-    bool isInCash = false;
-    for(int i = -3 ; i < 4; i++) {
-        if(index + i == slideNo)
-            isInCash = true;
-    }
-
     QImage pageImage;
 
-    if(first) {
-        qWarning() << "ilk girdi";
-        first = false;
-        pageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
-                                                               scaleFactor * QLabel::physicalDpiY());
-        pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    // TODO retrieve page from PresentationLoader instead
+    // TODO fit to width / height options while rendering need consideration
 
-        contentSize = pageImage.size();
+    pageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
+                                                    scaleFactor * QLabel::physicalDpiY());
 
-        setPixmap(QPixmap::fromImage(pageImage));
+    pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-        // TODO do error checking
-        currentSlide = slideNo;
-        emit contextChanged(getContentContext());
+    contentSize = pageImage.size();
 
-        // change cash accordingly
-        c.currentSlideNo = index = slideNo;
-        c.start();
-        qWarning() << "ilk cikti";
+    setPixmap(QPixmap::fromImage(pageImage));
 
-    }
-    else {
-        if(!c.isRunning()) {
-            qWarning() << "c run etmiyor girdi";
-
-            if(isInCash) {
-                qWarning() << "cash ten aldi " << slideNo;
-                pageImage = c.cash[3 + slideNo - index];
-            }
-            else {
-                qWarning() << "tekrar yuklenecek";
-                pageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
-                                                                       scaleFactor * QLabel::physicalDpiY());
-                // change cash accordingly
-                c.currentSlideNo = index = slideNo;
-                c.start();
-            }
-
-            pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-            contentSize = pageImage.size();
-
-            setPixmap(QPixmap::fromImage(pageImage));
-
-            // TODO do error checking
-            currentSlide = slideNo;
-            emit contextChanged(getContentContext());
-
-            qWarning() << "c run etmiyor cikti";
-
-        }
-        else {
-            qWarning() << "c run ediyor girdi";
-
-            pageImage = doc->page(slideNo-1)->renderToImage(120,120);
-
-            pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-            contentSize = pageImage.size();
-
-            setPixmap(QPixmap::fromImage(pageImage));
-
-            // TODO do error checking
-            currentSlide = slideNo;
-            emit contextChanged(getContentContext());
-
-            qWarning() << "c run ediyor cikti";
-        }
-    }
-
+    // TODO do error checking
+    currentSlide = slideNo;
+    emit contextChanged(getContentContext());
 }
 
 void PresentationDisplayWidget::generateContentIdentifier()

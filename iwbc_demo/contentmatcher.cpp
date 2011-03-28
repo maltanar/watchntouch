@@ -3,13 +3,11 @@
 #include <QDir>
 #include <QApplication>
 
-#include "appglobals.h"
-
 ContentMatcher::ContentMatcher()
 {
-    annotationDirPath = ANNOTATION_DIR;
-    annotationPrefix = ANNOTATION_PREFIX;
-    annotationExtension = ANNOTATION_EXTENSION;
+    annotationDirPath = qApp->applicationDirPath() + "/" + QString(ANNOTATION_DIRECTORY);
+    annotationPrefix = QString(ANNOTATION_PREFIX);
+    annotationExtension = QString(ANNOTATION_EXTENSION);
 
     QDir annotationDir(annotationDirPath);
     // check if annotations directory exists

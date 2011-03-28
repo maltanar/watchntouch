@@ -2,28 +2,21 @@
 #define DRAWINGACTION_H
 
 #include <QUndoCommand>
-#include <QPixmap>
-#include <QPicture>
-#include <QRect>
-
-#include "drawingdata.h"
-
-class DrawingData;
+#include <QGraphicsScene>
+#include <QGraphicsItem>
+#include <QList>
 
 class DrawingAction : public QUndoCommand
 {
 public:
-    explicit DrawingAction(DrawingData *scene, QUndoCommand *parent = 0);
-    void setActions(QPicture actions);
-    void setPrevPixmap(QPixmap prev, QRect rect);
+    explicit DrawingAction(QGraphicsScene *scene, QUndoCommand *parent = 0);
+    void addDrawingStep(QGraphicsItem *newItem);
     void undo();
     void redo();
 
 private:
-    DrawingData * parentScene;
-    QPicture drawingActions;
-    QPixmap prevPixmap;
-    QRect undoRect;
+    QGraphicsScene * parentScene;
+    QList<QGraphicsItem *> steps;
 
 signals:
 

@@ -1,10 +1,9 @@
 #ifndef CONTEXTMENU_H
 #define CONTEXTMENU_H
 
-#include "appglobals.h"
 #include <QWidget>
 #include <QPushButton>
-
+#include "appglobals.h"
 
 namespace Ui {
     class ContextMenu;
@@ -41,8 +40,6 @@ private slots:
     void on_print_clicked();
     void on_save_clicked();
     void on_open_clicked();
-    void on_sketch_clicked();
-    void on_scrnshot_clicked();
     void on_wt_toggled(bool checked);
     void on_color_toggled(bool checked);
     void on_shape_toggled(bool checked);
@@ -56,8 +53,6 @@ signals:
     void penWidthDecrease();
     void open();
     void save();
-    void sketch();
-    void screenshot();
     void print();
     void undo();
     void redo();

@@ -195,23 +195,3 @@ bool QjtMouseGestureFilter::mouseMoveEvent( QObject *obj, QMouseEvent *event )
     else
         return false;
 }
-
-void QjtMouseGestureFilter::gestureStart(QPoint pt)
-{
-    qWarning() << "gestureStart" << pt;
-    d->mgr.startGesture( pt.x(), pt.y() );
-    d->tracing = true;
-}
-
-void QjtMouseGestureFilter::gestureMove(QPoint pt)
-{
-    qWarning() << "gestureMove" << pt;
-    d->mgr.addPoint( pt.x(), pt.y() );
-}
-
-void QjtMouseGestureFilter::gestureEnd(QPoint pt)
-{
-    qWarning() << "gestureEnd" << pt;
-    d->mgr.endGesture( pt.x(), pt.y() );
-    d->tracing = false;
-}

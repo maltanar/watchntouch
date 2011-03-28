@@ -17,7 +17,9 @@ InputCalibration::InputCalibration()
     isCalibrated = false;
 
     pointCounter = 0;
-    sampleCounterForCurrentPoint = 0;    
+    sampleCounterForCurrentPoint = 0;
+    smoothCounter = 0;
+    full = false;
 }
 
 // specify a new set of calibration points
@@ -40,7 +42,7 @@ bool InputCalibration::calibrated()
 }
 
 // get the existing calibration points
-QPointF * InputCalibration::getCalibrationPoints()
+QPoint * InputCalibration::getCalibrationPoints()
 {
     return calibrationPoints;
 }
@@ -84,48 +86,121 @@ void InputCalibration::addCalibrationSample(QPoint newPoint)
     if(pointCounter == NUM_CALIBRATION_POINTS) {
         // we have all the calibration points we need
 
+        // calculate new x-y coordinates average width and height, use them in the linear transformation. CAUTION! coming x's are y's for us, and y's are x's!
+        calibratedHeight = (sqrt((calibrationPoints[0].x() - calibrationPoints[1].x())*(calibrationPoints[0].x() - calibrationPoints[1].x()) + (calibrationPoints[0].y() - calibrationPoints[1].y())*(calibrationPoints[0].y() - calibrationPoints[1].y()))
+                            + sqrt((calibrationPoints[3].x() - calibrationPoints[2].x())*(calibrationPoints[3].x() - calibrationPoints[2].x()) + (calibrationPoints[3].y() - calibrationPoints[2].y())*(calibrationPoints[3].y() - calibrationPoints[2].y()))) / 2;
+        calibratedWidth =  (sqrt((calibrationPoints[0].x() - calibrationPoints[3].x())*(calibrationPoints[0].x() - calibrationPoints[3].x()) + (calibrationPoints[0].y() - calibrationPoints[3].y())*(calibrationPoints[0].y() - calibrationPoints[3].y()))
+                            + sqrt((calibrationPoints[1].x() - calibrationPoints[2].x())*(calibrationPoints[1].x() - calibrationPoints[2].x()) + (calibrationPoints[1].y() - calibrationPoints[2].y())*(calibrationPoints[1].y() - calibrationPoints[2].y()))) / 2 ;
+
         emit calibrationComplete();
 
         isCalibrated = true;
         pointCounter = 0;
-
-        QTransform t;
-        QPolygonF one(4);
-        QPolygonF two(4);
-
-        one.clear();
-        two.clear();
-
-        // state the polygons that are to be transformed - from one ---> two
-        one << calibrationPoints[0] << calibrationPoints[1] << calibrationPoints[2] << calibrationPoints[3];
-        two << QPointF(0.0,0.0) << QPointF(screenWidth,0.0) << QPointF(screenWidth,screenHeight) <<  QPointF(0.0,screenHeight);        
-
-        // set transformation affine
-        transform.toAffine();
-        bool wtf = t.quadToQuad(one,two,transform);
-        qWarning() << "TRANSFORM operation is " << wtf;
-
     }
 }
+
+double InputCalibration::getCalibratedDistance(QPoint p1, QPoint p2, QPoint p3) {
+
+    double m,n,distance1,distance2;
+    int x = p3.x();
+    int y = p3.y();
+
+    // line of points 0 and 3, y = mx + n
+
+    m = (p1.y() - p2.y()) / (p1.x() - p2.x());
+    n = p1.y() - m * p1.x();
+
+    // distance btwn x,y to the found line. ax + by + c / sqrt(a*a + b*b); here we have y = mx + n --> mx + n - y = 0;
+
+    distance1 =  abs( (m * x + (-1) * y + n) ) / sqrt(m * m + 1);
+
+    distance2 = sqrt( (p1.x() - x)*(p1.x() - x) + (p1.y() - y)*(p1.y() - y) );
+
+    return sqrt(distance2*distance2 - distance1*distance1);
+
+}
+
 
 // map from Wiimote coordinates to screen coordinates
 // according to current calibration information
 QPoint InputCalibration::mapFromWiimoteToScreen(QPoint inputPoint)
 {
     // if calibration was not performed, return the same point
-
+    // TODO transformation ı duzelt, sadece ust ve sag kenar degil dort kenari da kullanır hale getir.
+    // TODO Utku: mouse release olunca bu smoothPoints'in sifirlanmasi lazim, yoksa arayi da dolduruyor
+    // TODO Utku: kagidin kenarlari ekranin kenarlarina denk gelmiyor, nedendir?
     if(!isCalibrated)
         return inputPoint;
 
-    qreal x = inputPoint.x();
-    qreal y = inputPoint.y();
+    int x = inputPoint.x();
+    int y = inputPoint.y();
 
-    qreal newx,newy;
-    transform.map(x,y,&newx,&newy);
+    /*if(smoothCounter < 10 && !full) {
+        smoothPoints[smoothCounter] = QPoint(x,y);
+        smoothCounter++;
+        for(int i = 0 ; i < smoothCounter ; i++) {
+            x += smoothPoints[i].x();
+            y += smoothPoints[i].y();
+        }
 
-    //qWarning() << "GELEN: " << x << y << " GIDEN " << newx << newy;
+        x /= smoothCounter;
+        y /= smoothCounter;
+    }
+    if(smoothCounter < 10 && full) {
+        smoothPoints[smoothCounter] = QPoint(x,y);
+        smoothCounter++;
 
-    return QPoint(newx,newy);
+        for(int i = 0 ; i < 10 ; i++) {
+            x += smoothPoints[i].x();
+            y += smoothPoints[i].y();
+        }
+
+        x /= 10;
+        y /= 10;
+    }
+    else if(smoothCounter >= 10){
+        full = true;
+        smoothCounter = 0;
+
+        smoothPoints[smoothCounter] = QPoint(x,y);
+        smoothCounter++;
+        for(int i = 0 ; i < 10 ; i++) {
+            x += smoothPoints[i].x();
+            y += smoothPoints[i].y();
+        }
+
+        x /= 10;
+        y /= 10;
+    }*/
+
+    //printf("gelen point %d %d\n",x,y);
+
+    double calibratedDistWidthLeft,calibratedDistWidthRight;
+    double calibratedDistHeightUp,calibratedDistHeightDown;
+    double calibratedDistWidth,calibratedDistHeight;
+
+    calibratedDistWidthLeft = getCalibratedDistance(QPoint(calibrationPoints[0]),QPoint(calibrationPoints[3]),QPoint(x,y));
+    calibratedDistWidthRight = getCalibratedDistance(QPoint(calibrationPoints[1]),QPoint(calibrationPoints[2]),QPoint(x,y));
+
+    calibratedDistWidth = (calibratedDistWidthLeft + calibratedDistWidthRight) / 2;
+
+    calibratedDistHeightUp = getCalibratedDistance(QPoint(calibrationPoints[0]),QPoint(calibrationPoints[1]),QPoint(x,y));
+    calibratedDistHeightDown = getCalibratedDistance(QPoint(calibrationPoints[3]),QPoint(calibrationPoints[2]),QPoint(x,y));
+
+    calibratedDistHeight = (calibratedDistHeightUp + calibratedDistHeightDown) / 2;
+
+    //m = (calibrationPoints[0].x() + calibrationPoints[1].x()) / 2.0 - x;
+    //n = y - (calibrationPoints[0].y() + calibrationPoints[3].y()) / 2.0;
+
+    x = (calibratedDistHeight/calibratedHeight) * screenWidth;
+    y = (calibratedDistWidth/calibratedWidth) * screenHeight;
+
+
+    //printf("giden point %d %d\n",x,y);
+    //x = ((x - calibrationPoints[3].x()) * screenWidth)  / (double)(calibrationPoints[2].x() - calibrationPoints[3].x()) ;
+    //y = (((y - calibrationPoints[0].y() )* screenHeight) / (double)( calibrationPoints[3].y() - calibrationPoints[0].y())) ;
+
+    return QPoint(x,y-(screenHeight/2));
 }
 
 void InputCalibration::processWiimotePoint(QPoint inputPoint)

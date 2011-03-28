@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#include "appglobals.h"
+
 class ContentMatcher
 {
 public:

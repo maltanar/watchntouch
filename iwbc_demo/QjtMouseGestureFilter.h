@@ -77,11 +77,6 @@ public:
      */
     void clearGestures( bool deleteGestures = false );
 
-    // functions added for W&T gestures support
-    void gestureStart(QPoint pt);
-    void gestureMove(QPoint pt);
-    void gestureEnd(QPoint pt);
-
 protected:
     bool eventFilter( QObject *obj, QEvent *event );
 

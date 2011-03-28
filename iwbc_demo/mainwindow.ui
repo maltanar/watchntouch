@@ -27,7 +27,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>6</y>
+         <y>7</y>
          <width>555</width>
          <height>327</height>
         </rect>
@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>575</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
@@ -71,7 +71,6 @@
    </attribute>
    <addaction name="actionPrevious"/>
    <addaction name="actionNext"/>
-   <addaction name="actionScreencasting"/>
    <addaction name="actionExit"/>
   </widget>
   <action name="actionNext">
@@ -134,21 +133,6 @@
   <action name="actionFreehand">
    <property name="text">
     <string>Freehand</string>
-   </property>
-  </action>
-  <action name="actionScreencasting">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/resources/record.png</normaloff>:/images/resources/record.png</iconset>
-   </property>
-   <property name="text">
-    <string>Screencasting</string>
-   </property>
-   <property name="toolTip">
-    <string>Start / Stop Screencasting</string>
    </property>
   </action>
  </widget>

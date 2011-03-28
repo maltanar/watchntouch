@@ -3,7 +3,7 @@
 
 #include <QStringList>
 #include <QApplication>
-
+#include "appglobals.h"
 
 class RecentlyUsed : public QStringList
 {

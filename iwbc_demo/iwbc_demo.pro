@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml network
+QT       += core gui svg xml network
 
 TARGET = iwbc_demo
 TEMPLATE = app
@@ -33,12 +33,7 @@ SOURCES += main.cpp\
     contextmenu.cpp \
     QjtMouseGestureFilter.cpp \
     QjtMouseGesture.cpp \
-    mousegesturerecognizer.cpp \
-    renderedimagecash.cpp \
-    loadrenderedimagestofiles.cpp \
-    eventgenerator.cpp \
-    screencasting.cpp \
-    screenshot.cpp
+    mousegesturerecognizer.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -60,18 +55,12 @@ HEADERS  += mainwindow.h \
     contextmenu.h \
     QjtMouseGestureFilter.h \
     QjtMouseGesture.h \
-    mousegesturerecognizer.h \
-    renderedimagecash.h \
-    loadrenderedimagestofiles.h \
-    eventgenerator.h \
-    screencasting.h \
-    screenshot.h
+    mousegesturerecognizer.h
 
 FORMS    += mainwindow.ui \
     contentselector.ui \
     calibrationwindow.ui \
-    contextmenu.ui \
-    screenshot.ui
+    contextmenu.ui
 
 RESOURCES += \
     resources.qrc

@@ -1,8 +1,6 @@
 #include "contextmenu.h"
 #include "ui_contextmenu.h"
 
-#include "appglobals.h"
-
 ContextMenu::ContextMenu(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ContextMenu)
@@ -30,9 +28,9 @@ void ContextMenu::on_close_clicked()
 
 void ContextMenu::on_penwidth_toggled(bool checked)
 {
-    hideSubmenus();
     ui->penWidthBox->setVisible(checked);
     if(checked) {
+        hideSubmenus();
         openedGroup = ui->penwidth;
         resizeToMin();
     }
@@ -40,9 +38,9 @@ void ContextMenu::on_penwidth_toggled(bool checked)
 
 void ContextMenu::on_shape_toggled(bool checked)
 {
-    hideSubmenus();
     ui->shapeBox->setVisible(checked);
     if(checked) {
+        hideSubmenus();
         openedGroup = ui->shape;
         resizeToMin();
     }
@@ -50,9 +48,9 @@ void ContextMenu::on_shape_toggled(bool checked)
 
 void ContextMenu::on_color_toggled(bool checked)
 {
-    hideSubmenus();
     ui->colorBox->setVisible(checked);
     if(checked) {
+        hideSubmenus();
         openedGroup = ui->color;
         resizeToMin();
     }
@@ -60,9 +58,9 @@ void ContextMenu::on_color_toggled(bool checked)
 
 void ContextMenu::on_wt_toggled(bool checked)
 {
-    hideSubmenus();
     ui->wtBox->setVisible(checked);
     if(checked) {
+        hideSubmenus();
         openedGroup = ui->wt;
         resizeToMin();
     }
@@ -91,16 +89,6 @@ void ContextMenu::on_open_clicked()
 void ContextMenu::on_save_clicked()
 {
     emit save();
-}
-
-void ContextMenu::on_sketch_clicked()
-{
-    emit sketch();
-}
-
-void ContextMenu::on_scrnshot_clicked()
-{
-    emit screenshot();
 }
 
 void ContextMenu::on_print_clicked()

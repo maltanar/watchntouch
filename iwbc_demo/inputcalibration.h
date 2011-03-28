@@ -11,7 +11,7 @@
 
 #include <QObject>
 #include <QPoint>
-#include <QTransform>
+
 
 #define NUM_CALIBRATION_POINTS      4
 #define NUM_SAMPLES_PER_POINT       1   // WARNING if this is >1 the threshold thing must be removed
@@ -25,7 +25,7 @@ class InputCalibration : public QObject
 public:
     InputCalibration();
     void setCalibrationPoints(QPoint *newPoints);
-    QPointF *getCalibrationPoints();
+    QPoint *getCalibrationPoints();
     void addCalibrationSample(QPoint newPoint);
     bool calibrated();
 
@@ -36,14 +36,18 @@ public:
     double getCalibratedDistance(QPoint p1, QPoint p2, QPoint p3);
 
 private:
-    QTransform transform;
-    QPointF calibrationPoints[NUM_CALIBRATION_POINTS];
+    QPoint calibrationPoints[NUM_CALIBRATION_POINTS];
     QPoint sampleAverage;
     QPoint prevSample;
     int screenWidth, screenHeight;
     bool isCalibrated;
     int sampleCounterForCurrentPoint;
-    int pointCounter;    
+    int pointCounter;
+    double calibratedWidth;
+    double calibratedHeight;
+    QPoint smoothPoints[10];
+    int smoothCounter;
+    bool full;
 
 signals:
     void calibrationPointReceived(QPoint p);

@@ -2,8 +2,7 @@
 #define PRESENTATIONDISPLAYWIDGET_H
 
 #include "contentdisplay.h"
-#include "renderedimagecash.h"
-#include "loadrenderedimagestofiles.h"
+#include <poppler-qt4.h>
 
 class PresentationDisplayWidget : public ContentDisplay
 {
@@ -19,18 +18,12 @@ public:
 private:
     int currentSlide;
     int slideCount;
-    int index;
     qreal scaleFactor;
-    RenderedImageCash c;
-    LoadRenderedImagesToFiles loader;
 
-    bool first;
     void generateContentIdentifier();
 
     Poppler::Document *doc;
     bool loadPDF(QString fileName);
-    bool loadScreenShot();
-    QString convertToPDF(QString inputFile);
 
 signals:
 

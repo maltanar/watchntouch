@@ -1,6 +1,6 @@
 #ifndef CONTENTSELECTOR_H
 #define CONTENTSELECTOR_H
-#include "appglobals.h"
+
 #include <QDialog>
 #include <QLabel>
 #include "recentlyused.h"
@@ -33,9 +33,6 @@ public slots:
     void recentItemClicked(QString url);
 
 private slots:
-    void on_takeScreenshot_clicked();
-    void on_openSketch_clicked();
-    void on_newSketch_clicked();
     void on_openGDoc_clicked();
     void on_login_clicked();
     void on_cancelButton_clicked();

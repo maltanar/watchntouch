@@ -5,10 +5,9 @@
 #include "presentationdisplaywidget.h"
 #include "annotationwidget.h"
 #include "contextmenu.h"
-#include "screencasting.h"
 
+#include "QjtMouseGestureFilter.h"
 #include "QjtMouseGesture.h"
-#include "screenshot.h"
 
 namespace Ui {
     class MainWindow;
@@ -28,10 +27,9 @@ private:
     AnnotationWidget *draw;
     QWidget *groupBox;
     ContextMenu *contextMenu;
+    QjtMouseGestureFilter *filter;
     QjtMouseGesture *g;
     DirectionList dl;
-    Screencasting sc;
-    Screenshot * scrnsht;
 
     void initGlobals();
     void deleteGlobals();
@@ -42,7 +40,6 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void on_actionScreencasting_triggered();
     void on_actionFreehand_triggered();
     void on_actionExit_triggered();
     void on_actionOpen_triggered();
@@ -51,9 +48,6 @@ private slots:
 public slots:
     void openContent();
     void saveContent();
-    void openSketch();
-    void openScreenshot();
-    void getScreenshot();
 };
 
 #endif // MAINWINDOW_H
