@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Go Back</string>
+   <string>Watch &amp; Touch</string>
   </property>
   <widget class="QPushButton" name="scrnshot">
    <property name="geometry">
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Go Back</string>
+    <string>Capture</string>
    </property>
   </widget>
  </widget>
