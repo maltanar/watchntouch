@@ -51,7 +51,8 @@ private slots:
 public slots:
     void openContent();
     void saveContent();
-    void openSketch();
+    void openNewSketch();
+    void openExistingSketch();
     void openScreenshot();
     void getScreenshot();
 };

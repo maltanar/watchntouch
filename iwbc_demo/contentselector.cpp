@@ -127,7 +127,7 @@ void ContentSelector::on_newSketch_clicked()
 
 void ContentSelector::on_openSketch_clicked()
 {
-
+    selectContent("$existingsketch$");
 }
 
 void ContentSelector::on_takeScreenshot_clicked()

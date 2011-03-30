@@ -63,6 +63,14 @@ bool PresentationDisplayWidget::loadScreenShot()
 {
     QString path = SCREENSHOT_DIR;
     path.append("/screenshot.png");
+    contentLocation = path;
+    generateContentIdentifier();
+    //contentSize = doc->page(0)->pageSize();
+    //contentTitle = "/screenshot.png";
+
+    //recentlyUsed->addRecentItem(contentTitle, path);
+    emit contentChanged(getContentIdentifier());
+
     QImage pageImage;
     QImageReader reader(path,"png");
     reader.read(&pageImage);

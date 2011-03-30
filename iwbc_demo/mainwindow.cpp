@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(contextMenu, SIGNAL(toolSelected(DrawingMode)), draw, SLOT(setDrawingMode(DrawingMode)));
     connect(contextMenu, SIGNAL(open()), this, SLOT(openContent()));
     connect(contextMenu, SIGNAL(save()), this, SLOT(saveContent()));
-    connect(contextMenu, SIGNAL(sketch()), this, SLOT(openSketch()));
+    //connect(contextMenu, SIGNAL(sketch()), this, SLOT(openNewSketch())); No need I guess ! - utku
     connect(contextMenu, SIGNAL(screenshot()), this, SLOT(openScreenshot()));
     connect(contextMenu, SIGNAL(colorSelected(QColor)), draw, SLOT(setDrawingColor(QColor)));
     connect(contextMenu, SIGNAL(penWidthIncrease()), draw, SLOT(increasePenWidth()));
@@ -99,8 +99,11 @@ void MainWindow::openContent()
     if(csel.getSelectedContent() == "$screenshot$") {
         openScreenshot();
     } else if (csel.getSelectedContent() == "$newsketch$") {
-        openSketch();
-    } else {
+        openNewSketch();
+    } else if (csel.getSelectedContent() == "$existingsketch$") {
+        openExistingSketch();
+    }
+    else {
         // TODO check content type before loading?
         // TODO the code below won't apply once we have fit to height/width options
         // set desired image size to a bit smaller than the scroll area size
@@ -111,7 +114,7 @@ void MainWindow::openContent()
     }
 }
 
-void MainWindow::openSketch()
+void MainWindow::openExistingSketch()
 {
     QString sketchDirPath = SKETCH_DIR;
     QDir sketchDir(sketchDirPath);
@@ -142,6 +145,37 @@ void MainWindow::openSketch()
     draw->raise();
 }
 
+void MainWindow::openNewSketch()
+{
+    QString sketchDirPath = SKETCH_DIR;
+    QDir sketchDir(sketchDirPath);
+    QString path;
+    path.append(sketchDirPath).append("/sketch.pdf");
+    if(!sketchDir.exists()) {
+        sketchDir.mkdir(sketchDirPath);
+    }
+    QFile sketch_file(path);
+    sketch_file.open(QIODevice::ReadWrite | QIODevice::Text);
+
+    QPrinter printer;
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(path);
+    printer.setFullPage(true);
+    printer.setOrientation(printer.Landscape);
+
+    QPainter painter;
+    if (! painter.begin(&printer)) { // failed to open file
+        qWarning("failed to open file, is it writable?");
+        return;
+    }
+    painter.end();
+
+    display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
+    display->selectContent(path);
+    groupBox->resize(display->getContentSize());
+    draw->raise();
+}
+
 void MainWindow::openScreenshot()
 {
     hide();
@@ -152,7 +186,7 @@ void MainWindow::openScreenshot()
 void MainWindow::getScreenshot()
 {
     scrnsht->hide();
-    usleep(5000);
+    usleep(5000);   // time for scrnsht window to be hided.
 
     QPixmap originalPixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
     showFullScreen();
