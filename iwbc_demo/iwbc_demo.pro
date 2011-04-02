@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     loadrenderedimagestofiles.cpp \
     eventgenerator.cpp \
     screencasting.cpp \
-    screenshot.cpp
+    screenshot.cpp \
+    sketchingwidget.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -65,7 +66,8 @@ HEADERS  += mainwindow.h \
     loadrenderedimagestofiles.h \
     eventgenerator.h \
     screencasting.h \
-    screenshot.h
+    screenshot.h \
+    sketchingwidget.h
 
 FORMS    += mainwindow.ui \
     contentselector.ui \

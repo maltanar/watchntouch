@@ -8,6 +8,7 @@
 #include <QPrinter>
 #include <QFile>
 #include <QPixmap>
+#include <QLabel>
 #include <QTimer>
 #include "contentselector.h"
 #include "googledocsaccess.h"
@@ -25,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    initGlobals();
+    initGlobals();           
 
     display = new PresentationDisplayWidget(this);
     draw = new AnnotationWidget(this);
@@ -34,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scrnsht->hide();
     contextMenu->hide();
 
-    groupBox = new QWidget(this);
+    groupBoxForPresentation = new QWidget(this);
 
     QStackedLayout *layout = new QStackedLayout();
 
@@ -43,9 +44,46 @@ MainWindow::MainWindow(QWidget *parent) :
     layout->setStackingMode(QStackedLayout::StackAll);
     layout->setAlignment(display, Qt::AlignHCenter);
     layout->setAlignment(draw, Qt::AlignHCenter);
-    groupBox->setLayout(layout);
 
-    ui->scrollArea->setWidget(groupBox);
+    groupBoxForPresentation->setLayout(layout);
+
+    /************** Sketching component init begins ***********************/
+
+    drawSketch = new SketchingWidget(this);
+    drawScreenshot = new SketchingWidget(this);
+    screenshotOrBlankImage = new QLabel(this);
+
+    groupBoxForSketching = new QWidget(this);
+    QStackedLayout *layoutForSketching = new QStackedLayout();
+
+    layoutForSketching->addWidget(drawSketch);
+    layoutForSketching->addWidget(drawScreenshot);
+    layoutForSketching->addWidget(screenshotOrBlankImage);
+    layoutForSketching->setStackingMode(QStackedLayout::StackAll);
+    layoutForSketching->setAlignment(drawSketch, Qt::AlignHCenter);
+    layoutForSketching->setAlignment(screenshotOrBlankImage, Qt::AlignHCenter);
+
+    groupBoxForSketching->setLayout(layoutForSketching);
+
+    /************** ends ***********************/
+
+    /************** Build the stack for sketch and presentation groupboxes ***********/
+
+    widgetStack = new QStackedWidget(this);
+
+    widgetStack->addWidget(groupBoxForPresentation);
+    widgetStack->addWidget(groupBoxForSketching);
+    widgetStack->setVisible(false);
+
+    widgetStack->setCurrentIndex(ANNOTATION_WIDGET);
+    ui->scrollArea->setWidget(widgetStack);
+
+    /************* ends ************************/
+
+    //connect(this,SIGNAL(contentChanged(QString)), drawSketch, SLOT(contentChanged(QString)));
+    //connect(this,SIGNAL(contextChanged(QString)), drawSketch, SLOT(contextChanged(QString)));
+    //connect(this,SIGNAL(contentChanged(QString)), drawScreenshot, SLOT(contentChanged(QString)));
+    //connect(this,SIGNAL(contextChanged(QString)), drawScreenshot, SLOT(contextChanged(QString)));
 
     connect(ui->actionNext, SIGNAL(triggered()), display, SLOT(gotoNextSlide()));
     connect(ui->actionPrevious, SIGNAL(triggered()), display, SLOT(gotoPrevSlide()));
@@ -53,7 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionUndo, SIGNAL(triggered()), draw->getDrawingData()->getUndoStack(),SLOT(undo()));
     connect(ui->actionRedo, SIGNAL(triggered()), draw->getDrawingData()->getUndoStack(),SLOT(redo()));
 
-    draw->attachToContentDisplay(display);
+    draw->attachToContentDisplay(display);  // TODO bunu bir presentation actıktan sonra yapmak lazım ?
     //draw->setStyleSheet("background: transparent");
 
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -64,11 +102,27 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(contextMenu, SIGNAL(open()), this, SLOT(openContent()));
     connect(contextMenu, SIGNAL(save()), this, SLOT(saveContent()));
     //connect(contextMenu, SIGNAL(sketch()), this, SLOT(openNewSketch())); No need I guess ! - utku
-    connect(contextMenu, SIGNAL(screenshot()), this, SLOT(openScreenshot()));
+    //connect(contextMenu, SIGNAL(screenshot()), this, SLOT(openScreenshot()));
     connect(contextMenu, SIGNAL(colorSelected(QColor)), draw, SLOT(setDrawingColor(QColor)));
     connect(contextMenu, SIGNAL(penWidthIncrease()), draw, SLOT(increasePenWidth()));
     connect(contextMenu, SIGNAL(penWidthDecrease()), draw, SLOT(decreasePenWidth()));
     connect(scrnsht,SIGNAL(goBack()),this,SLOT(getScreenshot()));
+
+    // ContextMenu bindings for SketchingWidget
+
+    connect(contextMenu, SIGNAL(undo()), drawSketch->getDrawingData()->getUndoStack(), SLOT(undo()));
+    connect(contextMenu, SIGNAL(redo()), drawSketch->getDrawingData()->getUndoStack(), SLOT(redo()));
+    connect(contextMenu, SIGNAL(toolSelected(DrawingMode)), drawSketch, SLOT(setDrawingMode(DrawingMode)));
+    connect(contextMenu, SIGNAL(colorSelected(QColor)), drawSketch, SLOT(setDrawingColor(QColor)));
+    connect(contextMenu, SIGNAL(penWidthIncrease()), drawSketch, SLOT(increasePenWidth()));
+    connect(contextMenu, SIGNAL(penWidthDecrease()), drawSketch, SLOT(decreasePenWidth()));
+
+    connect(contextMenu, SIGNAL(undo()), drawScreenshot->getDrawingData()->getUndoStack(), SLOT(undo()));
+    connect(contextMenu, SIGNAL(redo()), drawScreenshot->getDrawingData()->getUndoStack(), SLOT(redo()));
+    connect(contextMenu, SIGNAL(toolSelected(DrawingMode)), drawScreenshot, SLOT(setDrawingMode(DrawingMode)));
+    connect(contextMenu, SIGNAL(colorSelected(QColor)), drawScreenshot, SLOT(setDrawingColor(QColor)));
+    connect(contextMenu, SIGNAL(penWidthIncrease()), drawScreenshot, SLOT(increasePenWidth()));
+    connect(contextMenu, SIGNAL(penWidthDecrease()), drawScreenshot, SLOT(decreasePenWidth()));
 
     dl << Left;
     g = new QjtMouseGesture( dl, this);
@@ -80,7 +134,6 @@ MainWindow::MainWindow(QWidget *parent) :
     g = new QjtMouseGesture( dl, this );
     eventGenerator->addGesture( g );
     display->connect( g, SIGNAL(gestured()), SLOT(gotoNextSlide()) );
-
 }
 
 MainWindow::~MainWindow()
@@ -107,14 +160,87 @@ void MainWindow::openContent()
         // TODO check content type before loading?
         // TODO the code below won't apply once we have fit to height/width options
         // set desired image size to a bit smaller than the scroll area size
+        qWarning() << "pdf ac girdi";
+
+        widgetStack->setCurrentIndex(ANNOTATION_WIDGET);
+
         display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
         display->selectContent(csel.getSelectedContent());
-        groupBox->resize(display->getContentSize());
+        widgetStack->resize(display->getContentSize());
         draw->raise();
+
+        qWarning() << "pdf ac cikti";
     }
 }
 
 void MainWindow::openExistingSketch()
+{
+    QSize newSize = ui->scrollArea->size()-QSize(10,10);
+    QImage blankImage(newSize,QImage::Format_MonoLSB);
+    blankImage.fill(255);
+    blankImage = blankImage.scaled(newSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    screenshotOrBlankImage->setPixmap(QPixmap::fromImage(blankImage));
+
+    widgetStack->setCurrentIndex(SKETCHING_WIDGET);
+    widgetStack->resize(blankImage.size());
+
+    drawSketch->setVisible(true);
+    drawScreenshot->setVisible(false);
+    drawSketch->raise();
+}
+
+void MainWindow::openNewSketch()
+{
+    QSize newSize = ui->scrollArea->size()-QSize(10,10);
+    QImage blankImage(newSize,QImage::Format_MonoLSB);
+    blankImage.fill(255);
+    blankImage = blankImage.scaled(newSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    screenshotOrBlankImage->setPixmap(QPixmap::fromImage(blankImage));
+
+    drawSketch->getDrawingData()->clear();
+
+    widgetStack->setCurrentIndex(SKETCHING_WIDGET);
+    widgetStack->resize(blankImage.size());
+
+    drawSketch->setVisible(true);
+    drawScreenshot->setVisible(false);
+    drawSketch->raise();
+}
+
+void MainWindow::openScreenshot()
+{
+    hide();
+    scrnsht->show();
+}
+
+void MainWindow::getScreenshot()
+{
+    scrnsht->hide();
+    usleep(5000);   // time for scrnsht window to be hided.
+
+    QPixmap originalPixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
+    showFullScreen();
+
+    QImage screenshot = originalPixmap.toImage();
+    QSize newSize = ui->scrollArea->size()-QSize(10,10);
+    screenshot = screenshot.scaled(newSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    screenshotOrBlankImage->setPixmap(QPixmap::fromImage(screenshot));
+
+    drawScreenshot->getDrawingData()->clear();
+
+    widgetStack->setCurrentIndex(SKETCHING_WIDGET);
+    widgetStack->resize(screenshot.size());
+
+    drawSketch->setVisible(false);
+    drawScreenshot->setVisible(true);
+    drawScreenshot->raise();
+}
+
+/*
+void MainWindow::openExistingSketch_old()
 {
     QString sketchDirPath = SKETCH_DIR;
     QDir sketchDir(sketchDirPath);
@@ -141,11 +267,13 @@ void MainWindow::openExistingSketch()
     }
     display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
     display->selectContent(path);
-    groupBox->resize(display->getContentSize());
+    groupBoxForPresentation->resize(display->getContentSize());
     draw->raise();
 }
+*/
 
-void MainWindow::openNewSketch()
+/*
+void MainWindow::openNewSketch_old()
 {
     QString sketchDirPath = SKETCH_DIR;
     QDir sketchDir(sketchDirPath);
@@ -172,18 +300,13 @@ void MainWindow::openNewSketch()
 
     display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
     display->selectContent(path);
-    groupBox->resize(display->getContentSize());
+    groupBoxForPresentation->resize(display->getContentSize());
     draw->raise();
 }
+*/
 
-void MainWindow::openScreenshot()
-{
-    hide();
-    scrnsht->show();
-    //QTimer::singleShot(500, this, SLOT(getScreenshot()));
-}
-
-void MainWindow::getScreenshot()
+/*
+void MainWindow::getScreenshot_old()
 {
     scrnsht->hide();
     usleep(5000);   // time for scrnsht window to be hided.
@@ -203,13 +326,16 @@ void MainWindow::getScreenshot()
     if (!fileName.isEmpty())
        originalPixmap.save(fileName, format.toAscii());
 
-    display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
+    display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));    
+    //QImage pageImage = originalPixmap.toImage();
+    //pageImage = pageImage.scaled(display->getDesiredSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    //display->setPixmap(QPixmap::fromImage(pageImage));
     display->selectContent("screenshot.scrn");      // just to communicate internally, no such a file extension !
     groupBox->resize(display->getContentSize());
     draw->raise();
 
 }
-
+*/
 
 void MainWindow::saveContent()
 {

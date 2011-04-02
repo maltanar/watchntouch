@@ -13,8 +13,10 @@ AnnotationWidget::AnnotationWidget(QWidget *parent) :
 
 void AnnotationWidget::contentChanged(QString newContent)
 {
-    if(currentContent != "" && getDrawingData()->isModified())
+    if(currentContent != "" && getDrawingData()->isModified()) {
         getDrawingData()->saveImage(getCurrentAnnotation());
+        qWarning()<< "content change save girdi" << currentContent << currentContext;
+    }
 
     currentContent = newContent;    // set new content identifier
     currentSize = currentContentDisplay->getContentSize();  // set the content size
@@ -23,8 +25,10 @@ void AnnotationWidget::contentChanged(QString newContent)
 
 void AnnotationWidget::contextChanged(QString newContext)
 {
-    if(currentContent != "" && getDrawingData()->isModified())
+    if(currentContent != "" && getDrawingData()->isModified()) {
         getDrawingData()->saveImage(getCurrentAnnotation());
+        qWarning()<< "context change save girdi" << currentContent << currentContext;
+    }
 
     currentContext = newContext;
 

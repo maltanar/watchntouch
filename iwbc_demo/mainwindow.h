@@ -2,7 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStackedWidget>
 #include "presentationdisplaywidget.h"
+#include "sketchingwidget.h"
 #include "annotationwidget.h"
 #include "contextmenu.h"
 #include "screencasting.h"
@@ -25,8 +27,14 @@ public:
 private:
     Ui::MainWindow *ui;
     PresentationDisplayWidget *display;
+    SketchingWidget *drawSketch;
+    SketchingWidget *drawScreenshot;
     AnnotationWidget *draw;
-    QWidget *groupBox;
+    QWidget *groupBoxForPresentation;
+    QStackedWidget *widgetStack;
+    QWidget *groupBoxForSketching;
+    QLabel *screenshotOrBlankImage;
+
     ContextMenu *contextMenu;
     QjtMouseGesture *g;
     DirectionList dl;
@@ -55,6 +63,10 @@ public slots:
     void openExistingSketch();
     void openScreenshot();
     void getScreenshot();
+
+signals:
+    void contentChanged(QString newContent);
+    void contextChanged(QString newContext);
 };
 
 #endif // MAINWINDOW_H

@@ -49,7 +49,7 @@ bool PresentationDisplayWidget::selectContent(QString location)
         return loadPDF(convertToPDF(location));
     } else if(location.endsWith(".ppt")) {
         return loadPDF(convertToPDF(location));
-    } else if(location.endsWith("scrn")) {
+    } else if(location.endsWith(".scrn")) {
         return loadScreenShot();
     } else {
         displayErrorMessage("Unsupported presentation format!");
@@ -59,6 +59,7 @@ bool PresentationDisplayWidget::selectContent(QString location)
     return false;
 }
 
+// TODO delete this function
 bool PresentationDisplayWidget::loadScreenShot()
 {
     QString path = SCREENSHOT_DIR;
@@ -81,6 +82,7 @@ bool PresentationDisplayWidget::loadScreenShot()
 
     emit contextChanged(getContentContext());
 }
+
 
 QString PresentationDisplayWidget::convertToPDF(QString inputFile)
 {
