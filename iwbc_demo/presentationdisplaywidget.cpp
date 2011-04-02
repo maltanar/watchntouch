@@ -49,8 +49,6 @@ bool PresentationDisplayWidget::selectContent(QString location)
         return loadPDF(convertToPDF(location));
     } else if(location.endsWith(".ppt")) {
         return loadPDF(convertToPDF(location));
-    } else if(location.endsWith(".scrn")) {
-        return loadScreenShot();
     } else {
         displayErrorMessage("Unsupported presentation format!");
         return false;
@@ -58,31 +56,6 @@ bool PresentationDisplayWidget::selectContent(QString location)
 
     return false;
 }
-
-// TODO delete this function
-bool PresentationDisplayWidget::loadScreenShot()
-{
-    QString path = SCREENSHOT_DIR;
-    path.append("/screenshot.png");
-    contentLocation = path;
-    generateContentIdentifier();
-    //contentSize = doc->page(0)->pageSize();
-    //contentTitle = "/screenshot.png";
-
-    //recentlyUsed->addRecentItem(contentTitle, path);
-    emit contentChanged(getContentIdentifier());
-
-    QImage pageImage;
-    QImageReader reader(path,"png");
-    reader.read(&pageImage);
-    pageImage = pageImage.scaled(getDesiredSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-    setContentSize(pageImage.size());
-    setPixmap(QPixmap::fromImage(pageImage));
-
-    emit contextChanged(getContentContext());
-}
-
 
 QString PresentationDisplayWidget::convertToPDF(QString inputFile)
 {
