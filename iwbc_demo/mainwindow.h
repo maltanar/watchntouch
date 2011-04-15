@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <Phonon>
 #include "presentationdisplaywidget.h"
 #include "sketchingwidget.h"
 #include "annotationwidget.h"
@@ -16,6 +17,8 @@ namespace Ui {
     class MainWindow;
 }
 
+using namespace Phonon;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -27,6 +30,7 @@ public:
 private:
     Ui::MainWindow *ui;
     PresentationDisplayWidget *display;
+    VideoPlayer *videoPlayer;
     SketchingWidget *drawSketch;
     SketchingWidget *drawScreenshot;
     AnnotationWidget *draw;

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml network
+QT       += core gui xml network phonon
 
 TARGET = iwbc_demo
 TEMPLATE = app

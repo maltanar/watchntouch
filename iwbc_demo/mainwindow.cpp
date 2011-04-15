@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     initGlobals();           
 
     display = new PresentationDisplayWidget(this);
+    videoPlayer = new VideoPlayer(Phonon::VideoCategory, this);
     draw = new AnnotationWidget(this);
     contextMenu = new ContextMenu(this);
     scrnsht = new Screenshot(this);
@@ -41,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     layout->addWidget(display);
     layout->addWidget(draw);
+    layout->addWidget(videoPlayer);
     layout->setStackingMode(QStackedLayout::StackAll);
     layout->setAlignment(display, Qt::AlignHCenter);
     layout->setAlignment(draw, Qt::AlignHCenter);
@@ -91,7 +93,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionUndo, SIGNAL(triggered()), draw->getDrawingData()->getUndoStack(),SLOT(undo()));
     connect(ui->actionRedo, SIGNAL(triggered()), draw->getDrawingData()->getUndoStack(),SLOT(redo()));
 
-    draw->attachToContentDisplay(display);  // TODO bunu bir presentation actıktan sonra yapmak lazım ?
     //draw->setStyleSheet("background: transparent");
 
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -144,32 +145,52 @@ MainWindow::~MainWindow()
 
 void MainWindow::openContent()
 {
+    QString selectedContent;
     ContentSelector csel;
     if(csel.exec() != QDialog::Accepted)
         // no content selected, do nothing
         return;
 
-    if(csel.getSelectedContent() == "$screenshot$") {
+    selectedContent = csel.getSelectedContent();
+
+    if(selectedContent == "$screenshot$") {
         openScreenshot();
-    } else if (csel.getSelectedContent() == "$newsketch$") {
+    } else if (selectedContent == "$newsketch$") {
         openNewSketch();
-    } else if (csel.getSelectedContent() == "$existingsketch$") {
+    } else if (selectedContent == "$existingsketch$") {
         openExistingSketch();
     }
     else {
         // TODO check content type before loading?
         // TODO the code below won't apply once we have fit to height/width options
         // set desired image size to a bit smaller than the scroll area size
-        qWarning() << "pdf ac girdi";
+        if(selectedContent.endsWith("pdf") || selectedContent.endsWith("ppt") || selectedContent.endsWith("odp") ) {
+            qWarning() << "pdf ac girdi";
+            videoPlayer->hide();
+            display->show();
 
-        widgetStack->setCurrentIndex(ANNOTATION_WIDGET);
+            widgetStack->setCurrentIndex(ANNOTATION_WIDGET);
 
-        display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
-        display->selectContent(csel.getSelectedContent());
-        widgetStack->resize(display->getContentSize());
-        draw->raise();
+            display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
+            draw->attachToContentDisplay(display);  // TODO bunu bir presentation actıktan sonra yapmak lazım ?
+            display->selectContent(csel.getSelectedContent());
+            widgetStack->resize(display->getContentSize());
+            draw->raise();
 
-        qWarning() << "pdf ac cikti";
+            qWarning() << "pdf ac cikti";
+        } else if(selectedContent.endsWith("mp4") || selectedContent.endsWith("avi")) {
+            videoPlayer->show();
+            display->hide();
+
+            videoPlayer->resize(ui->scrollArea->size()-QSize(10,10));
+            widgetStack->setCurrentIndex(ANNOTATION_WIDGET);
+            videoPlayer->load(QUrl(selectedContent));
+            widgetStack->resize(videoPlayer->size());
+            //draw->raise();
+            videoPlayer->raise();
+            videoPlayer->play();
+
+        }
     }
 }
 

@@ -47,6 +47,9 @@ QString AnnotationWidget::getCurrentAnnotation()
 
 void AnnotationWidget::attachToContentDisplay(ContentDisplay *display)
 {
+    if(currentContentDisplay == display)
+        return;
+
     if(currentContentDisplay) {
         // remove the connections to the old widget
         disconnect(currentContentDisplay,SIGNAL(contentChanged(QString)), this, SLOT(contentChanged(QString)));
