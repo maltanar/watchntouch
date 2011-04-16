@@ -4,14 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml network phonon
+QT       += core gui xml network
 
 TARGET = iwbc_demo
 TEMPLATE = app
 
 INCLUDEPATH  += /usr/include/poppler/qt4
 
-LIBS         += -L/usr/lib -lpoppler-qt4 -lwiiuse -lX11 -lXtst -lXext -Wall -pipe -fPIC -funroll-loops
+LIBS         += -L/usr/lib -lpoppler-qt4 -lwiiuse -lX11 -lXtst -lXext -Wall -pipe -fPIC -funroll-loops -lvlc
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -39,7 +39,9 @@ SOURCES += main.cpp\
     eventgenerator.cpp \
     screencasting.cpp \
     screenshot.cpp \
-    sketchingwidget.cpp
+    sketchingwidget.cpp \
+    videounderlay.cpp \
+    videocontrolpanel.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -67,13 +69,17 @@ HEADERS  += mainwindow.h \
     eventgenerator.h \
     screencasting.h \
     screenshot.h \
-    sketchingwidget.h
+    sketchingwidget.h \
+    videounderlay.h \
+    videocontrolpanel.h
+
 
 FORMS    += mainwindow.ui \
     contentselector.ui \
     calibrationwindow.ui \
     contextmenu.ui \
-    screenshot.ui
+    screenshot.ui \
+    videocontrolpanel.ui
 
 RESOURCES += \
     resources.qrc

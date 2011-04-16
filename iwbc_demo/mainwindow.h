@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
-#include <Phonon>
 #include "presentationdisplaywidget.h"
 #include "sketchingwidget.h"
 #include "annotationwidget.h"
@@ -13,11 +12,13 @@
 #include "QjtMouseGesture.h"
 #include "screenshot.h"
 
+#include "videounderlay.h"
+#include "videocontrolpanel.h"
+
 namespace Ui {
     class MainWindow;
 }
 
-using namespace Phonon;
 
 class MainWindow : public QMainWindow
 {
@@ -30,14 +31,22 @@ public:
 private:
     Ui::MainWindow *ui;
     PresentationDisplayWidget *display;
-    VideoPlayer *videoPlayer;
+
     SketchingWidget *drawSketch;
     SketchingWidget *drawScreenshot;
     AnnotationWidget *draw;
+
     QWidget *groupBoxForPresentation;
     QStackedWidget *widgetStack;
     QWidget *groupBoxForSketching;
+
     QLabel *screenshotOrBlankImage;
+
+    QWidget *groupBoxForVideo;
+    QWidget *videoCanvas;
+    AnnotationWidget *videoDraw;
+    VideoUnderlay *videoPlayer;
+    VideoControlPanel *videoPanel;
 
     ContextMenu *contextMenu;
     QjtMouseGesture *g;

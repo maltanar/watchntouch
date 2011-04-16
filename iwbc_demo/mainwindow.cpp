@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
     initGlobals();           
 
     display = new PresentationDisplayWidget(this);
-    videoPlayer = new VideoPlayer(Phonon::VideoCategory, this);
     draw = new AnnotationWidget(this);
     contextMenu = new ContextMenu(this);
     scrnsht = new Screenshot(this);
@@ -42,12 +41,44 @@ MainWindow::MainWindow(QWidget *parent) :
 
     layout->addWidget(display);
     layout->addWidget(draw);
-    layout->addWidget(videoPlayer);
     layout->setStackingMode(QStackedLayout::StackAll);
     layout->setAlignment(display, Qt::AlignHCenter);
     layout->setAlignment(draw, Qt::AlignHCenter);
 
     groupBoxForPresentation->setLayout(layout);
+
+    // video playing and annotation components *********************
+    groupBoxForVideo = new QWidget(this);
+    videoCanvas = new QWidget(this);
+
+    videoPlayer = new VideoUnderlay(videoCanvas);
+    videoDraw = new AnnotationWidget(videoCanvas);
+
+    videoPanel = new VideoControlPanel(groupBoxForVideo);
+
+    QStackedLayout *layoutForCanvas = new QStackedLayout();
+    layoutForCanvas->addWidget(videoPlayer);
+    layoutForCanvas->addWidget(videoDraw);
+    layoutForCanvas->setStackingMode(QStackedLayout::StackAll);
+    layoutForCanvas->setAlignment(display, Qt::AlignHCenter);
+    layoutForCanvas->setAlignment(draw, Qt::AlignHCenter);
+
+    videoCanvas->setLayout(layoutForCanvas);
+
+    QVBoxLayout *layoutForVideo = new QVBoxLayout();
+    layoutForVideo->addWidget(videoCanvas);
+    layoutForVideo->addWidget(videoPanel);
+
+    groupBoxForVideo->setLayout(layoutForVideo);
+
+    // TODO fix video group resize issues
+
+    connect(videoPanel, SIGNAL(playClicked()), videoPlayer, SLOT(play()));
+    connect(videoPanel, SIGNAL(pauseClicked()), videoPlayer, SLOT(pause()));
+    connect(videoPanel, SIGNAL(stopClicked()), videoPlayer, SLOT(stop()));
+
+    // video playing and annotation components *********************
+
 
     /************** Sketching component init begins ***********************/
 
@@ -75,10 +106,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     widgetStack->addWidget(groupBoxForPresentation);
     widgetStack->addWidget(groupBoxForSketching);
-    widgetStack->setVisible(false);
+    widgetStack->addWidget(groupBoxForVideo);
 
-    widgetStack->setCurrentIndex(ANNOTATION_WIDGET);
     ui->scrollArea->setWidget(widgetStack);
+    widgetStack->setVisible(false);
 
     /************* ends ************************/
 
@@ -151,6 +182,7 @@ void MainWindow::openContent()
         // no content selected, do nothing
         return;
 
+    widgetStack->setVisible(true);
     selectedContent = csel.getSelectedContent();
 
     if(selectedContent == "$screenshot$") {
@@ -166,10 +198,8 @@ void MainWindow::openContent()
         // set desired image size to a bit smaller than the scroll area size
         if(selectedContent.endsWith("pdf") || selectedContent.endsWith("ppt") || selectedContent.endsWith("odp") ) {
             qWarning() << "pdf ac girdi";
-            videoPlayer->hide();
-            display->show();
 
-            widgetStack->setCurrentIndex(ANNOTATION_WIDGET);
+            widgetStack->setCurrentIndex(PRESENTATION_ANNOTATION);
 
             display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
             draw->attachToContentDisplay(display);  // TODO bunu bir presentation actıktan sonra yapmak lazım ?
@@ -179,16 +209,15 @@ void MainWindow::openContent()
 
             qWarning() << "pdf ac cikti";
         } else if(selectedContent.endsWith("mp4") || selectedContent.endsWith("avi")) {
-            videoPlayer->show();
-            display->hide();
+
+            widgetStack->setCurrentIndex(VIDEO_ANNOTATION);
 
             videoPlayer->resize(ui->scrollArea->size()-QSize(10,10));
-            widgetStack->setCurrentIndex(ANNOTATION_WIDGET);
-            videoPlayer->load(QUrl(selectedContent));
-            widgetStack->resize(videoPlayer->size());
-            //draw->raise();
+            videoPlayer->loadMedia(selectedContent);
             videoPlayer->raise();
-            videoPlayer->play();
+            videoDraw->raise();
+            widgetStack->resize(groupBoxForVideo->size());
+
 
         }
     }

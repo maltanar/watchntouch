@@ -14,8 +14,9 @@ typedef enum _ContentType {
 } ContentType;
 
 //W&T Drawing groups, this numbers directly depend on the order they have been put into the widgetStack vairable. See mainwindow.cpp, constructor.
-#define ANNOTATION_WIDGET 0
+#define PRESENTATION_ANNOTATION 0
 #define SKETCHING_WIDGET 1
+#define VIDEO_ANNOTATION 2
 
 // W&T specific directories
 #define CONFIG_DIR              qApp->applicationDirPath() + "/" + QString("configuration")
