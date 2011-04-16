@@ -54,6 +54,7 @@ public:
 
     bool selectContent(QString location);
     QString getContentContext();
+    void generateContentIdentifier();
 
 public slots:
     void play();
@@ -68,6 +69,7 @@ private:
     void                    initVLC();
     bool                    catchException();
     void                    unloadVideo();
+    void                    handleTimelineChange();
 
     // GUI
     QLabel*                 video;
@@ -84,9 +86,11 @@ private:
     libvlc_media_t*         m_vlcMedia;
     libvlc_media_player_t*  m_vlcMediaplayer;
 
+    int                     m_prevTimelineContext;
+
 signals:
     void                    frameReady( struct ctx* );
-    void timelineUpdate(float pos);
+    void                    timelineUpdate(float pos);
 };
 
 struct ctx

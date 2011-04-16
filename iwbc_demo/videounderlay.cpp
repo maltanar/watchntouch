@@ -25,6 +25,8 @@
 VideoUnderlay::VideoUnderlay( QWidget* parent )
         : ContentDisplay( parent )
 {
+    m_prevTimelineContext = -1;
+
     // We do not support video resizing
     setFixedSize( 640, 480 );
 
@@ -84,7 +86,7 @@ float VideoUnderlay::getMediaPosition()
     float pos = 0.0f;
 
     if(m_vlcMedia) {
-        pos = libvlc_media_player_get_position (m_vlcMediaplayer, &m_ex);
+        pos = libvlc_media_player_get_time(m_vlcMediaplayer, &m_ex);
     }
 
     return pos;
@@ -97,7 +99,7 @@ void VideoUnderlay::initVLC()
     // the the VLC command line.
     char const* vlc_argv[] =
     {
-        "--verbose", "3",
+        "--verbose", "1",
         // Edit this line if libvlc can't locate your plugins directory
         //"--plugin-path", "/path/to/vlc",
     };
@@ -198,6 +200,11 @@ bool VideoUnderlay::loadMedia(QString videoFileName)
     // Put the media into the mediaplayer
     libvlc_media_player_set_media( m_vlcMediaplayer, m_vlcMedia, &m_ex );
     catchException();
+
+    // generate the content identifier
+    generateContentIdentifier();
+    // emit the content changed signal
+    emit contentChanged(getContentIdentifier());
 }
 
 void VideoUnderlay::play()
@@ -268,8 +275,7 @@ void VideoUnderlay::processNewFrame( struct ctx* ctx )
     // Releasing the mutex for the upcoming frame.
     ctx->mutex->unlock();
 
-    // emit the timeline update signal
-    emit timelineUpdate(getMediaPosition());
+    handleTimelineChange();
 }
 
 bool VideoUnderlay::catchException()
@@ -297,5 +303,23 @@ bool VideoUnderlay::selectContent(QString location)
 
 QString VideoUnderlay::getContentContext()
 {
-    return QString::number(getMediaPosition()) + "_0";
+    return QString::number(m_prevTimelineContext) + "_0";
+}
+
+void VideoUnderlay::generateContentIdentifier()
+{
+    contentMD5 = ContentDisplay::generateFileMD5(mrl);
+}
+
+void VideoUnderlay::handleTimelineChange()
+{
+    emit timelineUpdate(getMediaPosition());
+
+    int currentTimelineContext = getMediaPosition() / 1000;
+
+    // if context has changed, update the context info and emit signal
+    if(currentTimelineContext != m_prevTimelineContext) {
+        m_prevTimelineContext = currentTimelineContext;
+        emit contextChanged(getContentContext());
+    }
 }

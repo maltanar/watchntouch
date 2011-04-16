@@ -66,7 +66,7 @@ QString ContentSelector::getSelectedContent()
 void ContentSelector::on_browseButton_clicked()
 {
     // TODO what to do for filters for a generic case?
-    QString fileName = QFileDialog::getOpenFileName(this, "Select content", "","Supported files (*.pdf *.ppt *.odp *.mp4 *.avi)");
+    QString fileName = QFileDialog::getOpenFileName(this, "Select content", "","Supported files (*.pdf *.ppt *.odp *.mp4 *.avi *.flv)");
     selectContent(fileName);
 }
 

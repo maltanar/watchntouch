@@ -73,9 +73,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // TODO fix video group resize issues
 
+    // connect signals and slots for video
+
     connect(videoPanel, SIGNAL(playClicked()), videoPlayer, SLOT(play()));
     connect(videoPanel, SIGNAL(pauseClicked()), videoPlayer, SLOT(pause()));
     connect(videoPanel, SIGNAL(stopClicked()), videoPlayer, SLOT(stop()));
+
+    //connect(videoPlayer, SIGNAL(contentChanged(QString)), videoDraw, SLOT(contentChanged(QString)));
+    //connect(videoPlayer, SIGNAL(contextChanged(QString)), videoDraw, SLOT(contextChanged(QString)));
 
     // video playing and annotation components *********************
 
@@ -156,6 +161,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(contextMenu, SIGNAL(penWidthIncrease()), drawScreenshot, SLOT(increasePenWidth()));
     connect(contextMenu, SIGNAL(penWidthDecrease()), drawScreenshot, SLOT(decreasePenWidth()));
 
+    // ContextMenu bindings for video annotation
+
+    connect(contextMenu, SIGNAL(undo()), videoDraw->getDrawingData()->getUndoStack(), SLOT(undo()));
+    connect(contextMenu, SIGNAL(redo()), videoDraw->getDrawingData()->getUndoStack(), SLOT(redo()));
+    connect(contextMenu, SIGNAL(toolSelected(DrawingMode)), videoDraw, SLOT(setDrawingMode(DrawingMode)));
+    connect(contextMenu, SIGNAL(colorSelected(QColor)), videoDraw, SLOT(setDrawingColor(QColor)));
+    connect(contextMenu, SIGNAL(penWidthIncrease()), videoDraw, SLOT(increasePenWidth()));
+    connect(contextMenu, SIGNAL(penWidthDecrease()), videoDraw, SLOT(decreasePenWidth()));
+
+    connect(contextMenu, SIGNAL(undo()), drawScreenshot->getDrawingData()->getUndoStack(), SLOT(undo()));
+    connect(contextMenu, SIGNAL(redo()), drawScreenshot->getDrawingData()->getUndoStack(), SLOT(redo()));
+    connect(contextMenu, SIGNAL(toolSelected(DrawingMode)), drawScreenshot, SLOT(setDrawingMode(DrawingMode)));
+    connect(contextMenu, SIGNAL(colorSelected(QColor)), drawScreenshot, SLOT(setDrawingColor(QColor)));
+    connect(contextMenu, SIGNAL(penWidthIncrease()), drawScreenshot, SLOT(increasePenWidth()));
+    connect(contextMenu, SIGNAL(penWidthDecrease()), drawScreenshot, SLOT(decreasePenWidth()));
+
     dl << Left;
     g = new QjtMouseGesture( dl, this);
     eventGenerator->addGesture( g );
@@ -208,16 +229,16 @@ void MainWindow::openContent()
             draw->raise();
 
             qWarning() << "pdf ac cikti";
-        } else if(selectedContent.endsWith("mp4") || selectedContent.endsWith("avi")) {
+        } else if(selectedContent.endsWith("mp4") || selectedContent.endsWith("avi") || selectedContent.endsWith("flv")) {
 
             widgetStack->setCurrentIndex(VIDEO_ANNOTATION);
 
             videoPlayer->resize(ui->scrollArea->size()-QSize(10,10));
-            videoPlayer->loadMedia(selectedContent);
+            videoDraw->attachToContentDisplay(videoPlayer);
+            videoPlayer->selectContent(selectedContent);
             videoPlayer->raise();
             videoDraw->raise();
             widgetStack->resize(groupBoxForVideo->size());
-
 
         }
     }
