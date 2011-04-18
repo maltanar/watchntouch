@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml network
+QT       += core gui xml network webkit
 
 TARGET = iwbc_demo
 TEMPLATE = app
@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     screenshot.cpp \
     sketchingwidget.cpp \
     videounderlay.cpp \
-    videocontrolpanel.cpp
+    videocontrolpanel.cpp \
+    webpagedisplaywidget.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -71,7 +72,8 @@ HEADERS  += mainwindow.h \
     screenshot.h \
     sketchingwidget.h \
     videounderlay.h \
-    videocontrolpanel.h
+    videocontrolpanel.h \
+    webpagedisplaywidget.h
 
 
 FORMS    += mainwindow.ui \
