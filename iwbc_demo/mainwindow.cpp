@@ -77,7 +77,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(videoPanel, SIGNAL(playClicked()), videoPlayer, SLOT(play()));
     connect(videoPanel, SIGNAL(pauseClicked()), videoPlayer, SLOT(pause()));
-    connect(videoPanel, SIGNAL(stopClicked()), videoPlayer, SLOT(stop()));
 
     //connect(videoPlayer, SIGNAL(contentChanged(QString)), videoDraw, SLOT(contentChanged(QString)));
     //connect(videoPlayer, SIGNAL(contextChanged(QString)), videoDraw, SLOT(contextChanged(QString)));

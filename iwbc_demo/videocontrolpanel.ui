@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>552</width>
-    <height>95</height>
+    <height>96</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -41,13 +41,6 @@
        <widget class="QCommandLinkButton" name="pauseButton">
         <property name="text">
          <string>Pause</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCommandLinkButton" name="stopButton">
-        <property name="text">
-         <string>Stop</string>
         </property>
        </widget>
       </item>

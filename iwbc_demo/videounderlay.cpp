@@ -19,7 +19,7 @@
 
 #include <QDebug>
 #include "videounderlay.h"
-
+#include "recentlyused.h"
 // TODO release allocated VLC resources in destructor
 
 VideoUnderlay::VideoUnderlay( QWidget* parent )
@@ -123,7 +123,7 @@ void VideoUnderlay::initVLC()
 void VideoUnderlay::unloadVideo()
 {
     if(m_vlcMedia) {
-        stop();
+        pause();
         libvlc_media_release(m_vlcMedia);
         m_vlcMedia = NULL;
         mrl = "";
@@ -297,6 +297,10 @@ bool VideoUnderlay::catchException()
 bool VideoUnderlay::selectContent(QString location)
 {
     loadMedia(location);
+    // TODO add to recent list in a more proper way?
+    // TODO better way to determine video title?
+    QFileInfo f(location);
+    recentlyUsed->addRecentItem(f.fileName(), location);
     // TODO error handling - don't always return true
     return true;
 }
