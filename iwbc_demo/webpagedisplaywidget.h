@@ -23,6 +23,9 @@ signals:
 public slots:
     void loadWebPage(QUrl newLocation);
 
+private slots:
+    void webPageLoadFinished(bool ok);
+
 };
 
 #endif // WEBPAGEDISPLAYWIDGET_H

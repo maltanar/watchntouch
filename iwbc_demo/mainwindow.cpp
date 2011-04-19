@@ -198,6 +198,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(contextMenu, SIGNAL(penWidthIncrease()), videoDraw, SLOT(increasePenWidth()));
     connect(contextMenu, SIGNAL(penWidthDecrease()), videoDraw, SLOT(decreasePenWidth()));
 
+    // ContextMenu bindings for webpage annotation
+
+    connect(contextMenu, SIGNAL(undo()), webDraw->getDrawingData()->getUndoStack(), SLOT(undo()));
+    connect(contextMenu, SIGNAL(redo()), webDraw->getDrawingData()->getUndoStack(), SLOT(redo()));
+    connect(contextMenu, SIGNAL(toolSelected(DrawingMode)), webDraw, SLOT(setDrawingMode(DrawingMode)));
+    connect(contextMenu, SIGNAL(colorSelected(QColor)), webDraw, SLOT(setDrawingColor(QColor)));
+    connect(contextMenu, SIGNAL(penWidthIncrease()), webDraw, SLOT(increasePenWidth()));
+    connect(contextMenu, SIGNAL(penWidthDecrease()), webDraw, SLOT(decreasePenWidth()));
+
+    // Context menu bindings for screenshot
+
     connect(contextMenu, SIGNAL(undo()), drawScreenshot->getDrawingData()->getUndoStack(), SLOT(undo()));
     connect(contextMenu, SIGNAL(redo()), drawScreenshot->getDrawingData()->getUndoStack(), SLOT(redo()));
     connect(contextMenu, SIGNAL(toolSelected(DrawingMode)), drawScreenshot, SLOT(setDrawingMode(DrawingMode)));
