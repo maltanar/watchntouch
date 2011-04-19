@@ -244,6 +244,11 @@ void MainWindow::openContent()
 
     widgetStack->setVisible(true);
 
+    // TODO implement context saving when we switch from one content type to the other!
+    // e.g presentation -> another presentation saves the annotations, but presentation -> video
+    // just hides the presentation and doesn't save the changes that was made on the presentation
+    // it is still saved when we close the app but we shouldn't rely on that
+
     selectedContent = csel.getSelectedContent();
 
     if(selectedContent == "$screenshot$") {
@@ -252,6 +257,15 @@ void MainWindow::openContent()
         openNewSketch();
     } else if (selectedContent == "$existingsketch$") {
         openExistingSketch();
+    } else if (selectedContent == "$webpage$") {
+        // TODO move to own function
+        widgetStack->setCurrentIndex(WEBPAGE_ANNOTATION);
+        widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
+        groupBoxForWeb->resize(ui->scrollArea->size()-QSize(10,10));
+        webDraw->attachToContentDisplay(webDisplay);
+        //webDisplay->selectContent("");
+        webDisplay->raise();
+        webDraw->raise();
     }
     else {
         // TODO check content type before loading?
@@ -400,6 +414,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // TODO add save function to drawing
     // do an empty content change to save any modified items
     draw->contentChanged("");
+    videoDraw->contentChanged("");
+    webDraw->contentChanged("");
+    recentlyUsed->writeToStorage();
+    // TODO BUG recent items list is lost on closing the app?
     event->accept();
 }
 

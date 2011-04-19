@@ -134,3 +134,8 @@ void ContentSelector::on_takeScreenshot_clicked()
 {
     selectContent("$screenshot$");
 }
+
+void ContentSelector::on_webSiteButton_clicked()
+{
+    selectContent("$webpage$");
+}

@@ -44,9 +44,8 @@ void WebpageDisplayWidget::loadWebPage(QUrl newLocation)
 
 void WebpageDisplayWidget::webPageLoadFinished(bool ok)
 {
+    // TODO relay status signals from web view - load progress, URL changed, etc.
     if(ok) {
-        // hede hede
-        // TODO use webpage title in recent item identifier
         recentlyUsed->addRecentItem(mWebView->title(), mUrlString);
         generateContentIdentifier();
         emit contentChanged(getContentIdentifier());

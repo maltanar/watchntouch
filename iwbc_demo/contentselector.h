@@ -40,6 +40,7 @@ private slots:
     void on_login_clicked();
     void on_cancelButton_clicked();
     void on_browseButton_clicked();
+    void on_webSiteButton_clicked();
 };
 
 #endif // CONTENTSELECTOR_H
