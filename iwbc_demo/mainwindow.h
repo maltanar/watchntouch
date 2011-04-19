@@ -15,6 +15,9 @@
 #include "videounderlay.h"
 #include "videocontrolpanel.h"
 
+#include "webpagedisplaywidget.h"
+#include "webcontrolpanel.h"
+
 namespace Ui {
     class MainWindow;
 }
@@ -47,6 +50,12 @@ private:
     AnnotationWidget *videoDraw;
     VideoUnderlay *videoPlayer;
     VideoControlPanel *videoPanel;
+
+    QWidget *groupBoxForWeb;
+    QWidget *webCanvas;
+    AnnotationWidget *webDraw;
+    WebpageDisplayWidget *webDisplay;
+    WebControlPanel *webControlPanel;
 
     ContextMenu *contextMenu;
     QjtMouseGesture *g;

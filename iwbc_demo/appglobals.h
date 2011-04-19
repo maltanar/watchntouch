@@ -17,6 +17,7 @@ typedef enum _ContentType {
 #define PRESENTATION_ANNOTATION 0
 #define SKETCHING_WIDGET 1
 #define VIDEO_ANNOTATION 2
+#define WEBPAGE_ANNOTATION 3
 
 // W&T specific directories
 #define CONFIG_DIR              qApp->applicationDirPath() + "/" + QString("configuration")

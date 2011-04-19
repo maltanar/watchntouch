@@ -78,10 +78,38 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(videoPanel, SIGNAL(playClicked()), videoPlayer, SLOT(play()));
     connect(videoPanel, SIGNAL(pauseClicked()), videoPlayer, SLOT(pause()));
 
-    //connect(videoPlayer, SIGNAL(contentChanged(QString)), videoDraw, SLOT(contentChanged(QString)));
-    //connect(videoPlayer, SIGNAL(contextChanged(QString)), videoDraw, SLOT(contextChanged(QString)));
-
     // video playing and annotation components *********************
+
+    // webpage display and annotation components *********************
+    groupBoxForWeb = new QWidget(this);
+    webCanvas = new QWidget(this);
+
+    webDisplay = new WebpageDisplayWidget(webCanvas);
+    webDraw = new AnnotationWidget(webCanvas);
+
+    webControlPanel = new WebControlPanel(groupBoxForWeb);
+
+    QStackedLayout *layoutForWebCanvas = new QStackedLayout();
+    layoutForWebCanvas->addWidget(webDisplay);
+    layoutForWebCanvas->addWidget(webDraw);
+    layoutForWebCanvas->setStackingMode(QStackedLayout::StackAll);
+    layoutForWebCanvas->setAlignment(display, Qt::AlignHCenter);
+    layoutForWebCanvas->setAlignment(draw, Qt::AlignHCenter);
+
+    webCanvas->setLayout(layoutForWebCanvas);
+
+    QVBoxLayout *layoutForWeb = new QVBoxLayout();
+    layoutForWeb->addWidget(webCanvas);
+    layoutForWeb->addWidget(webControlPanel);
+
+    groupBoxForWeb->setLayout(layoutForWeb);
+
+    // connect signals and slots for web
+
+    connect(webControlPanel, SIGNAL(locationChanged(QUrl)), webDisplay, SLOT(loadWebPage(QUrl)));
+
+
+    // webpage display and annotation components *********************
 
 
     /************** Sketching component init begins ***********************/
@@ -111,6 +139,7 @@ MainWindow::MainWindow(QWidget *parent) :
     widgetStack->addWidget(groupBoxForPresentation);
     widgetStack->addWidget(groupBoxForSketching);
     widgetStack->addWidget(groupBoxForVideo);
+    widgetStack->addWidget(groupBoxForWeb);
 
     ui->scrollArea->setWidget(widgetStack);
     widgetStack->setVisible(false);
@@ -239,6 +268,16 @@ void MainWindow::openContent()
             videoDraw->raise();
             widgetStack->resize(groupBoxForVideo->size());
 
+        } else if(selectedContent.endsWith("html") || selectedContent.endsWith("htm") || selectedContent.startsWith("www") || selectedContent.startsWith("http")) {
+            // TODO webpage resize problems
+            // TODO find a way to scroll the webpage and interact with links - enable disable annotation?
+            widgetStack->setCurrentIndex(WEBPAGE_ANNOTATION);
+            groupBoxForWeb->resize(ui->scrollArea->size()-QSize(10,10));
+            webDraw->attachToContentDisplay(webDisplay);
+            webDisplay->selectContent(selectedContent);
+            webDisplay->raise();
+            webDraw->raise();
+            //widgetStack->resize(groupBoxForWeb->size());
         }
     }
 }

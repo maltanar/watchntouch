@@ -42,7 +42,8 @@ SOURCES += main.cpp\
     sketchingwidget.cpp \
     videounderlay.cpp \
     videocontrolpanel.cpp \
-    webpagedisplaywidget.cpp
+    webpagedisplaywidget.cpp \
+    webcontrolpanel.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -73,7 +74,8 @@ HEADERS  += mainwindow.h \
     sketchingwidget.h \
     videounderlay.h \
     videocontrolpanel.h \
-    webpagedisplaywidget.h
+    webpagedisplaywidget.h \
+    webcontrolpanel.h
 
 
 FORMS    += mainwindow.ui \
@@ -81,7 +83,8 @@ FORMS    += mainwindow.ui \
     calibrationwindow.ui \
     contextmenu.ui \
     screenshot.ui \
-    videocontrolpanel.ui
+    videocontrolpanel.ui \
+    webcontrolpanel.ui
 
 RESOURCES += \
     resources.qrc
