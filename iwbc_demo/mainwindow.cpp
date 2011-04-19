@@ -232,6 +232,7 @@ void MainWindow::openContent()
         return;
 
     widgetStack->setVisible(true);
+
     selectedContent = csel.getSelectedContent();
 
     if(selectedContent == "$screenshot$") {
@@ -246,7 +247,6 @@ void MainWindow::openContent()
         // TODO the code below won't apply once we have fit to height/width options
         // set desired image size to a bit smaller than the scroll area size
         if(selectedContent.endsWith("pdf") || selectedContent.endsWith("ppt") || selectedContent.endsWith("odp") ) {
-            qWarning() << "pdf ac girdi";
 
             widgetStack->setCurrentIndex(PRESENTATION_ANNOTATION);
 
@@ -256,28 +256,26 @@ void MainWindow::openContent()
             widgetStack->resize(display->getContentSize());
             draw->raise();
 
-            qWarning() << "pdf ac cikti";
         } else if(selectedContent.endsWith("mp4") || selectedContent.endsWith("avi") || selectedContent.endsWith("flv")) {
 
             widgetStack->setCurrentIndex(VIDEO_ANNOTATION);
 
-            videoPlayer->resize(ui->scrollArea->size()-QSize(10,10));
+            widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
             videoDraw->attachToContentDisplay(videoPlayer);
             videoPlayer->selectContent(selectedContent);
             videoPlayer->raise();
             videoDraw->raise();
-            widgetStack->resize(groupBoxForVideo->size());
 
         } else if(selectedContent.endsWith("html") || selectedContent.endsWith("htm") || selectedContent.startsWith("www") || selectedContent.startsWith("http")) {
             // TODO webpage resize problems
             // TODO find a way to scroll the webpage and interact with links - enable disable annotation?
             widgetStack->setCurrentIndex(WEBPAGE_ANNOTATION);
+            widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
             groupBoxForWeb->resize(ui->scrollArea->size()-QSize(10,10));
             webDraw->attachToContentDisplay(webDisplay);
             webDisplay->selectContent(selectedContent);
             webDisplay->raise();
             webDraw->raise();
-            //widgetStack->resize(groupBoxForWeb->size());
         }
     }
 }
