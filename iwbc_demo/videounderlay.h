@@ -91,6 +91,7 @@ private:
 signals:
     void                    frameReady( struct ctx* );
     void                    timelineUpdate(float pos);
+    void                    mediaLengthUpdate(float length);
 };
 
 struct ctx

@@ -27,6 +27,10 @@ private slots:
     void on_stopButton_clicked();
     void on_pauseButton_clicked();
     void on_playButton_clicked();
+
+public slots:
+    void mediaLengthChanged(float length);
+    void mediaPosChanged(float pos);
 };
 
 #endif // VIDEOCONTROLPANEL_H

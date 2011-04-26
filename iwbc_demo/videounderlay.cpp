@@ -76,6 +76,7 @@ float VideoUnderlay::getMediaLength()
 
     if(m_vlcMedia) {
         length = libvlc_media_player_get_length(m_vlcMediaplayer, &m_ex);
+        catchException();
     }
 
     return length;
@@ -87,6 +88,7 @@ float VideoUnderlay::getMediaPosition()
 
     if(m_vlcMedia) {
         pos = libvlc_media_player_get_time(m_vlcMediaplayer, &m_ex);
+        catchException();
     }
 
     return pos;
@@ -125,6 +127,7 @@ void VideoUnderlay::unloadVideo()
     if(m_vlcMedia) {
         pause();
         libvlc_media_release(m_vlcMedia);
+        catchException();
         m_vlcMedia = NULL;
         mrl = "";
     }
@@ -203,8 +206,18 @@ bool VideoUnderlay::loadMedia(QString videoFileName)
 
     // generate the content identifier
     generateContentIdentifier();
+
+    play();
+    libvlc_state_t currentState;
+    while(currentState != libvlc_Playing) {
+        currentState = libvlc_media_player_get_state(m_vlcMediaplayer, &m_ex);
+    }
+    pause();
+
     // emit the content changed signal
     emit contentChanged(getContentIdentifier());
+    emit mediaLengthUpdate(getMediaLength());
+    emit timelineUpdate(getMediaPosition());
 }
 
 void VideoUnderlay::play()
@@ -274,7 +287,7 @@ void VideoUnderlay::processNewFrame( struct ctx* ctx )
 
     // Releasing the mutex for the upcoming frame.
     ctx->mutex->unlock();
-
+    // TODO we still keep coming here when we are paused? why?
     handleTimelineChange();
 }
 
