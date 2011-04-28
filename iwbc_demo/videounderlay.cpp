@@ -26,6 +26,7 @@ VideoUnderlay::VideoUnderlay( QWidget* parent )
         : ContentDisplay( parent )
 {
     m_prevTimelineContext = -1;
+    m_prevTimelinePos = -1;
 
     // We do not support video resizing
     setFixedSize( 640, 480 );
@@ -125,15 +126,14 @@ void VideoUnderlay::initVLC()
 void VideoUnderlay::unloadVideo()
 {
     if(m_vlcMedia) {
-        pause();
-        libvlc_media_release(m_vlcMedia);
+        libvlc_media_player_stop(m_vlcMediaplayer, &m_ex);
         catchException();
+        libvlc_media_release(m_vlcMedia);
         m_vlcMedia = NULL;
         mrl = "";
     }
 }
 
-// TODO get first frame on load
 bool VideoUnderlay::loadMedia(QString videoFileName)
 {
     // unload previously loaded video if it exists
@@ -330,13 +330,35 @@ void VideoUnderlay::generateContentIdentifier()
 
 void VideoUnderlay::handleTimelineChange()
 {
-    emit timelineUpdate(getMediaPosition());
+    float newTimelinePos = getMediaPosition();
+    if(newTimelinePos == m_prevTimelinePos)
+        return;
 
-    int currentTimelineContext = getMediaPosition() / 1000;
+    qWarning() << "new timeline ppos" << newTimelinePos << "old" << m_prevTimelinePos;
+
+    emit timelineUpdate(newTimelinePos);
+
+    m_prevTimelinePos = newTimelinePos;
+
+    int currentTimelineContext = newTimelinePos / 1000;
 
     // if context has changed, update the context info and emit signal
     if(currentTimelineContext != m_prevTimelineContext) {
         m_prevTimelineContext = currentTimelineContext;
         emit contextChanged(getContentContext());
+    }
+}
+
+void VideoUnderlay::seekTo(float pos)
+{
+    if(m_vlcMedia) {
+        if(!libvlc_media_player_is_seekable(m_vlcMediaplayer, &m_ex)) {
+            qWarning() << "we don't support seeking";
+            return;
+        }
+
+        qWarning() << "seek to requested position" << pos;
+        libvlc_media_player_set_time(m_vlcMediaplayer, pos, &m_ex);
+        catchException();
     }
 }

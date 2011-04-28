@@ -41,3 +41,19 @@ void VideoControlPanel::mediaPosChanged(float pos)
     int iPos = pos / 1000;
     ui->timeline->setValue(iPos);
 }
+
+void VideoControlPanel::on_timeline_sliderPressed()
+{
+    //emit pauseClicked();
+}
+
+void VideoControlPanel::on_timeline_sliderReleased()
+{
+    //emit playClicked();
+}
+
+void VideoControlPanel::on_timeline_sliderMoved(int position)
+{
+    qWarning() << "slider position" << position;
+    emit timelineChanged(position * 1000);
+}

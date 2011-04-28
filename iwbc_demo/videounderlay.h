@@ -61,6 +61,7 @@ public slots:
     bool loadMedia(QString videoFileName);
     void pause();
     void stop();
+    void seekTo(float pos);
 
 private slots:
     void processNewFrame( struct ctx* );
@@ -87,6 +88,7 @@ private:
     libvlc_media_player_t*  m_vlcMediaplayer;
 
     int                     m_prevTimelineContext;
+    float                   m_prevTimelinePos;
 
 signals:
     void                    frameReady( struct ctx* );

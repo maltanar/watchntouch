@@ -22,15 +22,20 @@ signals:
     void playClicked();
     void pauseClicked();
     void stopClicked();
+    void timelineChanged(float pos);
 
 private slots:
     void on_stopButton_clicked();
     void on_pauseButton_clicked();
     void on_playButton_clicked();
 
+    void on_timeline_sliderPressed();
+
 public slots:
     void mediaLengthChanged(float length);
     void mediaPosChanged(float pos);
+    void on_timeline_sliderReleased();
+    void on_timeline_sliderMoved(int position);
 };
 
 #endif // VIDEOCONTROLPANEL_H

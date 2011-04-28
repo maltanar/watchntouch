@@ -77,8 +77,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(videoPanel, SIGNAL(playClicked()), videoPlayer, SLOT(play()));
     connect(videoPanel, SIGNAL(pauseClicked()), videoPlayer, SLOT(pause()));
+    connect(videoPanel, SIGNAL(timelineChanged(float)), videoPlayer, SLOT(seekTo(float)));
     connect(videoPlayer, SIGNAL(mediaLengthUpdate(float)), videoPanel, SLOT(mediaLengthChanged(float)));
     connect(videoPlayer, SIGNAL(timelineUpdate(float)), videoPanel, SLOT(mediaPosChanged(float)));
+
 
     // video playing and annotation components *********************
 
