@@ -29,13 +29,14 @@ VideoUnderlay::VideoUnderlay( QWidget* parent )
     m_prevTimelinePos = -1;
 
     // We do not support video resizing
-    setFixedSize( 640, 480 );
+
 
     // This is the widget where the video will be drawn
     // The advantage of a QLabel over a QWidget is that
     // we can easily push a QPixmap into.
     video = new QLabel( this );
-    video->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+    this->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+    video->setFixedSize( 640, 480 );
 
     // The container will contain the main layout
     // Video + Play button
@@ -44,6 +45,7 @@ VideoUnderlay::VideoUnderlay( QWidget* parent )
     // Vertical Layout
     layout = new QVBoxLayout;
     layout->addWidget( video );
+    layout->setAlignment(video, Qt::AlignHCenter);
     this->setLayout( layout );
 
     // Used for printing libvlc exceptions (if any)
@@ -102,7 +104,7 @@ void VideoUnderlay::initVLC()
     // the the VLC command line.
     char const* vlc_argv[] =
     {
-        "--verbose", "1",
+        "--verbose", "0",
         // Edit this line if libvlc can't locate your plugins directory
         //"--plugin-path", "/path/to/vlc",
     };
