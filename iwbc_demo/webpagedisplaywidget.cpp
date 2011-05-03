@@ -11,7 +11,11 @@ WebpageDisplayWidget::WebpageDisplayWidget(QWidget *parent) :
     layout->addWidget(mWebView);
     setLayout(layout);
 
-    connect(mWebView, SIGNAL(loadFinished(bool)), this, SLOT(webPageLoadFinished(bool)));
+    connect(mWebView, SIGNAL(loadFinished(bool)), this, SLOT(webPageLoadFinishedInternal(bool)));
+    connect(mWebView, SIGNAL(loadProgress(int)), this, SIGNAL(webPageLoadProgress(int)));
+    connect(mWebView, SIGNAL(loadStarted()), this, SIGNAL(webPageLoadStarted()));
+    connect(mWebView, SIGNAL(loadFinished(bool)), this, SIGNAL(webPageLoadFinished(bool)));
+    connect(mWebView, SIGNAL(urlChanged(QUrl)), this, SIGNAL(webPageUrlChanged(QUrl)));
 }
 
 bool WebpageDisplayWidget::selectContent(QString location)
@@ -42,9 +46,8 @@ void WebpageDisplayWidget::loadWebPage(QUrl newLocation)
     selectContent(newLocation.toString());
 }
 
-void WebpageDisplayWidget::webPageLoadFinished(bool ok)
+void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
 {
-    // TODO relay status signals from web view - load progress, URL changed, etc.
     if(ok) {
         recentlyUsed->addRecentItem(mWebView->title(), mUrlString);
         generateContentIdentifier();

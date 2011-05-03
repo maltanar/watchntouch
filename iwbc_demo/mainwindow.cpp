@@ -111,6 +111,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // connect signals and slots for web
 
     connect(webControlPanel, SIGNAL(locationChanged(QUrl)), webDisplay, SLOT(loadWebPage(QUrl)));
+    connect(webDisplay, SIGNAL(webPageLoadStarted()), webControlPanel, SLOT(loadStarted()));
+    connect(webDisplay, SIGNAL(webPageLoadProgress(int)), webControlPanel, SLOT(loadProgress(int)));
+    connect(webDisplay, SIGNAL(webPageLoadFinished(bool)), webControlPanel, SLOT(loadFinished(bool)));
+    connect(webDisplay, SIGNAL(webPageUrlChanged(QUrl)), webControlPanel, SLOT(loadedPageChanged(QUrl)));
 
 
     // webpage display and annotation components *********************

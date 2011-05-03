@@ -16,6 +16,12 @@ public:
     explicit WebControlPanel(QWidget *parent = 0);
     ~WebControlPanel();
 
+public slots:
+    void loadStarted();
+    void loadFinished(bool ok);
+    void loadProgress(int progress);
+    void loadedPageChanged(QUrl newLocation);
+
 private slots:
     void on_confirmUrl_clicked();
 

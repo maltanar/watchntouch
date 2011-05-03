@@ -19,12 +19,17 @@ private:
     QString mUrlString;
 
 signals:
+    void webPageLoadProgress(int progress);
+    void webPageLoadStarted();
+    void webPageLoadFinished(bool ok);
+    void webPageUrlChanged(QUrl newUrl);
 
 public slots:
     void loadWebPage(QUrl newLocation);
 
 private slots:
-    void webPageLoadFinished(bool ok);
+    void webPageLoadFinishedInternal(bool ok);
+
 
 };
 
