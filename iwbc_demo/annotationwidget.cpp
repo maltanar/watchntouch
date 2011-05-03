@@ -47,6 +47,8 @@ QString AnnotationWidget::getCurrentAnnotation()
 
 void AnnotationWidget::attachToContentDisplay(ContentDisplay *display)
 {
+    // TODO operations regarding content size?
+
     if(currentContentDisplay == display)
         return;
 

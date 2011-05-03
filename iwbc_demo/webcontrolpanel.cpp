@@ -46,3 +46,8 @@ void WebControlPanel::loadedPageChanged(QUrl newLocation)
 {
     ui->urlEdit->setText(newLocation.toString());
 }
+
+void WebControlPanel::on_annotationEnabled_toggled(bool checked)
+{
+    emit requestReadOnly(!checked);
+}

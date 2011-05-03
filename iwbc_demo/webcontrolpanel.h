@@ -23,6 +23,7 @@ public slots:
     void loadedPageChanged(QUrl newLocation);
 
 private slots:
+    void on_annotationEnabled_toggled(bool checked);
     void on_confirmUrl_clicked();
 
 private:
@@ -30,6 +31,7 @@ private:
 
 signals:
     void locationChanged(QUrl newLocation);
+    void requestReadOnly(bool status);
 };
 
 #endif // WEBCONTROLPANEL_H

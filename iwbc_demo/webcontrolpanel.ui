@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>95</height>
+    <height>116</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,6 +30,16 @@
        <widget class="QPushButton" name="confirmUrl">
         <property name="text">
          <string>Go</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="annotationEnabled">
+        <property name="text">
+         <string>Annotation</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

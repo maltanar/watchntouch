@@ -1,6 +1,7 @@
 #include "webpagedisplaywidget.h"
 #include <QCryptographicHash>
 #include <QVBoxLayout>
+#include <QWebFrame>
 #include "recentlyused.h"
 
 WebpageDisplayWidget::WebpageDisplayWidget(QWidget *parent) :
@@ -52,6 +53,7 @@ void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
     if(ok) {
         recentlyUsed->addRecentItem(mWebView->title(), mUrlString);
         generateContentIdentifier();
+        setContentSize(mWebView->page()->mainFrame()->contentsSize());
         emit contentChanged(getContentIdentifier());
         // TODO currently each webpage is a single context - a more sophisticated system needed?
         emit contextChanged("1");
