@@ -19,6 +19,7 @@ private:
     QSize currentSize;
     ContentDisplay * currentContentDisplay;
     ContentMatcher matcher;
+    bool m_isReadOnly;
 
     QString getCurrentAnnotation();
 
@@ -27,6 +28,7 @@ signals:
 public slots:
     void contentChanged(QString newContent);
     void contextChanged(QString newContext);
+    void requestReadOnlyStatus(bool readOnly);
 
 };
 

@@ -38,6 +38,13 @@ void AnnotationWidget::contextChanged(QString newContext)
     } else {
         getDrawingData()->clear();
     }
+
+    // if context is empty, do not allow modifying the annotation since the
+    // empty context means the document is still being loaded
+    if(newContext == "")
+        requestReadOnlyStatus(true);
+    else
+        requestReadOnlyStatus(false);
 }
 
 QString AnnotationWidget::getCurrentAnnotation()
@@ -64,4 +71,13 @@ void AnnotationWidget::attachToContentDisplay(ContentDisplay *display)
     // establish the new connections
     connect(currentContentDisplay,SIGNAL(contentChanged(QString)), this, SLOT(contentChanged(QString)));
     connect(currentContentDisplay,SIGNAL(contextChanged(QString)), this, SLOT(contextChanged(QString)));
+}
+
+void AnnotationWidget::requestReadOnlyStatus(bool readOnly)
+{
+    if(readOnly != m_isReadOnly)
+    {
+        m_isReadOnly = readOnly;
+        setAttribute(Qt::WA_TransparentForMouseEvents, readOnly);
+    }
 }
