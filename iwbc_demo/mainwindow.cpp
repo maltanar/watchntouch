@@ -10,6 +10,7 @@
 #include <QPixmap>
 #include <QLabel>
 #include <QTimer>
+#include <QDeclarativeView>
 #include "contentselector.h"
 #include "googledocsaccess.h"
 #include "eventgenerator.h"
@@ -37,13 +38,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
     groupBoxForPresentation = new QWidget(this);
 
+    qmlMenu = new QDeclarativeView(this);
+    qmlMenu->setSource(QUrl("qrc:/qml/wtui.qml"));
+    qmlMenu->setAlignment(Qt::AlignBottom);
+    qmlMenu->setStyleSheet("background: transparent");
+
     QStackedLayout *layout = new QStackedLayout();
 
+    layout->addWidget(qmlMenu);
     layout->addWidget(display);
     layout->addWidget(draw);
+
+    display->setAlignment(Qt::AlignHCenter);
+
     layout->setStackingMode(QStackedLayout::StackAll);
     layout->setAlignment(display, Qt::AlignHCenter);
     layout->setAlignment(draw, Qt::AlignHCenter);
+    layout->setAlignment(qmlMenu, Qt::AlignHCenter);
 
     groupBoxForPresentation->setLayout(layout);
 
@@ -289,8 +300,12 @@ void MainWindow::openContent()
             display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
             draw->attachToContentDisplay(display);  // TODO bunu bir presentation actıktan sonra yapmak lazım ?
             display->selectContent(csel.getSelectedContent());
+
             widgetStack->resize(display->getContentSize());
+            if(widgetStack->width() < 800)
+                widgetStack->resize(800, widgetStack->height());
             draw->raise();
+            qmlMenu->raise();
 
         } else if(selectedContent.endsWith("mp4") || selectedContent.endsWith("avi") || selectedContent.endsWith("flv")) {
 

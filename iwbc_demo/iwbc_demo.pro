@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml network webkit
+QT       += core gui xml network webkit declarative
 
 TARGET = iwbc_demo
 TEMPLATE = app
@@ -88,3 +88,6 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += \
     resources.qrc
+
+OTHER_FILES += \
+    wtui.qml

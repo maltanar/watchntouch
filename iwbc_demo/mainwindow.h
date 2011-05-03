@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QDeclarativeView>
 #include "presentationdisplaywidget.h"
 #include "sketchingwidget.h"
 #include "annotationwidget.h"
@@ -32,6 +33,7 @@ public:
     ~MainWindow();
 
 private:
+    QDeclarativeView *qmlMenu;
     Ui::MainWindow *ui;
     PresentationDisplayWidget *display;
 
