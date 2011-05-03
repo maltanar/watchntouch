@@ -26,6 +26,7 @@ bool WebpageDisplayWidget::selectContent(QString location)
     // we're in limbo and should not really display any annotation
     emit contentChanged("");
     emit contextChanged("");
+    emit requestReadOnlyAnnotation(true);
     // TODO we should actually return the value for the loadFinished OK parameter here
     return true;
 }
@@ -54,6 +55,7 @@ void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
         emit contentChanged(getContentIdentifier());
         // TODO currently each webpage is a single context - a more sophisticated system needed?
         emit contextChanged("1");
+        emit requestReadOnlyAnnotation(false);
     } else {
         displayErrorMessage("Could not load requested web page");
         mUrlString = "";

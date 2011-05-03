@@ -224,22 +224,20 @@ void VideoUnderlay::play()
 {
     if ( mrl.isEmpty() ) return;
 
-    // Finally, start the playback.
+    // we don't want annotation to be updatable when media is playing
+    emit requestReadOnlyAnnotation(true);
     libvlc_media_player_play( m_vlcMediaplayer, &m_ex );
     catchException();
 }
 
-// TODO create private wrapper functions for things like isPlaying and canPause
+// TODO create private wrapper functions for things like isPlaying and canPause?
+
 void VideoUnderlay::pause()
 {
-    bool isPlaying = (bool) libvlc_media_player_is_playing(m_vlcMediaplayer, &m_ex);
+    // re-enable annotations since video is paused
+    emit requestReadOnlyAnnotation(false);
+    libvlc_media_player_pause(m_vlcMediaplayer, &m_ex);
     catchException();
-    bool canPause = (bool) libvlc_media_player_can_pause(m_vlcMediaplayer, &m_ex);
-    catchException();
-    if(isPlaying && canPause) {
-        libvlc_media_player_pause(m_vlcMediaplayer, &m_ex);
-        catchException();
-    }
 }
 
 void VideoUnderlay::stop()

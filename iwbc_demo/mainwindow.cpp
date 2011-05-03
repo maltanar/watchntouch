@@ -76,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // connect signals and slots for video
 
     connect(videoPanel, SIGNAL(playClicked()), videoPlayer, SLOT(play()));
+    connect(videoPlayer, SIGNAL(requestReadOnlyAnnotation(bool)), videoDraw, SLOT(requestReadOnlyStatus(bool)));
     connect(videoPanel, SIGNAL(pauseClicked()), videoPlayer, SLOT(pause()));
     connect(videoPanel, SIGNAL(timelineChanged(float)), videoPlayer, SLOT(seekTo(float)));
     connect(videoPlayer, SIGNAL(mediaLengthUpdate(float)), videoPanel, SLOT(mediaLengthChanged(float)));
@@ -111,6 +112,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // connect signals and slots for web
 
     connect(webControlPanel, SIGNAL(locationChanged(QUrl)), webDisplay, SLOT(loadWebPage(QUrl)));
+    connect(webDisplay, SIGNAL(requestReadOnlyAnnotation(bool)), webDraw, SLOT(requestReadOnlyStatus(bool)));
     connect(webDisplay, SIGNAL(webPageLoadStarted()), webControlPanel, SLOT(loadStarted()));
     connect(webDisplay, SIGNAL(webPageLoadProgress(int)), webControlPanel, SLOT(loadProgress(int)));
     connect(webDisplay, SIGNAL(webPageLoadFinished(bool)), webControlPanel, SLOT(loadFinished(bool)));

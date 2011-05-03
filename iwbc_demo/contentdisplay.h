@@ -37,6 +37,7 @@ protected:
 signals:
     void contextChanged(QString newContext);    // emitted when context is changed
     void contentChanged(QString newContentId);  // emitted when content file changes
+    void requestReadOnlyAnnotation(bool readOnly);
 
 public slots:
 

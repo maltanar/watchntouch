@@ -38,13 +38,6 @@ void AnnotationWidget::contextChanged(QString newContext)
     } else {
         getDrawingData()->clear();
     }
-
-    // if context is empty, do not allow modifying the annotation since the
-    // empty context means the document is still being loaded
-    if(newContext == "")
-        requestReadOnlyStatus(true);
-    else
-        requestReadOnlyStatus(false);
 }
 
 QString AnnotationWidget::getCurrentAnnotation()
@@ -75,6 +68,7 @@ void AnnotationWidget::attachToContentDisplay(ContentDisplay *display)
 
 void AnnotationWidget::requestReadOnlyStatus(bool readOnly)
 {
+    qWarning() << "read only status" << readOnly;
     if(readOnly != m_isReadOnly)
     {
         m_isReadOnly = readOnly;
