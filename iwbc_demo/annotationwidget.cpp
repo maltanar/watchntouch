@@ -19,7 +19,8 @@ void AnnotationWidget::contentChanged(QString newContent)
     }
 
     currentContent = newContent;    // set new content identifier
-    currentSize = currentContentDisplay->getContentSize();  // set the content size
+    if(currentContentDisplay)
+        currentSize = currentContentDisplay->getContentSize();  // set the content size
     currentContext = "";    // context is initially empty for new content
 }
 
