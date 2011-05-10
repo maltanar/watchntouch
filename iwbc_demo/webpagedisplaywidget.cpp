@@ -17,12 +17,14 @@ WebpageDisplayWidget::WebpageDisplayWidget(QWidget *parent) :
     connect(mWebView, SIGNAL(loadStarted()), this, SIGNAL(webPageLoadStarted()));
     connect(mWebView, SIGNAL(loadFinished(bool)), this, SIGNAL(webPageLoadFinished(bool)));
     connect(mWebView, SIGNAL(urlChanged(QUrl)), this, SIGNAL(webPageUrlChanged(QUrl)));
+
+    connect(mWebView->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(scrollRequested(int,int,QRect)));
 }
 
 bool WebpageDisplayWidget::selectContent(QString location)
 {
-    mUrlString = location;
-    mWebView->load(QUrl(mUrlString));
+    mUrlString = "";
+    mWebView->load(QUrl(location));
     // emit empty content and context message since from this point on to when the loading is finished,
     // we're in limbo and should not really display any annotation
     emit contentChanged("");
@@ -51,9 +53,10 @@ void WebpageDisplayWidget::loadWebPage(QUrl newLocation)
 void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
 {
     if(ok) {
-        recentlyUsed->addRecentItem(mWebView->title(), mUrlString);
+        recentlyUsed->addRecentItem(mWebView->title(), mWebView->url().toString());
+        mUrlString = mWebView->url().toString();
         generateContentIdentifier();
-        setContentSize(mWebView->page()->mainFrame()->contentsSize());
+
         emit contentChanged(getContentIdentifier());
         // TODO currently each webpage is a single context - a more sophisticated system needed?
         emit contextChanged("1");
@@ -62,4 +65,14 @@ void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
         displayErrorMessage("Could not load requested web page");
         mUrlString = "";
     }
+}
+
+void WebpageDisplayWidget::setExternalViewportSize(QSize newSize)
+{
+    m_externalViewportSize = newSize;
+}
+
+void WebpageDisplayWidget::scrollRequested(int dx, int dy, const QRect &rectToScroll)
+{
+    qWarning() << "dx" << dx << "dy" << dy <<"rect" << rectToScroll;
 }

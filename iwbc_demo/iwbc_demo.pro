@@ -43,7 +43,8 @@ SOURCES += main.cpp\
     videounderlay.cpp \
     videocontrolpanel.cpp \
     webpagedisplaywidget.cpp \
-    webcontrolpanel.cpp
+    webcontrolpanel.cpp \
+    qmlmenulayer.cpp
 
 HEADERS  += mainwindow.h \
     contentdisplay.h \
@@ -75,7 +76,8 @@ HEADERS  += mainwindow.h \
     videounderlay.h \
     videocontrolpanel.h \
     webpagedisplaywidget.h \
-    webcontrolpanel.h
+    webcontrolpanel.h \
+    qmlmenulayer.h
 
 
 FORMS    += mainwindow.ui \

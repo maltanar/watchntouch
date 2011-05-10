@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QDeclarativeView>
+#include <QScrollArea>
 #include "presentationdisplaywidget.h"
 #include "sketchingwidget.h"
 #include "annotationwidget.h"
@@ -19,6 +20,8 @@
 #include "webpagedisplaywidget.h"
 #include "webcontrolpanel.h"
 
+#include "qmlmenulayer.h"
+
 namespace Ui {
     class MainWindow;
 }
@@ -33,7 +36,7 @@ public:
     ~MainWindow();
 
 private:
-    QDeclarativeView *qmlMenu;
+    QMLMenuLayer *qmlMenu;
     Ui::MainWindow *ui;
     PresentationDisplayWidget *display;
 
@@ -55,6 +58,7 @@ private:
 
     QWidget *groupBoxForWeb;
     QWidget *webCanvas;
+    QScrollArea *webScrollArea;
     AnnotationWidget *webDraw;
     WebpageDisplayWidget *webDisplay;
     WebControlPanel *webControlPanel;

@@ -14,9 +14,12 @@ public:
     QString getContentContext();
     void generateContentIdentifier();
 
+    void setExternalViewportSize(QSize newSize);
+
 private:
     QWebView * mWebView;
     QString mUrlString;
+    QSize m_externalViewportSize;
 
 signals:
     void webPageLoadProgress(int progress);
@@ -29,6 +32,7 @@ public slots:
 
 private slots:
     void webPageLoadFinishedInternal(bool ok);
+    void scrollRequested ( int dx, int dy, const QRect & rectToScroll);
 
 
 };

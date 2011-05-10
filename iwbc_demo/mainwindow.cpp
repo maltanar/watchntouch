@@ -38,10 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     groupBoxForPresentation = new QWidget(this);
 
-    qmlMenu = new QDeclarativeView(this);
-    qmlMenu->setSource(QUrl("qrc:/qml/wtui.qml"));
-    qmlMenu->setAlignment(Qt::AlignBottom);
-    qmlMenu->setStyleSheet("background: transparent");
+    qmlMenu = new QMLMenuLayer(this);
 
     QStackedLayout *layout = new QStackedLayout();
 
@@ -98,7 +95,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // webpage display and annotation components *********************
     groupBoxForWeb = new QWidget(this);
-    webCanvas = new QWidget(this);
+
+    webScrollArea = new QScrollArea(groupBoxForWeb);
+    webCanvas = new QWidget(webScrollArea);
 
     webDisplay = new WebpageDisplayWidget(webCanvas);
     webDraw = new AnnotationWidget(webCanvas);
@@ -114,8 +113,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     webCanvas->setLayout(layoutForWebCanvas);
 
+    webScrollArea->setWidget(webCanvas);
+    webScrollArea->setWidgetResizable(true);
+
     QVBoxLayout *layoutForWeb = new QVBoxLayout();
-    layoutForWeb->addWidget(webCanvas);
+    layoutForWeb->addWidget(webScrollArea);
     layoutForWeb->addWidget(webControlPanel);
 
     groupBoxForWeb->setLayout(layoutForWeb);
@@ -319,10 +321,12 @@ void MainWindow::openContent()
 
         } else if(selectedContent.endsWith("html") || selectedContent.endsWith("htm") || selectedContent.startsWith("www") || selectedContent.startsWith("http")) {
             // TODO webpage resize problems
-            // TODO find a way to scroll the webpage and interact with links - enable disable annotation?
+            // TODO find a way to scroll the webpage
             widgetStack->setCurrentIndex(WEBPAGE_ANNOTATION);
+
             widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
             groupBoxForWeb->resize(ui->scrollArea->size()-QSize(10,10));
+            //webCanvas->resize(ui->scrollArea->size()-QSize(50,10));
             webDraw->attachToContentDisplay(webDisplay);
             webDisplay->selectContent(selectedContent);
             webDisplay->raise();
