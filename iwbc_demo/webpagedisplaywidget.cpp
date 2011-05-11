@@ -17,21 +17,25 @@ WebpageDisplayWidget::WebpageDisplayWidget(QWidget *parent) :
     connect(mWebView, SIGNAL(loadStarted()), this, SIGNAL(webPageLoadStarted()));
     connect(mWebView, SIGNAL(loadFinished(bool)), this, SIGNAL(webPageLoadFinished(bool)));
     connect(mWebView, SIGNAL(urlChanged(QUrl)), this, SIGNAL(webPageUrlChanged(QUrl)));
+    connect(mWebView, SIGNAL(loadStarted()), this, SLOT(webPageLoadStartInternal()));
 
     connect(mWebView->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(scrollRequested(int,int,QRect)));
 }
 
 bool WebpageDisplayWidget::selectContent(QString location)
 {
-    mUrlString = "";
+    // load the requested webpage
     mWebView->load(QUrl(location));
+    // TODO we should actually return the value for the loadFinished OK parameter here
+    return true;
+}
+
+void WebpageDisplayWidget::webPageLoadStartInternal()
+{
+    mUrlString = "";
     // emit empty content and context message since from this point on to when the loading is finished,
     // we're in limbo and should not really display any annotation
     emit contentChanged("");
-    emit contextChanged("");
-    emit requestReadOnlyAnnotation(true);
-    // TODO we should actually return the value for the loadFinished OK parameter here
-    return true;
 }
 
 QString WebpageDisplayWidget::getContentContext()
@@ -60,7 +64,6 @@ void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
         emit contentChanged(getContentIdentifier());
         // TODO currently each webpage is a single context - a more sophisticated system needed?
         emit contextChanged("1");
-        emit requestReadOnlyAnnotation(false);
     } else {
         displayErrorMessage("Could not load requested web page");
         mUrlString = "";
