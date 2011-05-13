@@ -20,6 +20,7 @@ private:
     ContentDisplay * currentContentDisplay;
     ContentMatcher matcher;
     bool m_isReadOnly;
+    QPointF sceneCenter;
 
     QString getCurrentAnnotation();
 
@@ -28,6 +29,7 @@ signals:
 public slots:
     void contentChanged(QString newContent);
     void contextChanged(QString newContext);
+    void scrollRequest(int dx, int dy);
     void requestReadOnlyStatus(bool readOnly);
 
 };

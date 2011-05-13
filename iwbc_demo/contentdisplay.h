@@ -38,6 +38,7 @@ signals:
     void contextChanged(QString newContext);    // emitted when context is changed
     void contentChanged(QString newContentId);  // emitted when content file changes
     void requestReadOnlyAnnotation(bool readOnly);
+    void scrollRequested(int dx, int dy);
 
 public slots:
 

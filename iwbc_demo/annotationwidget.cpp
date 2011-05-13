@@ -19,8 +19,14 @@ void AnnotationWidget::contentChanged(QString newContent)
     }
 
     currentContent = newContent;    // set new content identifier
-    if(currentContentDisplay)
+    if(currentContentDisplay) {
         currentSize = currentContentDisplay->getContentSize();  // set the content size
+        qWarning() << "AnnotationWidget resizing to content size" << currentSize;
+        //resize(currentSize); // resize the annotation widget
+        getDrawingData()->setSceneRect(0,0,currentSize.width(), currentSize.height());
+        getDrawingData()->requestStageSize(currentSize);
+        sceneCenter = QPointF(width() / 2, height() / 2);
+    }
 
     contextChanged("");    // context is initially empty for new content
 }
@@ -65,6 +71,7 @@ void AnnotationWidget::attachToContentDisplay(ContentDisplay *display)
         // remove the connections to the old widget
         disconnect(currentContentDisplay,SIGNAL(contentChanged(QString)), this, SLOT(contentChanged(QString)));
         disconnect(currentContentDisplay,SIGNAL(contextChanged(QString)), this, SLOT(contextChanged(QString)));
+        disconnect(currentContentDisplay,SIGNAL(scrollRequested(int,int)), this, SLOT(scrollRequest(int,int)));
     }
 
     currentContentDisplay = display;
@@ -75,6 +82,7 @@ void AnnotationWidget::attachToContentDisplay(ContentDisplay *display)
     // establish the new connections
     connect(currentContentDisplay,SIGNAL(contentChanged(QString)), this, SLOT(contentChanged(QString)));
     connect(currentContentDisplay,SIGNAL(contextChanged(QString)), this, SLOT(contextChanged(QString)));
+    connect(currentContentDisplay,SIGNAL(scrollRequested(int,int)), this, SLOT(scrollRequest(int,int)));
 }
 
 void AnnotationWidget::requestReadOnlyStatus(bool readOnly)
@@ -85,4 +93,17 @@ void AnnotationWidget::requestReadOnlyStatus(bool readOnly)
         m_isReadOnly = readOnly;
         setAttribute(Qt::WA_TransparentForMouseEvents, readOnly);
     }
+}
+
+void AnnotationWidget::scrollRequest(int dx, int dy)
+{
+    // TODO do we also need to pass the rect to be scrolled?
+    //scroll(dx,dy);
+
+    qWarning() << "prev scene center" << sceneCenter;
+    sceneCenter -= QPointF(dx,dy);
+    qWarning() << "new scene center" << sceneCenter;
+
+    centerOn(sceneCenter);
+
 }

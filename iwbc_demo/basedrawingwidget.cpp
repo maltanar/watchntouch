@@ -117,7 +117,7 @@ void BaseDrawingWidget::drawingEnd(QPointF endPoint)
 void BaseDrawingWidget::resizeEvent(QResizeEvent * event)
 {
     if(drawingData != NULL) {
-        drawingData->setSceneRect(0,0,width(),height());
+        //drawingData->setSceneRect(0,0,width(),height());
         qWarning() << "view:" << geometry() << "scene: " << drawingData->sceneRect();
     }
 

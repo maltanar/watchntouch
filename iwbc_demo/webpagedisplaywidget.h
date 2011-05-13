@@ -26,6 +26,7 @@ signals:
     void webPageLoadStarted();
     void webPageLoadFinished(bool ok);
     void webPageUrlChanged(QUrl newUrl);
+    void scrollRequested ( int dx, int dy);
 
 public slots:
     void loadWebPage(QUrl newLocation);
@@ -33,7 +34,6 @@ public slots:
 private slots:
     void webPageLoadStartInternal();
     void webPageLoadFinishedInternal(bool ok);
-    void scrollRequested ( int dx, int dy, const QRect & rectToScroll);
 
 
 };

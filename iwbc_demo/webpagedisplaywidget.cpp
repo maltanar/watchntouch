@@ -19,7 +19,7 @@ WebpageDisplayWidget::WebpageDisplayWidget(QWidget *parent) :
     connect(mWebView, SIGNAL(urlChanged(QUrl)), this, SIGNAL(webPageUrlChanged(QUrl)));
     connect(mWebView, SIGNAL(loadStarted()), this, SLOT(webPageLoadStartInternal()));
 
-    connect(mWebView->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(scrollRequested(int,int,QRect)));
+    connect(mWebView->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SIGNAL(scrollRequested(int,int)));
 }
 
 bool WebpageDisplayWidget::selectContent(QString location)
@@ -60,7 +60,7 @@ void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
         recentlyUsed->addRecentItem(mWebView->title(), mWebView->url().toString());
         mUrlString = mWebView->url().toString();
         generateContentIdentifier();
-
+        setContentSize(mWebView->page()->mainFrame()->contentsSize());
         emit contentChanged(getContentIdentifier());
         // TODO currently each webpage is a single context - a more sophisticated system needed?
         emit contextChanged("1");
@@ -73,9 +73,4 @@ void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
 void WebpageDisplayWidget::setExternalViewportSize(QSize newSize)
 {
     m_externalViewportSize = newSize;
-}
-
-void WebpageDisplayWidget::scrollRequested(int dx, int dy, const QRect &rectToScroll)
-{
-    qWarning() << "dx" << dx << "dy" << dy <<"rect" << rectToScroll;
 }

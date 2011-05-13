@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     groupBoxForPresentation = new QWidget(this);
 
-    qmlMenu = new QMLMenuLayer(this);
+    qmlMenu = new QmlMenuLayer(this);
 
     QStackedLayout *layout = new QStackedLayout();
 
@@ -126,6 +126,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(webControlPanel, SIGNAL(locationChanged(QUrl)), webDisplay, SLOT(loadWebPage(QUrl)));
     connect(webControlPanel, SIGNAL(requestReadOnly(bool)), webDraw, SLOT(requestReadOnlyStatus(bool)));
+
     connect(webDisplay, SIGNAL(requestReadOnlyAnnotation(bool)), webDraw, SLOT(requestReadOnlyStatus(bool)));
     connect(webDisplay, SIGNAL(webPageLoadStarted()), webControlPanel, SLOT(loadStarted()));
     connect(webDisplay, SIGNAL(webPageLoadProgress(int)), webControlPanel, SLOT(loadProgress(int)));

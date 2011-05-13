@@ -36,7 +36,7 @@ public:
     ~MainWindow();
 
 private:
-    QMLMenuLayer *qmlMenu;
+    QmlMenuLayer *qmlMenu;
     Ui::MainWindow *ui;
     PresentationDisplayWidget *display;
 

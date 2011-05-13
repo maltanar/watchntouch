@@ -11,7 +11,7 @@ DrawingData::DrawingData(QObject *parent) :
 {
     currentAction = new DrawingAction(this);
     modified = false;
-    stage = new QPixmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+    stage = new QImage(SCREEN_WIDTH, SCREEN_HEIGHT, QImage::Format_ARGB32_Premultiplied);
     stage->fill(Qt::transparent);
 }
 
@@ -50,7 +50,7 @@ void DrawingData::registerAction(QPicture actions)
     if(boundingRect.y() > height())
         boundingRect.setY(height());
     // backup the area to be painted, to be used for undo'ing later
-    QPixmap areaToChange = stage->copy(boundingRect);
+    QPixmap areaToChange = QPixmap::fromImage(stage->copy(boundingRect));
     // set the properties of this drawing step for undo/redo
     currentAction->setActions(actions);
     currentAction->setPrevPixmap(areaToChange, boundingRect);
@@ -82,7 +82,7 @@ void DrawingData::clear()
     stage->fill(Qt::transparent);
 }
 
-QPixmap * DrawingData::getStage()
+QImage * DrawingData::getStage()
 {
     return stage;
 }
@@ -92,5 +92,14 @@ void DrawingData::drawBackground ( QPainter * painter, const QRectF & rect )
     // draw the stage pixmap as the scene background
     // the stage pixmap is where we do all the user-created drawing
     painter->setClipRect(rect);
-    painter->drawPixmap(0,0, *stage);
+    painter->drawImage(0,0, *stage);
+}
+
+void DrawingData::requestStageSize(QSize size)
+{
+    qWarning() << "requested stage size" << size;
+    // TODO copy old image into new
+    delete stage;
+    stage = new QImage(size, QImage::Format_ARGB32_Premultiplied);
+    stage->fill(Qt::transparent);
 }

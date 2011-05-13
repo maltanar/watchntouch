@@ -26,7 +26,8 @@ public:
     bool isModified();
     void setModified(bool newValue);
 
-    QPixmap * getStage();
+    QImage * getStage();
+    void requestStageSize(QSize size);
 
 protected:
     void drawBackground ( QPainter * painter, const QRectF & rect );
@@ -35,7 +36,7 @@ private:
     QUndoStack undoStack;
     DrawingAction *currentAction;
     bool modified;
-    QPixmap *stage;
+    QImage *stage;
 
 signals:
 
