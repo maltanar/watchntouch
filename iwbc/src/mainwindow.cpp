@@ -41,13 +41,19 @@ MainWindow::MainWindow(QWidget *parent) :
     centralStack->setStackingMode(QStackedLayout::StackAll);
     centralStretcher->addLayout(centralStack);
 
-    connect(m_qmlMenu->rootObject(), SIGNAL(mainMenuShowHide(bool)), this, SLOT(mainMenuShowHide(bool)));
-    connect(m_qmlMenu->rootObject(), SIGNAL(exitPressed()), this, SLOT(exitPressed()));
+
 
     //m_qmlMenu->setStyleSheet("border: 2px solid red");
     //m_currentTaskContainer->setStyleSheet("border: 3px solid yellow; background: red");
     ui->theCentralWidget->setLayout(centralStretcher);
 
+}
+
+void MainWindow::connectMainMenuSignals()
+{
+    // connect the signals emitted from the QML main menu to the slots we have here
+    connect(m_qmlMenu->rootObject(), SIGNAL(mainMenuShowHide(bool)), this, SLOT(mainMenuShowHide(bool)));
+    connect(m_qmlMenu->rootObject(), SIGNAL(exitPressed()), this, SLOT(exitPressed()));
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)

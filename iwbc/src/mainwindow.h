@@ -44,6 +44,7 @@ protected:
     void initGlobals();
     void deleteGlobals();
     void createAppSubdir(QString subdirName);
+    void connectMainMenuSignals();
 
     void closeEvent(QCloseEvent *);
     void resizeEvent(QResizeEvent *);
