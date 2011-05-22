@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     centralStack->setStackingMode(QStackedLayout::StackAll);
     centralStretcher->addLayout(centralStack);
 
-
+    connectMainMenuSignals();
 
     //m_qmlMenu->setStyleSheet("border: 2px solid red");
     //m_currentTaskContainer->setStyleSheet("border: 3px solid yellow; background: red");
@@ -54,6 +54,7 @@ void MainWindow::connectMainMenuSignals()
     // connect the signals emitted from the QML main menu to the slots we have here
     connect(m_qmlMenu->rootObject(), SIGNAL(mainMenuShowHide(bool)), this, SLOT(mainMenuShowHide(bool)));
     connect(m_qmlMenu->rootObject(), SIGNAL(exitPressed()), this, SLOT(exitPressed()));
+    connect(m_qmlMenu->rootObject(), SIGNAL(recordPressed(bool)), this, SLOT(recordPressed(bool)));
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)
@@ -63,7 +64,11 @@ void MainWindow::mainMenuShowHide(bool newStatus)
     } else {
         qWarning() << "menu now hidden";
     }
+}
 
+void MainWindow::recordPressed(bool newStatus)
+{
+    qWarning() << "record pressed" << newStatus;
 }
 
 MainWindow::~MainWindow()

@@ -52,6 +52,7 @@ protected:
 private slots:
     void mainMenuShowHide(bool newStatus);
     void exitPressed();
+    void recordPressed(bool newStatus);
 
 
 };

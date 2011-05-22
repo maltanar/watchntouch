@@ -10,6 +10,7 @@ Rectangle {
     signal qmlSignal(string msg)
     signal mainMenuShowHide(bool newStatus)
     signal exitPressed()
+    signal recordPressed(bool newStatus)
 
 
 Rectangle{      //PRES INTERFACE
@@ -1046,16 +1047,19 @@ Rectangle{
                 fillMode: Image.PreserveAspectFit
                 smooth: true
                 source: "images/mainmenu/recOff.png" //TODO: NOTIFICATION ON/OFF
-
-                MouseArea {                    
-                    anchors.fill: parent
-                    property int recordNo: 0
-                    onClicked: {
-                        recordNo = recordNo+1;
-                        if (recordNo%2==0)
-                            recId.source = "images/mainmenu/recOn.png";
-                        if (recordNo%2==1)
-                            recId.source = "images/mainmenu/recOff.png";
+            }
+            MouseArea {
+                anchors.fill: parent
+                property int recordNo: 0
+                onClicked: {
+                    recordNo = recordNo+1;
+                    if (recordNo%2==1) {
+                        recId.source = "images/mainmenu/recOn.png";
+                        recordPressed(true);
+                    }
+                    if (recordNo%2==0) {
+                        recId.source = "images/mainmenu/recOff.png";
+                        recordPressed(false);
                     }
                 }
             }
