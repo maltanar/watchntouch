@@ -55,6 +55,7 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(mainMenuShowHide(bool)), this, SLOT(mainMenuShowHide(bool)));
     connect(m_qmlMenu->rootObject(), SIGNAL(exitPressed()), this, SLOT(exitPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(recordPressed(bool)), this, SLOT(recordPressed(bool)));
+    connect(m_qmlMenu->rootObject(), SIGNAL(notificationsPressed()), this, SLOT(notificationsPressed()));
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)
@@ -69,6 +70,11 @@ void MainWindow::mainMenuShowHide(bool newStatus)
 void MainWindow::recordPressed(bool newStatus)
 {
     qWarning() << "record pressed" << newStatus;
+}
+
+void MainWindow::notificationsPressed()
+{
+    qWarning() << "notifications pressed";
 }
 
 MainWindow::~MainWindow()

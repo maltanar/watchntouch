@@ -11,6 +11,7 @@ Rectangle {
     signal mainMenuShowHide(bool newStatus)
     signal exitPressed()
     signal recordPressed(bool newStatus)
+    signal notificationsPressed()
 
 
 Rectangle{      //PRES INTERFACE
@@ -1032,6 +1033,12 @@ Rectangle{
                 fillMode: Image.PreserveAspectFit
                 smooth: true
                 source: "images/mainmenu/notificationOff.png" //TODO: NOTIFICATION ON/OFF
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    notificationsPressed()
+                }
             }
         }
 

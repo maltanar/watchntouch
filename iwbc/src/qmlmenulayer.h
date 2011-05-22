@@ -9,16 +9,13 @@ class QMLMenuLayer : public QDeclarativeView
 public:
     explicit QMLMenuLayer(QWidget *parent = 0);
 
-    void setDeliveryWidget(QWidget *newWidget);
-    QWidget * getDeliveryWidget();
+
 
 protected:
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
 
-    QWidget * m_deliveryWidget;
-    bool m_deliveryActive;
+    void resizeEvent(QResizeEvent *event);
+
+
 
 signals:
 
