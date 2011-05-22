@@ -9,6 +9,7 @@ Rectangle {
     property string activeFunction: ""
     signal qmlSignal(string msg)
     signal mainMenuShowHide(bool newStatus)
+    signal exitPressed()
 
 
 Rectangle{      //PRES INTERFACE
@@ -1809,7 +1810,7 @@ Rectangle{
                 anchors.fill: parent
                 onClicked: {
 
-                    Qt.quit()
+                    exitPressed()
                 }
             }
         }

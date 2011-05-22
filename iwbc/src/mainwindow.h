@@ -50,6 +50,7 @@ protected:
 
 private slots:
     void mainMenuShowHide(bool newStatus);
+    void exitPressed();
 
 
 };

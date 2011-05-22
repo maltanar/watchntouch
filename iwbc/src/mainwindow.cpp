@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     centralStretcher->addLayout(centralStack);
 
     connect(m_qmlMenu->rootObject(), SIGNAL(mainMenuShowHide(bool)), this, SLOT(mainMenuShowHide(bool)));
+    connect(m_qmlMenu->rootObject(), SIGNAL(exitPressed()), this, SLOT(exitPressed()));
 
     //m_qmlMenu->setStyleSheet("border: 2px solid red");
     //m_currentTaskContainer->setStyleSheet("border: 3px solid yellow; background: red");
@@ -122,3 +123,7 @@ void MainWindow::createAppSubdir(QString subdirName)
     }
 }
 
+void MainWindow::exitPressed()
+{
+    close();
+}
