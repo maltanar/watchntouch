@@ -13,6 +13,8 @@ Rectangle {
     signal recordPressed(bool newStatus)
     signal notificationsPressed()
     signal presentationPressed()
+    signal webPressed()
+    signal multimediaPressed()
 
 
 Rectangle{      //PRES INTERFACE
@@ -1582,6 +1584,7 @@ Rectangle{
                     onClicked: {
                         window.activeFunction = "web"
                         textWeb.no=textWeb.no+1;
+                        webPressed()
                         if(textWeb.no==0){
                             textWebBackgroundCircle.visible = false;
                             textWeb.visible = false;
@@ -1656,6 +1659,7 @@ Rectangle{
                     onClicked: {
                         window.activeFunction = "multimedia"
                         textMM.no=textMM.no+1;
+                        multimediaPressed()
                         if(textMM.no==0){
                             textMMBackgroundCircle.visible = false;
                             textMM.visible = false;

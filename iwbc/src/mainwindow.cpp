@@ -57,6 +57,8 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(recordPressed(bool)), this, SLOT(recordPressed(bool)));
     connect(m_qmlMenu->rootObject(), SIGNAL(notificationsPressed()), this, SLOT(notificationsPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(presentationPressed()), this, SLOT(presentationPressed()));
+    connect(m_qmlMenu->rootObject(), SIGNAL(webPressed()), this, SLOT(webPressed()));
+    connect(m_qmlMenu->rootObject(), SIGNAL(multimediaPressed()), this, SLOT(multimediaPressed()));
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)
@@ -84,6 +86,18 @@ void MainWindow::notificationsPressed()
 void MainWindow::presentationPressed()
 {
     // TODO filter type as presentation
+    openContent();
+}
+
+void MainWindow::webPressed()
+{
+    // TODO filter type as web
+    openContent();
+}
+
+void MainWindow::multimediaPressed()
+{
+    // TODO filter type as multimedia
     openContent();
 }
 

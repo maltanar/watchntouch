@@ -59,6 +59,8 @@ private slots:
     void recordPressed(bool newStatus);
     void notificationsPressed();
     void presentationPressed();
+    void webPressed();
+    void multimediaPressed();
 
 
 };
