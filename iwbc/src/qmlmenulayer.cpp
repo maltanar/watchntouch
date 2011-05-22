@@ -23,5 +23,5 @@ void QMLMenuLayer::resizeEvent(QResizeEvent *event)
     QDeclarativeView::resizeEvent(event);
 
     clearMask();
-    setMask(QRegion(0, height()-100, width() , 100));
+    setMask(QRegion(0, height()-150, width() , 150));
 }

@@ -56,6 +56,7 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(exitPressed()), this, SLOT(exitPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(recordPressed(bool)), this, SLOT(recordPressed(bool)));
     connect(m_qmlMenu->rootObject(), SIGNAL(notificationsPressed()), this, SLOT(notificationsPressed()));
+    connect(m_qmlMenu->rootObject(), SIGNAL(presentationPressed()), this, SLOT(presentationPressed()));
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)
@@ -78,6 +79,12 @@ void MainWindow::recordPressed(bool newStatus)
 void MainWindow::notificationsPressed()
 {
     qWarning() << "notifications pressed";
+}
+
+void MainWindow::presentationPressed()
+{
+    // TODO filter type as presentation
+    openContent();
 }
 
 MainWindow::~MainWindow()
@@ -146,4 +153,81 @@ void MainWindow::createAppSubdir(QString subdirName)
 void MainWindow::exitPressed()
 {
     close();
+}
+
+void MainWindow::openContent()
+{
+    QString selectedContent;
+    ContentSelector csel;
+    if(csel.exec() != QDialog::Accepted)
+        // no content selected, do nothing
+        return;
+
+    //widgetStack->setVisible(true);
+
+    // TODO implement context saving when we switch from one content type to the other!
+    // e.g presentation -> another presentation saves the annotations, but presentation -> video
+    // just hides the presentation and doesn't save the changes that was made on the presentation
+    // it is still saved when we close the app but we shouldn't rely on that
+
+    selectedContent = csel.getSelectedContent();
+
+    /*if(selectedContent == "$screenshot$") {
+        openScreenshot();
+    } else if (selectedContent == "$newsketch$") {
+        openNewSketch();
+    } else if (selectedContent == "$existingsketch$") {
+        openExistingSketch();
+    } else if (selectedContent == "$webpage$") {
+        // TODO move to own function
+        widgetStack->setCurrentIndex(WEBPAGE_ANNOTATION);
+        widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
+        groupBoxForWeb->resize(ui->scrollArea->size()-QSize(10,10));
+        webDraw->attachToContentDisplay(webDisplay);
+        //webDisplay->selectContent("");
+        webDisplay->raise();
+        webDraw->raise();
+    }
+    else {
+        // TODO check content type before loading?
+        // TODO the code below won't apply once we have fit to height/width options
+        // set desired image size to a bit smaller than the scroll area size
+        if(selectedContent.endsWith("pdf") || selectedContent.endsWith("ppt") || selectedContent.endsWith("odp") ) {
+
+            widgetStack->setCurrentIndex(PRESENTATION_ANNOTATION);
+
+            display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
+            draw->attachToContentDisplay(display);  // TODO bunu bir presentation actıktan sonra yapmak lazım ?
+            display->selectContent(csel.getSelectedContent());
+
+            widgetStack->resize(display->getContentSize());
+            if(widgetStack->width() < 800)
+                widgetStack->resize(800, widgetStack->height());
+            draw->raise();
+            //qmlMenu->raise();
+
+        } else if(selectedContent.endsWith("mp4") || selectedContent.endsWith("avi") || selectedContent.endsWith("flv")) {
+
+            widgetStack->setCurrentIndex(VIDEO_ANNOTATION);
+
+            widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
+            videoDraw->attachToContentDisplay(videoPlayer);
+            videoPlayer->selectContent(selectedContent);
+            videoPlayer->raise();
+            videoDraw->raise();
+
+        } else if(selectedContent.endsWith("html") || selectedContent.endsWith("htm") || selectedContent.startsWith("www") || selectedContent.startsWith("http")) {
+            // TODO webpage resize problems
+            // TODO find a way to scroll the webpage
+            widgetStack->setCurrentIndex(WEBPAGE_ANNOTATION);
+
+            widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
+            groupBoxForWeb->resize(ui->scrollArea->size()-QSize(10,10));
+            //webCanvas->resize(ui->scrollArea->size()-QSize(50,10));
+            webDraw->attachToContentDisplay(webDisplay);
+            webDisplay->selectContent(selectedContent);
+            webDisplay->raise();
+            webDraw->raise();
+        }
+    }*/
 }

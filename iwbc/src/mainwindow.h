@@ -48,6 +48,8 @@ protected:
     void createAppSubdir(QString subdirName);
     void connectMainMenuSignals();
 
+    void openContent();
+
     void closeEvent(QCloseEvent *);
     void resizeEvent(QResizeEvent *);
 
@@ -56,6 +58,7 @@ private slots:
     void exitPressed();
     void recordPressed(bool newStatus);
     void notificationsPressed();
+    void presentationPressed();
 
 
 };

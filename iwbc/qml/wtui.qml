@@ -12,6 +12,7 @@ Rectangle {
     signal exitPressed()
     signal recordPressed(bool newStatus)
     signal notificationsPressed()
+    signal presentationPressed()
 
 
 Rectangle{      //PRES INTERFACE
@@ -1506,6 +1507,7 @@ Rectangle{
                     onClicked: {
                         window.activeFunction = "presentation"
                         textPres.no=textPres.no+1;
+                        presentationPressed();
                         if(textPres.no==0){
                             textPresBackgroundCircle.visible = false;
                             textPres.visible = false;
