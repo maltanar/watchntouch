@@ -41,6 +41,8 @@ protected:
     QScrollArea *m_currentTaskContainer;
     Ui::MainWindow *ui;
 
+    Screencasting m_screencast;
+
     void initGlobals();
     void deleteGlobals();
     void createAppSubdir(QString subdirName);

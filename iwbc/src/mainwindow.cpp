@@ -69,7 +69,10 @@ void MainWindow::mainMenuShowHide(bool newStatus)
 
 void MainWindow::recordPressed(bool newStatus)
 {
-    qWarning() << "record pressed" << newStatus;
+    if(newStatus)
+        m_screencast.startScreencasting();
+    else
+        m_screencast.stopScreencasting();
 }
 
 void MainWindow::notificationsPressed()
