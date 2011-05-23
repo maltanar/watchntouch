@@ -17,6 +17,7 @@ INCLUDEPATH  +=     src   \
                     src/screencasting \
                     src/screenshot    \
                     src/wiimote \
+                    src/tasks \
                     /usr/include/poppler/qt4     
 
 
@@ -59,7 +60,9 @@ HEADERS +=          src/qmlmenulayer.h \
                     src/wiimote/irthread.h \
                     src/wiimote/inputcalibration.h \
                     src/wiimote/eventgenerator.h \
-                    src/wiimote/calibrationwindow.h
+                    src/wiimote/calibrationwindow.h \
+    src/tasks/presentationdisplaytask.h \
+    src/tasks/contentdisplaytask.h
 
 SOURCES +=          src/qmlmenulayer.cpp \
                     src/mainwindow.cpp \
@@ -91,7 +94,9 @@ SOURCES +=          src/qmlmenulayer.cpp \
                     src/wiimote/irthread.cpp \
                     src/wiimote/inputcalibration.cpp \
                     src/wiimote/eventgenerator.cpp \
-                    src/wiimote/calibrationwindow.cpp
+                    src/wiimote/calibrationwindow.cpp \
+    src/tasks/presentationdisplaytask.cpp \
+    src/tasks/contentdisplaytask.cpp
 
 RESOURCES +=        resources.qrc
 

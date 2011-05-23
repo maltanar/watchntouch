@@ -21,6 +21,7 @@ private:
     int slideCount;
     int index;
     qreal scaleFactor;
+    QImage m_currentPageImage;
     RenderedImageCash c;
     LoadRenderedImagesToFiles loader;
 

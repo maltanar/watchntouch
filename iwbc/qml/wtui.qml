@@ -15,6 +15,7 @@ Rectangle {
     signal presentationPressed()
     signal webPressed()
     signal multimediaPressed()
+    signal sketchPressed()
 
 
 Rectangle{      //PRES INTERFACE
@@ -1198,7 +1199,7 @@ Rectangle{
 
 
                     onClicked: {
-
+                        sketchPressed();
                         if(rectSketch.isMenuOn){
                         sketchMenuHide.running = true;
                         //sketchButtonMenuHide.running = true;

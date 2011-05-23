@@ -173,7 +173,10 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
         first = false;
         pageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
                                                                scaleFactor * QLabel::physicalDpiY());
-        pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        qWarning() << "at first, pageimage size" << pageImage.size() << "desired size" << desiredSize;
+        if(desiredSize != QSize(0,0))
+            pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
         contentSize = pageImage.size();
 
@@ -206,7 +209,8 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
                 c.start();
             }
 
-            pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            if(desiredSize != QSize(0,0))
+                pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
             contentSize = pageImage.size();
 
@@ -224,7 +228,8 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
 
             pageImage = doc->page(slideNo-1)->renderToImage(120,120);
 
-            pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            if(desiredSize != QSize(0,0))
+                pageImage = pageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
             contentSize = pageImage.size();
 

@@ -31,13 +31,7 @@ ContentSelector::ContentSelector(ContentType desiredContentType, QWidget *parent
 
     loadRecentlyUsedList();
 
-    // unless we're loading a presentation, hide the Google Docs option
-    if(m_desiredContentType != CONTENTTYPE_SKETCH)
-        ui->tabWidget->removeTab(2);
-
-    // unless we're loading a presentation, hide the Google Docs option
-    if(m_desiredContentType != CONTENTTYPE_PRESENTATION)
-        ui->tabWidget->removeTab(1);
+    // TODO rework the content selection interface
 
 }
 

@@ -5,20 +5,12 @@
 #include <QStackedWidget>
 #include <QDeclarativeView>
 #include <QScrollArea>
-#include "presentationdisplaywidget.h"
-#include "sketchingwidget.h"
-#include "annotationwidget.h"
-#include "contextmenu.h"
-#include "screencasting.h"
+#include <QHash>
+#include "presentationdisplaytask.h"
 
-#include "QjtMouseGesture.h"
+#include "screencasting.h"
 #include "screenshot.h"
 
-#include "videounderlay.h"
-#include "videocontrolpanel.h"
-
-#include "webpagedisplaywidget.h"
-#include "webcontrolpanel.h"
 
 #include "qmlmenulayer.h"
 
@@ -41,6 +33,7 @@ protected:
     QScrollArea *m_currentTaskContainer;
     Ui::MainWindow *ui;
     QString m_selectedContent;
+    QHash<QString, ContentDisplayTask *> m_tasks;
 
     Screencasting m_screencast;
 
@@ -54,6 +47,8 @@ protected:
     void openWebPage();
     void openMultimedia();
 
+    void setActiveTask(QString taskID);
+
     void closeEvent(QCloseEvent *);
     void resizeEvent(QResizeEvent *);
 
@@ -65,6 +60,7 @@ private slots:
     void presentationPressed();
     void webPressed();
     void multimediaPressed();
+    void sketchPressed();
 
 
 };

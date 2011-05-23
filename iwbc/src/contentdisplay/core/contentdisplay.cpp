@@ -9,6 +9,7 @@ ContentDisplay::ContentDisplay(QWidget *parent) :
 {
     contentType = CONTENTTYPE_UNDEFINED;
     contentSize = QSize(0,0);
+    desiredSize = QSize(0,0);
 }
 
 QString ContentDisplay::getContentIdentifier()

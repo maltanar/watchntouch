@@ -59,6 +59,7 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(presentationPressed()), this, SLOT(presentationPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(webPressed()), this, SLOT(webPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(multimediaPressed()), this, SLOT(multimediaPressed()));
+    connect(m_qmlMenu->rootObject(), SIGNAL(sketchPressed()), this, SLOT(sketchPressed()));
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)
@@ -146,8 +147,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     //draw->contentChanged("");
     //videoDraw->contentChanged("");
     //webDraw->contentChanged("");
+    // TODO IMPORTANT save all active tasks' changes!
     recentlyUsed->writeToStorage();
-    // TODO BUG recent items list is lost on closing the app?
     event->accept();
 }
 
@@ -168,7 +169,31 @@ void MainWindow::exitPressed()
 
 void MainWindow::openPresentation()
 {
+    PresentationDisplayTask * newTask;
+    QString newTaskID;
     m_selectedContent = openContent(CONTENTTYPE_PRESENTATION);
+
+    if(m_selectedContent != "") {
+        // create and insert new task into the list of active tasks
+        PresentationDisplayTask * newTask = new PresentationDisplayTask(this);
+        newTask->getContentDisplay()->selectContent(m_selectedContent);
+        // TODO add some "salt" to content identifier - user may want to open the same content multiple times
+        newTaskID = newTask->getContentDisplay()->getContentIdentifier();
+        m_tasks.insert(newTaskID, newTask);
+        // set this as the active task
+        setActiveTask(newTaskID);
+    }
+}
+
+void MainWindow::setActiveTask(QString taskID)
+{
+    ContentDisplayTask * theTask = m_tasks.value(taskID, NULL);
+
+    if(theTask) {
+        // TODO let the menu know that the active task changed
+       m_currentTaskContainer->setWidget(theTask);
+       theTask->resize(m_currentTaskContainer->size() - QSize(5,5));
+    }
 }
 
 void MainWindow::openWebPage()
@@ -255,4 +280,10 @@ QString MainWindow::openContent(ContentType type)
             webDraw->raise();
         }
     }*/
+}
+
+
+void MainWindow::sketchPressed()
+{
+    m_selectedContent = openContent(CONTENTTYPE_SKETCH);
 }
