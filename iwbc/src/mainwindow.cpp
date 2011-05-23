@@ -85,20 +85,17 @@ void MainWindow::notificationsPressed()
 
 void MainWindow::presentationPressed()
 {
-    // TODO filter type as presentation
-    openContent();
+    openPresentation();
 }
 
 void MainWindow::webPressed()
 {
-    // TODO filter type as web
-    openContent();
+    openWebPage();
 }
 
 void MainWindow::multimediaPressed()
 {
-    // TODO filter type as multimedia
-    openContent();
+    openMultimedia();
 }
 
 MainWindow::~MainWindow()
@@ -169,13 +166,27 @@ void MainWindow::exitPressed()
     close();
 }
 
-void MainWindow::openContent()
+void MainWindow::openPresentation()
 {
-    QString selectedContent;
-    ContentSelector csel;
+    m_selectedContent = openContent(CONTENTTYPE_PRESENTATION);
+}
+
+void MainWindow::openWebPage()
+{
+    m_selectedContent = openContent(CONTENTTYPE_WEBPAGE);
+}
+
+void MainWindow::openMultimedia()
+{
+    m_selectedContent = openContent(CONTENTTYPE_VIDEO);
+}
+
+QString MainWindow::openContent(ContentType type)
+{
+    ContentSelector csel(type);
     if(csel.exec() != QDialog::Accepted)
         // no content selected, do nothing
-        return;
+        return "";
 
     //widgetStack->setVisible(true);
 
@@ -184,7 +195,7 @@ void MainWindow::openContent()
     // just hides the presentation and doesn't save the changes that was made on the presentation
     // it is still saved when we close the app but we shouldn't rely on that
 
-    selectedContent = csel.getSelectedContent();
+    return csel.getSelectedContent();
 
     /*if(selectedContent == "$screenshot$") {
         openScreenshot();

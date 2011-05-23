@@ -6,7 +6,7 @@
 
 #include "googledocsaccess.h"
 
-ContentSelector::ContentSelector(QWidget *parent) :
+ContentSelector::ContentSelector(ContentType desiredContentType, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ContentSelector)
 {
@@ -15,6 +15,8 @@ ContentSelector::ContentSelector(QWidget *parent) :
     ui->gdocsBox->setVisible(false);
 
     selectedContent = "";
+
+    m_desiredContentType = desiredContentType;
 
     // create the display labels we use for the recent items
     QVBoxLayout *layout = new QVBoxLayout();
@@ -28,6 +30,15 @@ ContentSelector::ContentSelector(QWidget *parent) :
     ui->recentBox->setLayout(layout);
 
     loadRecentlyUsedList();
+
+    // unless we're loading a presentation, hide the Google Docs option
+    if(m_desiredContentType != CONTENTTYPE_SKETCH)
+        ui->tabWidget->removeTab(2);
+
+    // unless we're loading a presentation, hide the Google Docs option
+    if(m_desiredContentType != CONTENTTYPE_PRESENTATION)
+        ui->tabWidget->removeTab(1);
+
 }
 
 ContentSelector::~ContentSelector()

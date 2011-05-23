@@ -15,7 +15,7 @@ class ContentSelector : public QDialog
     Q_OBJECT
 
 public:
-    explicit ContentSelector(QWidget *parent = 0);
+    explicit ContentSelector(ContentType desiredContentType, QWidget *parent = 0);
     ~ContentSelector();
 
     QString getSelectedContent();
@@ -24,6 +24,7 @@ private:
     Ui::ContentSelector *ui;
     QLabel *recentItem[NUM_RECENT_ITEMS];
     QString selectedContent;
+    ContentType m_desiredContentType;
 
     void loadRecentlyUsedList();
     void selectContent(QString content);

@@ -40,6 +40,7 @@ protected:
     QMLMenuLayer *m_qmlMenu;
     QScrollArea *m_currentTaskContainer;
     Ui::MainWindow *ui;
+    QString m_selectedContent;
 
     Screencasting m_screencast;
 
@@ -48,7 +49,10 @@ protected:
     void createAppSubdir(QString subdirName);
     void connectMainMenuSignals();
 
-    void openContent();
+    QString openContent(ContentType type);
+    void openPresentation();
+    void openWebPage();
+    void openMultimedia();
 
     void closeEvent(QCloseEvent *);
     void resizeEvent(QResizeEvent *);

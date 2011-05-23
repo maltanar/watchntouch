@@ -10,7 +10,8 @@ typedef enum _ContentType {
     CONTENTTYPE_UNDEFINED,
     CONTENTTYPE_PRESENTATION,
     CONTENTTYPE_VIDEO,
-    CONTENTTYPE_WEBPAGE
+    CONTENTTYPE_WEBPAGE,
+    CONTENTTYPE_SKETCH
 } ContentType;
 
 //W&T Drawing groups, this numbers directly depend on the order they have been put into the widgetStack vairable. See mainwindow.cpp, constructor.
