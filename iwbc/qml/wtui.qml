@@ -31,9 +31,9 @@ Rectangle {
     signal sliderMouseUp( int timelineSizeInPixels, int relativePositionOfTimeIndicatorInPixels )
     signal sliderMouseMove( int timelineSizeInPixels, int relativePositionOfTimeIndicatorInPixels )
 
-    signal volumeMouseDown(int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
-    signal volumeMouseUp( int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
-    signal volumeMouseMove( int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
+    signal volumeMouseDown(int volume)
+    signal volumeMouseUp(int volume)
+    signal volumeMouseMove(int volume)
 
 
     //int timelineSizeInPixels, int relativePositionOfTimeIndicatorInPixels
@@ -477,10 +477,6 @@ Rectangle{          //MM INTERFACE
                     smooth: true
                     source: "images/MMImages/MMVolumeIndicator.png"
                 }
-
-                signal volumeMouseDown(int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
-                signal volumeMouseUp( int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
-                signal volumeMouseMove( int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
 
                 onPositionChanged:{
                     volumeMouseMove((volumeControlIndicatorImage.x*100)/(window.width/9.54));
