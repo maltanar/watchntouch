@@ -39,3 +39,20 @@ void displayInfoMessage(QString messageText, QString messageTitle)
     inf.setDefaultButton(QMessageBox::Ok);
     inf.exec();
 }
+
+bool displayYesNoMessage(QString messageText, QString messageTitle)
+{
+    QMessageBox inf;
+
+
+    inf.setWindowTitle(messageTitle);
+    inf.setText(messageText);
+    inf.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+    inf.setIcon(QMessageBox::Question);
+    int result = inf.exec();
+
+    if(result == QMessageBox::Yes)
+        return true;
+    else
+        return false;
+}

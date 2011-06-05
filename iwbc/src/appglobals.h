@@ -76,6 +76,7 @@ typedef enum _DrawingState {
 
 void displayErrorMessage(QString messageText, QString messageTitle = "Error");
 void displayInfoMessage(QString messageText, QString messageTitle = "Information");
+bool displayYesNoMessage(QString messageText, QString messageTitle = "Confirmation");
 
 
 #endif // APPGLOBALS_H

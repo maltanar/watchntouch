@@ -1646,7 +1646,11 @@ Rectangle{
             }
 
 
-            PropertyAnimation { id: menuDownAnimation; target: bottomMenu; property: "y"; to: window.height; duration: 250 }
+            PropertyAnimation { id: menuDownAnimation; target: bottomMenu; property: "y"; to: window.height; duration: 250
+                onCompleted: {
+                    mainMenuShowHide(false);
+                }
+            }
             PropertyAnimation { id: menuUpAnimation; target: bottomMenu; property: "y"; to: window.height - bottomMenu.height; duration: 250 }
 
             PropertyAnimation { id: upButtonAppearAnimation; target: upButtonRect; property: "opacity"; to: 0.8; duration: 250 }
@@ -1657,7 +1661,6 @@ Rectangle{
                 onClicked:{         //TODO: button acilimlari kapanacak + - ler gibi
                     menuDownAnimation.running = true
                     upButtonAppearAnimation.running = true
-                    mainMenuShowHide(false);
                 }
             }
 

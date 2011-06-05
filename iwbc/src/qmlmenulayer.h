@@ -9,9 +9,10 @@ class QMLMenuLayer : public QDeclarativeView
 public:
     explicit QMLMenuLayer(QWidget *parent = 0);
 
-
+    void setMaskHeightFromBottom(unsigned int height);
 
 protected:
+    unsigned int m_maskHeight;
 
     void resizeEvent(QResizeEvent *event);
 

@@ -67,8 +67,10 @@ void MainWindow::mainMenuShowHide(bool newStatus)
 {
     if(newStatus) {
         qWarning() << "menu now visible";
+        m_qmlMenu->setMaskHeightFromBottom(110);
     } else {
         qWarning() << "menu now hidden";
+        m_qmlMenu->setMaskHeightFromBottom(35);
     }
 }
 
@@ -149,8 +151,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
     //videoDraw->contentChanged("");
     //webDraw->contentChanged("");
     // TODO IMPORTANT save all active tasks' changes!
-    recentlyUsed->writeToStorage();
-    event->accept();
+    if(displayYesNoMessage("Are you sure you want to exit?", "Exiting Watch and Touch")) {
+        recentlyUsed->writeToStorage();
+        event->accept();
+    } else
+        event->ignore();
 }
 
 void MainWindow::createAppSubdir(QString subdirName)

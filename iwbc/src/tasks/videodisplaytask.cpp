@@ -31,6 +31,7 @@ VideoDisplayTask::VideoDisplayTask(QWidget *parent) :
 
     // connect signals and slots for video
     // TODO move requestReadOnlyAnnotation signal connection to AnnotationWidget
+    // TODO connect video signals and slots with QML
     connect(m_videoPanel, SIGNAL(playClicked()), m_videoPlayer, SLOT(play()));
     connect(m_videoPlayer, SIGNAL(requestReadOnlyAnnotation(bool)), m_videoDraw, SLOT(requestReadOnlyStatus(bool)));
     connect(m_videoPanel, SIGNAL(pauseClicked()), m_videoPlayer, SLOT(pause()));

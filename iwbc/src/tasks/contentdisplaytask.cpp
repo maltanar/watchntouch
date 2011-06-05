@@ -110,8 +110,7 @@ QImage ContentDisplayTask::getTaskScreenshot()
 {
     QImage resultImage;
 
-    if(m_contentDisplay)
-        resultImage = QPixmap::grabWidget(m_contentDisplay).toImage().scaledToHeight(120);
+    resultImage = QPixmap::grabWidget(this).toImage().scaledToHeight(120, Qt::SmoothTransformation);
 
     return resultImage;
 }
