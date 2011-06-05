@@ -23,7 +23,7 @@ PresentationDisplayWidget::PresentationDisplayWidget(QWidget *parent) :
 
     first = true;
 
-    QObject::connect(&loader,SIGNAL(imagesAreReady()),&c,SLOT(imagesAreReady()));
+    //QObject::connect(&loader,SIGNAL(imagesAreReady()),&c,SLOT(imagesAreReady()));
 }
 
 PresentationDisplayWidget::~PresentationDisplayWidget()
@@ -116,7 +116,7 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
 
     doc = Poppler::Document::load(fileName);    
     if (doc) {
-        loader.fileName = c.fileName = fileName;
+        //loader.fileName = c.fileName = fileName;
         first = true;
         c.areImagesReady = false;
 
@@ -133,8 +133,9 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
         doc->setRenderHint(Poppler::Document::Antialiasing);
         doc->setRenderHint(Poppler::Document::TextAntialiasing);
         currentSlide = 0;
-        loader.slideCount = c.slideCount = slideCount = doc->numPages();
-        loader.start();
+        slideCount = doc->numPages();
+        //loader.slideCount = c.slideCount = slideCount = doc->numPages();
+        //loader.start();
         gotoSlide(1);
     }
     return doc != 0;
@@ -155,12 +156,27 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
     if(slideNo == currentSlide)
         return;
 
-    qWarning() << "---------- SLIDE NO " << slideNo << " ---------------";
+    m_currentPageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
+                                                           scaleFactor * QLabel::physicalDpiY());
+
+    qWarning() << "at first, pageimage size" << m_currentPageImage.size() << "desired size" << desiredSize;
+    if(desiredSize != QSize(0,0))
+        m_currentPageImage = m_currentPageImage.scaled(desiredSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    contentSize = m_currentPageImage.size();
+
+    setPixmap(QPixmap::fromImage(m_currentPageImage));
+
+    // TODO do error checking
+    currentSlide = slideNo;
+    emit contextChanged(getContentContext());
+
+    //qWarning() << "---------- SLIDE NO " << slideNo << " ---------------";
 
     // TODO retrieve page from PresentationLoader instead
     // TODO fit to width / height options while rendering need consideration,
 
-    bool isInCash = false;
+    /*bool isInCash = false;
     for(int i = -3 ; i < 4; i++) {
         if(index + i == slideNo)
             isInCash = true;
@@ -241,7 +257,7 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
 
             qWarning() << "c run ediyor cikti";
         }
-    }
+    }*/
 
 }
 
