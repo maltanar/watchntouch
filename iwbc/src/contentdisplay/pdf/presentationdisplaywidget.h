@@ -16,6 +16,11 @@ public:
     QString getContentContext();
     bool selectContent(QString location);
 
+protected:
+
+    void keyPressEvent(QKeyEvent *ev);
+    void resizeEvent(QResizeEvent *ev);
+
 private:
     int currentSlide;
     int slideCount;
@@ -38,6 +43,8 @@ signals:
 public slots:
     void gotoNextSlide();
     void gotoPrevSlide();
+    void gotoFirstSlide();
+    void gotoLastSlide();
     void gotoSlide(int slideNo);
 
 };

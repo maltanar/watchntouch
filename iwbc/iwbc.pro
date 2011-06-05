@@ -62,7 +62,8 @@ HEADERS +=          src/qmlmenulayer.h \
                     src/wiimote/eventgenerator.h \
                     src/wiimote/calibrationwindow.h \
     src/tasks/presentationdisplaytask.h \
-    src/tasks/contentdisplaytask.h
+    src/tasks/contentdisplaytask.h \
+    src/tasks/videodisplaytask.h
 
 SOURCES +=          src/qmlmenulayer.cpp \
                     src/mainwindow.cpp \
@@ -96,7 +97,8 @@ SOURCES +=          src/qmlmenulayer.cpp \
                     src/wiimote/eventgenerator.cpp \
                     src/wiimote/calibrationwindow.cpp \
     src/tasks/presentationdisplaytask.cpp \
-    src/tasks/contentdisplaytask.cpp
+    src/tasks/contentdisplaytask.cpp \
+    src/tasks/videodisplaytask.cpp
 
 RESOURCES +=        resources.qrc
 

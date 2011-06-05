@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QStackedLayout>
+#include <QImage>
 #include <contentdisplay.h>
 #include <annotationwidget.h>
 #include <contextmenu.h>
@@ -16,6 +17,9 @@ public:
     ContentDisplay * getContentDisplay();
     AnnotationWidget * getAnnotationWidget();
     ContextMenu * getContextMenu();
+
+    virtual void activate();
+    virtual void deactivate();
 
 protected:
     ContextMenu * m_contextMenu;
@@ -31,6 +35,7 @@ protected:
 signals:
 
 public slots:
+    QImage getTaskScreenshot();
 
 private slots:
     void showContextMenu(QPoint p);

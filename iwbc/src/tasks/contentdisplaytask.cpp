@@ -30,6 +30,30 @@ void ContentDisplayTask::setContextMenu(ContextMenu *newMenu)
     connect(m_contextMenu, SIGNAL(penWidthDecrease()), m_annotationWidget, SLOT(decreasePenWidth()));
 }
 
+void ContentDisplayTask::activate()
+{
+    // make this task the active task
+    // at the base level this means the associated ContentDisplay will grab the keyboard
+    // and the menu opening gesture (pinch)
+
+    if(m_contentDisplay) {
+        // TODO do we really need to grab the keyboard? find a better way
+        // m_contentDisplay->grabKeyboard();
+        // TODO IMPORTANT GESTURE grab pinch gesture!
+    }
+}
+
+void ContentDisplayTask::deactivate()
+{
+    // we are no longer the active task
+    // for the base implementation, release the grabbed keyboard and gesture focus
+
+    if(m_contentDisplay) {
+        // m_contentDisplay->releaseKeyboard();
+        // TODO IMPORTANT GESTURE release the pinch gesture
+    }
+}
+
 void ContentDisplayTask::setAnnotationWidget(AnnotationWidget * newWidget)
 {
     m_annotationWidget = newWidget;
@@ -74,6 +98,20 @@ void ContentDisplayTask::resizeEvent(QResizeEvent *e)
 {
     QWidget::resizeEvent(e);
 
+    QSize hede = size();
+
+    if(m_contentDisplay) {
+        m_contentDisplay->setDesiredSize(hede);
+        qWarning() << "ContentDisplayTask resizeEvent" << hede;
+    }
+}
+
+QImage ContentDisplayTask::getTaskScreenshot()
+{
+    QImage resultImage;
+
     if(m_contentDisplay)
-        m_contentDisplay->setDesiredSize(size());
+        resultImage = QPixmap::grabWidget(m_contentDisplay).toImage().scaledToHeight(120);
+
+    return resultImage;
 }

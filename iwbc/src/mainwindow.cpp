@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     // setup the global variables and create the subdirs (if needed)
     initGlobals();
+    m_activeTask = NULL;
     // create the central stacked layout
     QVBoxLayout * centralStretcher = new QVBoxLayout();
     QStackedLayout * centralStack = new QStackedLayout();
@@ -175,13 +176,14 @@ void MainWindow::openPresentation()
 
     if(m_selectedContent != "") {
         // create and insert new task into the list of active tasks
-        PresentationDisplayTask * newTask = new PresentationDisplayTask(this);
-        newTask->getContentDisplay()->selectContent(m_selectedContent);
-        // TODO add some "salt" to content identifier - user may want to open the same content multiple times
-        newTaskID = newTask->getContentDisplay()->getContentIdentifier();
+        newTask = new PresentationDisplayTask(this);
+        newTaskID = "presentation_" + QString::number(QDateTime::currentMSecsSinceEpoch());
+        qWarning() << "new task identifier:" << newTaskID;
         m_tasks.insert(newTaskID, newTask);
         // set this as the active task
         setActiveTask(newTaskID);
+        // load the content
+        newTask->getContentDisplay()->selectContent(m_selectedContent);
     }
 }
 
@@ -190,8 +192,16 @@ void MainWindow::setActiveTask(QString taskID)
     ContentDisplayTask * theTask = m_tasks.value(taskID, NULL);
 
     if(theTask) {
+        if(m_activeTask) {
+            // deactivate previous task
+            m_activeTask->deactivate();
+        }
         // TODO let the menu know that the active task changed
        m_currentTaskContainer->setWidget(theTask);
+       m_activeTask = theTask;
+       // let the active widget know it's been activated
+       m_activeTask->activate();
+       // TODO RESIZING erronous logic here?
        theTask->resize(m_currentTaskContainer->size() - QSize(5,5));
     }
 }
@@ -203,7 +213,22 @@ void MainWindow::openWebPage()
 
 void MainWindow::openMultimedia()
 {
+    VideoDisplayTask * newTask;
+    QString newTaskID;
+
     m_selectedContent = openContent(CONTENTTYPE_VIDEO);
+
+    if(m_selectedContent != "") {
+        // create and insert new task into the list of active tasks
+        newTask = new VideoDisplayTask(this);
+        newTaskID = "video_" + QString::number(QDateTime::currentMSecsSinceEpoch());
+        qWarning() << "new task identifier:" << newTaskID;
+        m_tasks.insert(newTaskID, newTask);
+        // set this as the active task
+        setActiveTask(newTaskID);
+        // load the content
+        newTask->getContentDisplay()->selectContent(m_selectedContent);
+    }
 }
 
 QString MainWindow::openContent(ContentType type)

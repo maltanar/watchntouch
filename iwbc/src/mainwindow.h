@@ -7,6 +7,7 @@
 #include <QScrollArea>
 #include <QHash>
 #include "presentationdisplaytask.h"
+#include "videodisplaytask.h"
 
 #include "screencasting.h"
 #include "screenshot.h"
@@ -34,6 +35,7 @@ protected:
     Ui::MainWindow *ui;
     QString m_selectedContent;
     QHash<QString, ContentDisplayTask *> m_tasks;
+    ContentDisplayTask * m_activeTask;
 
     Screencasting m_screencast;
 

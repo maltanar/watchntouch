@@ -37,6 +37,7 @@ VideoUnderlay::VideoUnderlay( QWidget* parent )
     video = new QLabel( this );
     this->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
     video->setFixedSize( 640, 480 );
+    contentSize = QSize(640, 480);
 
     // The container will contain the main layout
     // Video + Play button
