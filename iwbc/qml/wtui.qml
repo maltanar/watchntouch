@@ -4,10 +4,13 @@ Rectangle {
     id: window
     z:-1
     width: 800
-    height: parent.height
+    height: 600
     color: "transparent"
     property string activeFunction: ""
     signal qmlSignal(string msg)
+
+    //BOTTOM MENU SIGNALS AND FUNCTIONS
+
     signal mainMenuShowHide(bool newStatus)
     signal exitPressed()
     signal recordPressed(bool newStatus)
@@ -16,6 +19,37 @@ Rectangle {
     signal webPressed()
     signal multimediaPressed()
     signal sketchPressed()
+
+    //MULTIMEDIA SIGNALS AND FUNCTIONS
+
+    signal playPause(bool playpause)
+    signal gotoPrevAnnotation()
+    signal gotoNextAnnotation()
+
+
+    signal sliderMouseDown(int timelineSizeInPixels, int relativePositionOfTimeIndicatorInPixels )
+    signal sliderMouseUp( int timelineSizeInPixels, int relativePositionOfTimeIndicatorInPixels )
+    signal sliderMouseMove( int timelineSizeInPixels, int relativePositionOfTimeIndicatorInPixels )
+
+    signal volumeMouseDown(int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
+    signal volumeMouseUp( int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
+    signal volumeMouseMove( int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
+
+
+    //int timelineSizeInPixels, int relativePositionOfTimeIndicatorInPixels
+
+    function setSliderPosition(a){
+        timelineDotImage.x=a*window.width/1.25;
+    }
+
+    function setVideoTime(a, b){
+        passingTime.pt=a;
+        remainingTime.rt=b;
+    }
+
+    function setVolume(a){
+        volumeControlIndicatorImage.x=(a*(window.width/9.54))/100;
+    }
 
 
 Rectangle{      //PRES INTERFACE
@@ -381,9 +415,18 @@ Rectangle{      //PRES INTERFACE
 
 }
 
+
+
+
 Rectangle{          //MM INTERFACE
+
+        function playPause(){
+
+
+        }
+
         id: multInterface
-        opacity: 0
+        opacity: 1
         width: window.width
         height: window.width/15.0
         color: "#a2d6d8"
@@ -394,7 +437,7 @@ Rectangle{          //MM INTERFACE
             anchors.horizontalCenter: multInterface.horizontalCenter
             anchors.bottom: multInterface.top
             anchors.bottomMargin:-2
-            width: window.width/1.92
+            width: window.width/2.375
             height: window.width/20.89
             smooth: true
             source: "images/MMImages/MMBarTop.png"
@@ -413,12 +456,10 @@ Rectangle{          //MM INTERFACE
                 height: window.width/29.25
                 y: window.width/266
                 property int volume: 70; //TODO: Volume'e bagla: 100 uzerinden, 70/100 baslangic degeri?
-
                 drag.target : volumeControlIndicatorImage
                 drag.axis : Drag.XAxis
                 drag.minimumX : 0
                 drag.maximumX : window.width/9.54
-
 
                 Image {
                     id: volumeControlImage
@@ -435,37 +476,26 @@ Rectangle{          //MM INTERFACE
                     y:-window.width/256
                     smooth: true
                     source: "images/MMImages/MMVolumeIndicator.png"
-
                 }
+
+                signal volumeMouseDown(int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
+                signal volumeMouseUp( int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
+                signal volumeMouseMove( int volumeSizeInPixels, int relativePositionOfVolumeIndicatorInPixels )
+
                 onPositionChanged:{
-                    /* //DEBUG
-                    if(volumeControlArea.mouseX<window.width/90){
-                        passingTime.length=0;
-                        remainingTime.length=100;
+                    volumeMouseMove((volumeControlIndicatorImage.x*100)/(window.width/9.54));
+                    console.log((volumeControlIndicatorImage.x*100)/(window.width/9.54));
+                }
 
-                    }
-                    else if(volumeControlArea.mouseX/window.width>(0.111)){
-                        passingTime.length=100;
-                        remainingTime.length=0;
+                onPressed: {
+                    volumeControlIndicatorImage.x = mouseX-window.width/130;
+                    volumeMouseDown((volumeControlIndicatorImage.x*100)/(window.width/9.54));
+                    console.log((volumeControlIndicatorImage.x*100)/(window.width/9.54));
+                }
 
-                    }
-                    else{
-                        passingTime.length= (volumeControlArea.mouseX/window.width)/(0.111)*100;
-                        remainingTime.length=100-passingTime.length;
-                    }
-                    */
-                    if(volumeControlArea.mouseX<window.width/90){
-                       volume=0;
-
-                    }
-                    else if(volumeControlArea.mouseX/window.width>(0.111)){
-                        volume=100;
-
-                    }
-                    else{
-                        volume= (volumeControlArea.mouseX/window.width)/(0.111)*100;
-
-                    }
+                onReleased: {
+                    volumeMouseUp((volumeControlIndicatorImage.x*100)/(window.width/9.54));
+                    console.log((volumeControlIndicatorImage.x*100)/(window.width/9.54));
                 }
 
              }
@@ -488,10 +518,14 @@ Rectangle{          //MM INTERFACE
                     window.qmlSignal("Play-Pause Video");
                     console.log("Play-Pause Video");
                     videoPlayPauseNo = videoPlayPauseNo+1;
-                        if (videoPlayPauseNo%2==0)
+                        if (videoPlayPauseNo%2==0){
                             playPauseImage.source = "images/MMImages/MMPlay.png";
-                        if (videoPlayPauseNo%2==1)
+                            window.playPause(false);
+                        }
+                        if (videoPlayPauseNo%2==1){
                             playPauseImage.source = "images/MMImages/MMPause.png";
+                            window.playPause(true);
+                        }
                 }
              }
             MouseArea {
@@ -509,6 +543,7 @@ Rectangle{          //MM INTERFACE
                 }
                 onClicked: {
                     window.qmlSignal("Goto Previous Video Annotation")
+                    window.gotoPrevAnnotation();
                     console.log("Goto Previous Video Annotation");
                 }
              }
@@ -528,72 +563,11 @@ Rectangle{          //MM INTERFACE
                 }
                 onClicked: {
                     window.qmlSignal("Goto Next Video Annotation")
+                    window.gotoNextAnnotation();
                     console.log("Goto Next Video Annotation");
                 }
              }
 
-            MouseArea {
-                id: delAnnoArea
-                width: window.width/16.51
-                height: window.width/24.97
-
-                //contentWidth: image.width; contentHeight: image.height
-                Image {
-                    id: delAnnoImage
-                    width: window.width/16.51
-                    height: window.width/24.97
-                    smooth: true
-                    source: "images/MMImages/MMDeleteAnnotation.png"
-                }
-                onClicked: {
-                    window.qmlSignal("Delete Video Annotation")
-                    console.log("Delete Video Annotation");
-                }
-             }
-
-            MouseArea {
-                id: delAllAnnoArea
-                width: window.width/16.51
-                height: window.width/24.97
-
-                //contentWidth: image.width; contentHeight: image.height
-                Image {
-                    id: delAllAnnoImage
-                    width: window.width/16.51
-                    height: window.width/24.97
-                    smooth: true
-                    source: "images/MMImages/MMDeleteAllAnnotations.png"
-                }
-                onClicked: {
-                    window.qmlSignal("Delete All Video Annotations")
-                    console.log("Delete All Video Annotations");
-                }
-             }
-
-            /*MouseArea {
-                id: annoOnOffArea
-                width: window.width/21.33
-                height: window.width/21.33
-                y: -window.width/266
-                property int videoAnnoNo: 0
-                Image {
-                    id: annoOnOffImage
-                    width: window.width/21.33
-                    height: window.width/21.33
-                    smooth: true
-                    source: "images/MMImages/MMAnnoOff.png"
-                }
-
-                onClicked: {
-                    window.qmlSignal("Video Annotation State Changed")
-                    videoAnnoNo = videoAnnoNo+1;
-                        if (videoAnnoNo%2==0)
-                            annoOnOffImage.source = "images/MMImages/MMAnnoOff.png";
-                        if (videoAnnoNo%2==1)
-                            annoOnOffImage.source = "images/MMImages/MMAnnoOn.png";
-                }
-
-             }*/
         }
 
         Row{
@@ -603,13 +577,8 @@ Rectangle{          //MM INTERFACE
 
             Text{
                 id: passingTime
-                property int length: 0 //(in seconds)
-                property int min: Math.floor(length/60)
-                property int sec: length%60
-                text:{
-                    if(sec<10) min+".0"+sec;
-                    else min+"."+sec;
-                }
+                property string pt: "0.00"
+                text: pt
                 width: window.width/15.6
                 font.family: "Ubuntu"
                 font.pointSize: window.width/50
@@ -629,13 +598,8 @@ Rectangle{          //MM INTERFACE
             Text{
                 width: window.width/15.6
                 id: remainingTime
-                property int length: multInterface.fullLength //(in seconds)
-                property int min: Math.floor(length/60)
-                property int sec: length%60
-                text:{
-                    if(sec<10) min+".0"+sec;
-                    else min+"."+sec;
-                }
+                property string rt: "0.00"
+                text: rt
                 font.family: "Ubuntu"
                 font.pointSize: window.width/50
                 color: "black"
@@ -644,37 +608,10 @@ Rectangle{          //MM INTERFACE
         }
 
 
-/*                  //TODO: Deneme 1387: Bu annotation'lar var ya, yoklar. Istenilen yerlere sari kutular yerlesmiyorlar. Of.
-           Rectangle {
-               id: yellowDot
-                height: window.width/102
-                width: window.width/102
-                y: 28
-                x: 103
-
-                color: "#ffff00"
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {            // TODO: Uzerine basilabilecek mi?
-
-                            }
-                        }
-            }
-
-
-
-           Binding {
-                target: yellowDot; property: 'x'
-                value: yellowDot.x+40; when: delAllAnnoArea.
-            }
-
-*/
-
         MouseArea {
             id: timelineDotArea
             width: window.width/1.20
-            height: window.width/20
+            height: window.width/30
             x: window.width/12
             y: window.width/64
             clip:true
@@ -683,30 +620,24 @@ Rectangle{          //MM INTERFACE
             drag.minimumX : 0
             drag.maximumX : window.width/1.26
 
-            onPositionChanged:{
+           onPositionChanged:{
+                window.sliderMouseMove(window.width/1.20, timelineDotImage.x);
+                console.log(timelineDotImage.x);
+            }
 
-                if(timelineDotArea.mouseX<window.width/90){
-                    passingTime.length=0;
-                    remainingTime.length=multInterface.fullLength;
-                }
-                else if(timelineDotArea.mouseX/window.width>1/1.23){
-                    passingTime.length=multInterface.fullLength;
-                    remainingTime.length=0;
-                }
-                else{
-                    passingTime.length= (timelineDotArea.mouseX/window.width)/(1/1.23)*multInterface.fullLength;
-                    remainingTime.length=multInterface.fullLength-passingTime.length;
+            onPressed: {
+                timelineDotImage.x=mouseX-window.width/70;
+                window.sliderMouseDown(window.width/1.20, timelineDotImage.x);
+                console.log(timelineDotImage.x);
+            }
 
-                }
+            onReleased: {
+                window.sliderMouseUp(window.width/1.20, timelineDotImage.x);
             }
 
 
-            //contentWidth: image.width; contentHeight: image.height
             Image {
                 id: timelineDotImage
-
-
-
                 width: window.width/30.11
                 height: window.width/30.11
                 source: "images/MMImages/MMTimeIndicator.png"
