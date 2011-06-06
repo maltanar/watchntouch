@@ -18,3 +18,8 @@ PresentationDisplayTask::PresentationDisplayTask(QWidget *parent) :
 
     m_annotationWidget->raise();
 }
+
+ContentType PresentationDisplayTask::getContentType()
+{
+    return CONTENTTYPE_PRESENTATION;
+}

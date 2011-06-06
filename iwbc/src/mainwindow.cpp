@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
     centralStack->setStackingMode(QStackedLayout::StackAll);
     centralStretcher->addLayout(centralStack);
 
+    m_currentTaskContainer->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
     connectMainMenuSignals();
 
     //m_qmlMenu->setStyleSheet("border: 2px solid red");
@@ -213,7 +215,22 @@ void MainWindow::setActiveTask(QString taskID)
 
 void MainWindow::openWebPage()
 {
+    WebPageDisplayTask * newTask;
+    QString newTaskID;
+
     m_selectedContent = openContent(CONTENTTYPE_WEBPAGE);
+
+    if(m_selectedContent != "") {
+        // create and insert new task into the list of active tasks
+        newTask = new WebPageDisplayTask(this);
+        newTaskID = "webpage_" + QString::number(QDateTime::currentMSecsSinceEpoch());
+        qWarning() << "new task identifier:" << newTaskID;
+        m_tasks.insert(newTaskID, newTask);
+        // set this as the active task
+        setActiveTask(newTaskID);
+        // load the content
+        newTask->getContentDisplay()->selectContent(m_selectedContent);
+    }
 }
 
 void MainWindow::openMultimedia()

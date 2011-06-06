@@ -17,6 +17,7 @@ public:
     ContentDisplay * getContentDisplay();
     AnnotationWidget * getAnnotationWidget();
     ContextMenu * getContextMenu();
+    virtual ContentType getContentType() = 0;
 
     virtual void activate();
     virtual void deactivate();

@@ -13,6 +13,8 @@ class PresentationDisplayTask : public ContentDisplayTask
 public:
     explicit PresentationDisplayTask(QWidget *parent = 0);
 
+    ContentType getContentType();
+
 protected:
     QStackedLayout m_layout;
 

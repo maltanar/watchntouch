@@ -15,6 +15,8 @@ class VideoDisplayTask : public ContentDisplayTask
 public:
     explicit VideoDisplayTask(QWidget *parent = 0);
 
+    ContentType getContentType();
+
 protected:
     QWidget * m_videoCanvas;
     VideoUnderlay * m_videoPlayer;

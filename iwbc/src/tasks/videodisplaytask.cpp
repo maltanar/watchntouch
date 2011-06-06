@@ -41,3 +41,8 @@ VideoDisplayTask::VideoDisplayTask(QWidget *parent) :
 
     m_annotationWidget->raise();
 }
+
+ContentType VideoDisplayTask::getContentType()
+{
+    return CONTENTTYPE_VIDEO;
+}

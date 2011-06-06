@@ -8,6 +8,7 @@
 #include <QHash>
 #include "presentationdisplaytask.h"
 #include "videodisplaytask.h"
+#include "webpagedisplaytask.h"
 
 #include "screencasting.h"
 #include "screenshot.h"

@@ -14,6 +14,7 @@ class WebPageDisplayTask : public ContentDisplayTask
     Q_OBJECT
 public:
     explicit WebPageDisplayTask(QWidget *parent = 0);
+    ContentType getContentType();
 
 protected:
     QWidget * m_webCanvas;

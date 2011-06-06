@@ -42,3 +42,8 @@ WebPageDisplayTask::WebPageDisplayTask(QWidget *parent) :
 
     m_annotationWidget->raise();
 }
+
+ContentType WebPageDisplayTask::getContentType()
+{
+    return CONTENTTYPE_WEBPAGE;
+}
