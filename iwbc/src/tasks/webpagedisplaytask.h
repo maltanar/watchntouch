@@ -16,7 +16,10 @@ public:
     explicit WebPageDisplayTask(QWidget *parent = 0);
 
 protected:
-    QWidget * m_webScrollArea;
+    QWidget * m_webCanvas;
+    WebpageDisplayWidget * m_webDisplay;
+    AnnotationWidget * m_webDraw;
+    WebControlPanel * m_webControlPanel;
 
 signals:
 
