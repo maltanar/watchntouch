@@ -8,6 +8,7 @@ Rectangle {
     color: "transparent"
     property string activeFunction: ""
     signal qmlSignal(string msg)
+    signal notifyRegionChange(bool isDisplayed, int top, int left, int w, int h, string name)
 
     //BOTTOM MENU SIGNALS AND FUNCTIONS
 
@@ -19,6 +20,26 @@ Rectangle {
     signal webPressed()
     signal multimediaPressed()
     signal sketchPressed()
+
+    function handleOpacityChange(rect,opacity0,opacity1){
+        if(rect.opacity == opacity0) {
+            notifyRegionChange(false,
+                               rect.mapToItem(window, 0,0).x,
+                               rect.mapToItem(window, 0,0).y,
+                               rect.width,
+                               rect.height,
+                               rect.objectName);
+        } else if(rect.opacity == opacity1) {
+            notifyRegionChange(true,
+                               rect.mapToItem(window, 0,0).x,
+                               rect.mapToItem(window, 0,0).y,
+                               rect.width,
+                               rect.height,
+                               rect.objectName);
+        }
+    }
+
+
 
     //MULTIMEDIA SIGNALS AND FUNCTIONS
 
@@ -51,6 +72,30 @@ Rectangle {
         volumeControlIndicatorImage.x=(a*(window.width/9.54))/100;
     }
 
+    //WEB SIGNALS AND FUNCTIONS
+
+    signal back()
+    signal forward()
+    signal refresh()
+    signal bookmarkRequest(string URL)
+    signal gotoBookmark(string URL)
+    signal deleteBookmarkSignal(string id)
+    signal bookmarkMenuShowHide(bool showhide)
+    signal webAnnotationStatus(bool onOff)
+    signal gotoURL(string URL)
+
+
+    function addBookmark(URL){
+        weblistModelSketch.append({"val": URL});
+    }
+
+    function deleteBookmark(index){
+        weblistModelSketch.remove(index);
+    }
+
+    function closeBookmarkList(){
+        favListHide.running=true;
+    }
 
 Rectangle{      //PRES INTERFACE
          id: presInterface
@@ -426,7 +471,7 @@ Rectangle{          //MM INTERFACE
         }
 
         id: multInterface
-        opacity: 1
+        opacity: 0
         width: window.width
         height: window.width/15.0
         color: "#a2d6d8"
@@ -645,13 +690,14 @@ Rectangle{          //MM INTERFACE
 
 
 }
+
 Rectangle{          //WEB INTERFACE
-        id: webInterface
-        opacity: 0
-        width: window.width
-        height: window.width/20.0
-        color: "#a8b3c7"
-        anchors.bottom: bottomMenu.top
+    id: webInterface
+    opacity: 1
+    width: window.width
+    height: window.width/20.0
+    color: "#a8b3c7"
+    anchors.bottom: bottomMenu.top
 
         PropertyAnimation { id: favListReveal; targets: [favsBackgroundImg, favListContent]; property: "opacity"; to: 1; duration: 300 }
         PropertyAnimation { id: favListHide; targets: [favsBackgroundImg, favListContent]; property: "opacity"; to: 0; duration: 300 }
@@ -695,9 +741,8 @@ Rectangle{          //WEB INTERFACE
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            window.qmlSignal("Goto "+ val);
+                            gotoBookmark(val);
                             console.log("Goto "+ val);
-                            webTextInput.text=val;
                         }
                     }
                 }
@@ -713,9 +758,8 @@ Rectangle{          //WEB INTERFACE
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            window.qmlSignal("Remove "+ index);
+                            deleteBookmarkSignal(index);
                             console.log("Remove "+ index);
-                            weblistModelSketch.remove(index);
                         }
                     }
 
@@ -804,7 +848,7 @@ Rectangle{
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            window.qmlSignal("Web Goto Previous Page");
+                            back();
                             console.log("Web Goto Previous Page");
                         }
                     }
@@ -818,7 +862,7 @@ Rectangle{
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            window.qmlSignal("Web Goto Next Page");
+                            next();
                             console.log("Web Goto Next Page");
                         }
                     }
@@ -832,7 +876,7 @@ Rectangle{
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            window.qmlSignal("Web Refresh");
+                            refresh();
                             console.log("Web Refresh");
                         }
                     }
@@ -859,9 +903,8 @@ Rectangle{
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            window.qmlSignal("Web Add to Favourites");
+                            bookmarkRequest(webTextInput.text);
                             console.log("Web Add to Favourites");
-                            weblistModelSketch.append({"val": webTextInput.text});
                         }
                     }
                 }
@@ -880,16 +923,19 @@ Rectangle{
                             webFavNo = webFavNo+1;
                             if (webFavNo%2==0){
                                 webFavImg.source = "images/webImages/favList.png";
-                                window.qmlSignal("Web Close Favourites List");
+                                //window.qmlSignal("Web Close Favourites List");
                                 console.log("Web Close Favourites List");
+                                console.log(webFavImg.mapToItem(window,0,0).x);
+                                console.log(webFavImg.mapToItem(window,0,0).y);
                                 favListHide.running = true;
                             }
 
                             if (webFavNo%2==1){
                                 webFavImg.source = "images/webImages/favListOn.png"
-                                window.qmlSignal("Web Open Favourites List");
+                                //window.qmlSignal("Web Open Favourites List");
                                 console.log("Web Open Favourites List");
                                 favListReveal.running = true;
+
                             }
                         }
                     }
@@ -914,30 +960,20 @@ Rectangle{
                         anchors.fill: parent
                         property int webAnnoNo: 0
                         onClicked: {
-                            window.qmlSignal("Web Annotation On-Off");
                             console.log("Web Annotation On-Off");
                             webAnnoNo = webAnnoNo+1;
-                            if (webAnnoNo%2==0)
+                            if (webAnnoNo%2==0){
                                 webAnnoImg.source = "images/webImages/annooff.png";
-                            if (webAnnoNo%2==1)
+                                webAnnotationStatus(false);
+                            }
+                            if (webAnnoNo%2==1){
                                 webAnnoImg.source = "images/webImages/annoon.png"
+                                webAnnotationStatus(true);
+                            }
                         }
                     }
                 }
 
-                Image{
-                    width: window.width/26.94; height: window.width/26.94   // CALCULATION: width: window.width/ (1024/ImageWidth)
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                    source: "images/webImages/annodelall.png"
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            window.qmlSignal("Web Remove All Annotations");
-                            console.log("Web Remove All Annotations");
-                        }
-                    }
-                }
             }
 
 
@@ -951,7 +987,7 @@ Rectangle{
     Row{                //BOTTOM MENU
         id: bottomMenu
         y: window.height
-        spacing: window.width/140.0
+        spacing: window.width/50.0
 
         Rectangle {      //NOTIFICATION BUTTON
             id: rectNotification
@@ -1662,10 +1698,11 @@ Rectangle{
 
             Rectangle{
                 id: upButtonRect
+                objectName: "upButtonRect"
                 opacity: 100
                 anchors.bottom: parent.top
                 anchors.left: parent.right
-                anchors.leftMargin: window.width/16
+                anchors.leftMargin: window.width/38
                 color: "transparent"
                 z:1
                 width: window.width/18
@@ -1685,6 +1722,9 @@ Rectangle{
                         mainMenuShowHide(true);
                     }
                 }
+                onOpacityChanged: {
+                    handleOpacityChange(upButtonRect,0,0.8);
+                }
             }
 
             /*Rectangle{
@@ -1697,50 +1737,6 @@ Rectangle{
            }*/
         }
 
-        Rectangle {     // BATTERY AND CONFIGURATION
-            id: rectConfBatt
-            color: "#dbdbdb";
-            width: window.width/17
-            height: (width/60)*137
-            Column{
-                anchors.centerIn: parent
-                spacing: window.width/51.2     //TODO: STATIC
-                Image{
-                    //anchors.centerIn: parent
-                    width: window.width/20.89; height: window.width/44.52    // CALCULATION: width: window.width/ (1024/ImageWidth)
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                    source: "images/mainmenu/battery.png"
-                }
-                Image{
-                    //anchors.centerIn: parent
-                    width: window.width/21.3; height: window.width/20.89    // CALCULATION: width: window.width/ (1024/ImageWidth)
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                    source: "images/mainmenu/config.png"
-                }
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    window.activeFunction = "config"
-                    activeCollaboration.visible = false;
-                    activeSketch.visible = false;
-                    activePresentation.visible = false;
-                    activeWeb.visible = false;
-                    activeMultimedia.visible = false;
-                    activeConfig.visible = true;
-                }
-            }
-            Rectangle{
-                id: activeConfig
-                visible: false;
-                anchors.bottom: parent.top
-                color: "#342323"
-                width: window.width/17
-                height: (width/13)
-            }
-        }
 
         Rectangle {     // EXIT BUTTON
             id: rectExit
