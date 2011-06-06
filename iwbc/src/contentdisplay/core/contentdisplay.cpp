@@ -5,7 +5,7 @@
 #include "appglobals.h"
 
 ContentDisplay::ContentDisplay(QWidget *parent) :
-    QLabel(parent)
+    QWidget(parent)
 {
     contentType = CONTENTTYPE_UNDEFINED;
     contentSize = QSize(0,0);

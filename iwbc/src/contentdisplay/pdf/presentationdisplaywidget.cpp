@@ -9,6 +9,7 @@
 #include <QImageReader>
 #include <QKeyEvent>
 #include <QResizeEvent>
+#include <QVBoxLayout>
 
 #include "recentlyused.h"
 
@@ -25,7 +26,12 @@ PresentationDisplayWidget::PresentationDisplayWidget(QWidget *parent) :
 
     first = true;
 
-    setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+    m_imageDisplayLabel = new QLabel(this);
+    QVBoxLayout * theLayout = new QVBoxLayout();
+    theLayout->addWidget(m_imageDisplayLabel, 0, Qt::AlignHCenter | Qt::AlignVCenter);
+    this->setLayout(theLayout);
 
     //QObject::connect(&loader,SIGNAL(imagesAreReady()),&c,SLOT(imagesAreReady()));
 }
@@ -175,8 +181,8 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
     if(slideNo == currentSlide)
         return;
 
-    m_currentPageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * QLabel::physicalDpiX(),
-                                                           scaleFactor * QLabel::physicalDpiY());
+    m_currentPageImage = doc->page(slideNo-1)->renderToImage(scaleFactor * m_imageDisplayLabel->physicalDpiX(),
+                                                           scaleFactor * m_imageDisplayLabel->physicalDpiY());
 
     qWarning() << "at first, pageimage size" << m_currentPageImage.size() << "desired size" << desiredSize;
     if(desiredSize != QSize(0,0))
@@ -184,11 +190,11 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
 
     contentSize = m_currentPageImage.size();
 
-    resize(contentSize);
+    m_imageDisplayLabel->resize(contentSize);
 
-    qWarning() << "PresentationDisplayWidget is now" << size();
+    qWarning() << "PresentationDisplayWidget m_imageDisplayLabel is now" << contentSize;
 
-    setPixmap(QPixmap::fromImage(m_currentPageImage));
+    m_imageDisplayLabel->setPixmap(QPixmap::fromImage(m_currentPageImage));
 
     // TODO do error checking
     currentSlide = slideNo;

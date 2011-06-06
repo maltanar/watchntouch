@@ -5,6 +5,8 @@
 #include "renderedimagecash.h"
 #include "loadrenderedimagestofiles.h"
 
+#include <QLabel>
+
 class PresentationDisplayWidget : public ContentDisplay
 {
     Q_OBJECT
@@ -29,6 +31,7 @@ private:
     QImage m_currentPageImage;
     RenderedImageCash c;
     LoadRenderedImagesToFiles loader;
+    QLabel *m_imageDisplayLabel;
 
     bool first;
     void generateContentIdentifier();

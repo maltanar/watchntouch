@@ -35,7 +35,7 @@ void AnnotationWidget::contextChanged(QString newContext)
     if(currentContentDisplay && newContext != "") {
         currentSize = currentContentDisplay->getContentSize();  // set the content size
         qWarning() << "AnnotationWidget resizing to content size" << currentSize;
-        resize(currentSize); // resize the annotation widget
+        //resize(currentSize); // resize the annotation widget
         getDrawingData()->setSceneRect(0,0,currentSize.width(), currentSize.height());
         getDrawingData()->requestStageSize(currentSize);
         sceneCenter = QPointF(width() / 2, height() / 2);
