@@ -3,7 +3,7 @@ import Qt 4.7
 Rectangle {
     id: window
     z:-1
-    width: 800
+    width: 1024
     height: 600
     color: "transparent"
     property string activeFunction: ""
@@ -28,6 +28,35 @@ Rectangle {
             adjustInteractiveHeight(-rect.height);
         } else if(rect.opacity == opacity1) {
             adjustInteractiveHeight(rect.height);
+        }
+    }
+
+    function handleUpRectParent(parent){
+        switch(parent){
+        case 0:{
+            upButtonImg.parent = upButtonRect;
+        }
+        break;
+        case 1:{
+            upButtonImg.parent = sketchInterface;
+        }
+        break;
+        case 2:{
+            upButtonImg.parent = presInterface;
+        }
+        break;
+        case 3:{
+            upButtonImg.parent = webInterface;
+        }
+        break;
+        case 4:{
+            upButtonImg.parent = multInterface;
+        }
+        break;
+        default:{
+            upButtonImg.parent = upButtonRect;
+        }
+        break;
         }
     }
 
@@ -986,10 +1015,49 @@ Rectangle{
     }
 
 
+Rectangle{ // MENU UP
+    id: upButtonRect
+    objectName: "upButtonRect"
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    color: "transparent"
+    opacity: 1
+    z:10
+    width: window.width/18
+    height: window.width*0.04
+    Image{
+        id: upButtonImg
+        opacity: 1
+        z:10
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        width: window.width/18.96; height: window.width/24.97    // CALCULATION: width: window.width/ (1024/ImageWidth)
+        fillMode: Image.PreserveAspectFit
+        smooth: true
+        source: "images/mainmenu/up.png"
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked:{
+                menuUpAnimation.running = true
+                upButtonDisappearAnimation.running = true
+                mainMenuShowHide(true);
+                adjustInteractiveHeight(menuUpDown.height);
+            }
+        }
+        onOpacityChanged: {
+            handleOpacityChange(upButtonImg,0,0.8);
+        }
+    }
+
+}
+
+
 Row{                //BOTTOM MENU
         id: bottomMenu
         y: window.height
         spacing: window.width/50.0
+
 
 
         Rectangle {      //NOTIFICATION BUTTON
@@ -1662,7 +1730,11 @@ Row{                //BOTTOM MENU
 
         }
 
-        Rectangle {     // MENU UP/DOWN
+
+
+
+
+        Rectangle {     // MENU DOWN
             id: menuUpDown
             color: "#bc9e7e"
             width: window.width/23
@@ -1685,8 +1757,8 @@ Row{                //BOTTOM MENU
             }
             PropertyAnimation { id: menuUpAnimation; target: bottomMenu; property: "y"; to: window.height - bottomMenu.height; duration: 250 }
 
-            PropertyAnimation { id: upButtonAppearAnimation; target: upButtonRect; property: "opacity"; to: 0.8; duration: 250 }
-            PropertyAnimation { id: upButtonDisappearAnimation; target: upButtonRect; property: "opacity"; to: 0; duration: 250 }
+            PropertyAnimation { id: upButtonAppearAnimation; target: upButtonImg; property: "opacity"; to: 0.8; duration: 250 }
+            PropertyAnimation { id: upButtonDisappearAnimation; target: upButtonImg; property: "opacity"; to: 0; duration: 250 }
 
             MouseArea {
                 anchors.fill: parent
@@ -1696,37 +1768,6 @@ Row{                //BOTTOM MENU
                 }
             }
 
-            Rectangle{
-                id: upButtonRect
-                objectName: "upButtonRect"
-                opacity: 100
-                anchors.bottom: parent.top
-                anchors.left: parent.right
-                anchors.leftMargin: window.width/38
-                color: "transparent"
-                z:1
-                width: window.width/18
-                height: window.width*0.04
-                Image{
-                    anchors.centerIn: parent
-                    width: window.width/18.96; height: window.width/24.97    // CALCULATION: width: window.width/ (1024/ImageWidth)
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                    source: "images/mainmenu/up.png"
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked:{
-                        menuUpAnimation.running = true
-                        upButtonDisappearAnimation.running = true
-                        mainMenuShowHide(true);
-                        adjustInteractiveHeight(menuUpDown.height);
-                    }
-                }
-                onOpacityChanged: {
-                    handleOpacityChange(upButtonRect,0,0.8);
-                }
-            }
 
             /*Rectangle{
             id: activeUpDown
@@ -1761,5 +1802,6 @@ Row{                //BOTTOM MENU
         }
 
     }
+
 
 }
