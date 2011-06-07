@@ -93,8 +93,13 @@ Rectangle {
 
 Rectangle{      //PRES INTERFACE
          id: presInterface
+         objectName: "presInterface"
          anchors.bottom: bottomMenu.top
          opacity: 0
+
+         onOpacityChanged: {
+             handleOpacityChange(presInterface,0,1);
+         }
 
 
     Rectangle{      //buttons
@@ -454,9 +459,6 @@ Rectangle{      //PRES INTERFACE
 
 }
 
-
-
-
 Rectangle{          //MM INTERFACE
 
         function playPause(){
@@ -769,6 +771,7 @@ Rectangle{          //WEB INTERFACE
 
         Image{
             id:favsBackgroundImg
+            objectName: "favsBackgroundImg"
             opacity:0
             width: window.width/2.89
             height: window.width/4.76
@@ -778,6 +781,9 @@ Rectangle{          //WEB INTERFACE
             anchors.bottomMargin: window.width/160
             x: window.width-window.width/2.95
 
+            onOpacityChanged: {
+                handleOpacityChange(favsBackgroundImg,0,1);
+            }
             }
 
 Rectangle{
@@ -793,9 +799,6 @@ Rectangle{
         ListView {              // TODO: butonun altina giriyor, bug var
             clip: true
             spacing: window.width/128
-
-
-
             id: webFavListView
             anchors.fill: parent
             model: webVisualDataModel
@@ -823,6 +826,10 @@ Rectangle{
                      font.family: "Ubuntu"
                      font.pointSize: window.width/68
                      color: "black"
+
+                     onAccepted: {
+                        gotoURL(webTextInput.text);
+                     }
 
                  }
             }
@@ -919,9 +926,10 @@ Rectangle{
                                 webFavImg.source = "images/webImages/favList.png";
                                 //window.qmlSignal("Web Close Favourites List");
                                 console.log("Web Close Favourites List");
-                                console.log(webFavImg.mapToItem(window,0,0).x);
-                                console.log(webFavImg.mapToItem(window,0,0).y);
+                                //console.log(webFavImg.mapToItem(window,0,0).x);
+                                //console.log(webFavImg.mapToItem(window,0,0).y);
                                 favListHide.running = true;
+                                bookmarkMenuShowHide(false);
                             }
 
                             if (webFavNo%2==1){
@@ -929,7 +937,7 @@ Rectangle{
                                 //window.qmlSignal("Web Open Favourites List");
                                 console.log("Web Open Favourites List");
                                 favListReveal.running = true;
-
+                                bookmarkMenuShowHide(true);
                             }
                         }
                     }
@@ -978,7 +986,7 @@ Rectangle{
     }
 
 
-    Row{                //BOTTOM MENU
+Row{                //BOTTOM MENU
         id: bottomMenu
         y: window.height
         spacing: window.width/50.0
@@ -1754,6 +1762,4 @@ Rectangle{
 
     }
 
-
 }
-
