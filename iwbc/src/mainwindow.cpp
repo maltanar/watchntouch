@@ -17,6 +17,8 @@
 #include "googledocsaccess.h"
 #include "eventgenerator.h"
 
+#include <QMetaMethod>
+
 #include "appglobals.h"
 
 RecentlyUsed *recentlyUsed;
@@ -63,16 +65,23 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(webPressed()), this, SLOT(webPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(multimediaPressed()), this, SLOT(multimediaPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(sketchPressed()), this, SLOT(sketchPressed()));
+
+    connect(m_qmlMenu->rootObject(), SIGNAL(adjustInteractiveHeight(int)), m_qmlMenu, SLOT(adjustInteractiveHeight(int)));
+
+    // set the default interactive height for the menu
+    QVariant defIntHeight;
+    QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "getMenuDefaultInteractiveHeight", Q_RETURN_ARG(QVariant, defIntHeight));
+    m_qmlMenu->adjustInteractiveHeight(defIntHeight.toInt());
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)
 {
     if(newStatus) {
         qWarning() << "menu now visible";
-        m_qmlMenu->setMaskHeightFromBottom(110);
+        //m_qmlMenu->setMaskHeightFromBottom(110);
     } else {
         qWarning() << "menu now hidden";
-        m_qmlMenu->setMaskHeightFromBottom(35);
+        //m_qmlMenu->setMaskHeightFromBottom(35);
     }
 }
 

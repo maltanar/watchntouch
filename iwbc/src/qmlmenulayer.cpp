@@ -18,12 +18,15 @@ QMLMenuLayer::QMLMenuLayer(QWidget *parent) :
 
 }
 
-void QMLMenuLayer::setMaskHeightFromBottom(unsigned int maskHeight)
+void QMLMenuLayer::adjustInteractiveHeight(int heightAdjustment)
 {
-    clearMask();
-    setMask(QRegion(0, height() - maskHeight, width() , maskHeight));
+    qWarning() << "ih adjustment" << heightAdjustment;
+    qWarning() << "old ih" << m_maskHeight;
+    m_maskHeight += heightAdjustment;
+    qWarning() << "new ih" << m_maskHeight;
 
-    m_maskHeight = maskHeight;
+    clearMask();
+    setMask(QRegion(0, height() - m_maskHeight, width() , m_maskHeight));
 }
 
 void QMLMenuLayer::resizeEvent(QResizeEvent *event)

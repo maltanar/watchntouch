@@ -7,8 +7,10 @@ Rectangle {
     height: 600
     color: "transparent"
     property string activeFunction: ""
+
     signal qmlSignal(string msg)
     signal notifyRegionChange(bool isDisplayed, int top, int left, int w, int h, string name)
+    signal adjustInteractiveHeight(int amount)
 
     //BOTTOM MENU SIGNALS AND FUNCTIONS
 
@@ -23,23 +25,11 @@ Rectangle {
 
     function handleOpacityChange(rect,opacity0,opacity1){
         if(rect.opacity == opacity0) {
-            notifyRegionChange(false,
-                               rect.mapToItem(window, 0,0).x,
-                               rect.mapToItem(window, 0,0).y,
-                               rect.width,
-                               rect.height,
-                               rect.objectName);
+            adjustInteractiveHeight(-rect.height);
         } else if(rect.opacity == opacity1) {
-            notifyRegionChange(true,
-                               rect.mapToItem(window, 0,0).x,
-                               rect.mapToItem(window, 0,0).y,
-                               rect.width,
-                               rect.height,
-                               rect.objectName);
+            adjustInteractiveHeight(rect.height);
         }
     }
-
-
 
     //MULTIMEDIA SIGNALS AND FUNCTIONS
 
@@ -70,6 +60,10 @@ Rectangle {
 
     function setVolume(a){
         volumeControlIndicatorImage.x=(a*(window.width/9.54))/100;
+    }
+
+    function getMenuDefaultInteractiveHeight() {
+        return upButtonRect.height;
     }
 
     //WEB SIGNALS AND FUNCTIONS
@@ -989,6 +983,7 @@ Rectangle{
         y: window.height
         spacing: window.width/50.0
 
+
         Rectangle {      //NOTIFICATION BUTTON
             id: rectNotification
             color: "#edec99";
@@ -1207,7 +1202,6 @@ Rectangle{
                             activePresentation.visible = false;
                             activeWeb.visible = false;
                             activeMultimedia.visible = false;
-                            activeConfig.visible = false;
                         }
                     }
                 }
@@ -1429,9 +1423,6 @@ Rectangle{
                 PropertyAnimation { id: sketchButtonMenuReveal; target: sketchButtonMenu; property: "opacity"; to: 1; duration: 150 }
                 PropertyAnimation { id: sketchButtonMenuHide; target: sketchButtonMenu; property: "opacity"; to: 0; duration: 150 }
                 */
-
-
-
             }
 
             Rectangle {                     // PRESENTATION BUTTON
@@ -1681,6 +1672,7 @@ Rectangle{
             PropertyAnimation { id: menuDownAnimation; target: bottomMenu; property: "y"; to: window.height; duration: 250
                 onCompleted: {
                     mainMenuShowHide(false);
+                    adjustInteractiveHeight(-menuUpDown.height);
                 }
             }
             PropertyAnimation { id: menuUpAnimation; target: bottomMenu; property: "y"; to: window.height - bottomMenu.height; duration: 250 }
@@ -1720,6 +1712,7 @@ Rectangle{
                         menuUpAnimation.running = true
                         upButtonDisappearAnimation.running = true
                         mainMenuShowHide(true);
+                        adjustInteractiveHeight(menuUpDown.height);
                     }
                 }
                 onOpacityChanged: {
