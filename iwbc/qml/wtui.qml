@@ -12,6 +12,63 @@ Rectangle {
     signal notifyRegionChange(bool isDisplayed, int top, int left, int w, int h, string name)
     signal adjustInteractiveHeight(int amount)
 
+
+    function showHideCollaboration(showHide){
+        showHideMenus.target=colInterface;
+        if(showHide){
+            showHideMenus.to=1;
+        }
+        else{
+            showHideMenus.to=0;
+        }
+        showHideMenus.running=true;
+    }
+
+    function showHideSketch(showHide){
+        showHideMenus.target=sketchInterface;
+        if(showHide){
+            showHideMenus.to=1;
+        }
+        else{
+            showHideMenus.to=0;
+        }
+        showHideMenus.running=true;
+    }
+
+    function showHidePresentation(showHide){
+        showHideMenus.target=presInterface;
+        if(showHide){
+            showHideMenus.to=1;
+        }
+        else{
+            showHideMenus.to=0;
+        }
+        showHideMenus.running=true;
+    }
+
+    function showHideWeb(showHide){
+        showHideMenus.target=webInterface;
+        if(showHide){
+            showHideMenus.to=1;
+        }
+        else{
+            showHideMenus.to=0;
+        }
+        showHideMenus.running=true;
+    }
+
+    function showHideMultimedia(showHide){
+        showHideMenus.target=multInterface;
+        if(showHide){
+            showHideMenus.to=1;
+        }
+        else{
+            showHideMenus.to=0;
+        }
+        showHideMenus.running=true;
+    }
+
+
     //BOTTOM MENU SIGNALS AND FUNCTIONS
 
     signal mainMenuShowHide(bool newStatus)
@@ -98,7 +155,7 @@ Rectangle {
     //WEB SIGNALS AND FUNCTIONS
 
     signal back()
-    signal forward()
+    signal next()
     signal refresh()
     signal bookmarkRequest(string URL)
     signal gotoBookmark(string URL)
@@ -118,6 +175,16 @@ Rectangle {
 
     function closeBookmarkList(){
         favListHide.running=true;
+    }
+
+    PropertyAnimation { id: showHideMenus; target: []; property: "opacity"; to: 1; duration: 300
+    onCompleted: {
+        //mainMenuShowHide(false);          //TODO SOR
+        if(showHideMenus.to==1)
+            adjustInteractiveHeight(showHideMenus.target.height);
+        else if(showHideMenus.to==0)
+            adjustInteractiveHeight(-showHideMenus.target.height);
+    }
     }
 
 Rectangle{      //PRES INTERFACE
@@ -893,6 +960,7 @@ Rectangle{
                         anchors.fill: parent
                         onClicked: {
                             next();
+                            showHideWeb(false);
                             console.log("Web Goto Next Page");
                         }
                     }
