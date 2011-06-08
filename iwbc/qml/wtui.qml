@@ -177,6 +177,31 @@ Rectangle {
         favListHide.running=true;
     }
 
+    //PRESENTATION SIGNALS AND FUNCTIONS
+
+    signal goToFirstPage()
+    signal goToPrevPage()
+    signal goToNextPage()
+    signal goToLastPage()
+    signal goToPageNumber(string no)
+    signal presZoomIn()
+    signal presZoomOut()
+    signal fitPageWidthToScreenSize();
+    signal fitPageHeighttoScreenSize();
+
+
+    function setSlideNumber(no){
+        presPageNumber.text=no;
+    }
+
+    function addToPageScroller(pathOfTheImage, pageNo){
+        presPagingVisualsListModel.append({"file": pathOfTheImage, "pageNo": pageNo})
+    }
+
+    function clearPageScroller(){
+        presPagingVisualsListModel.clear();
+    }
+
     PropertyAnimation { id: showHideMenus; target: []; property: "opacity"; to: 1; duration: 300
     onCompleted: {
         //mainMenuShowHide(false);          //TODO SOR
@@ -191,7 +216,7 @@ Rectangle{      //PRES INTERFACE
          id: presInterface
          objectName: "presInterface"
          anchors.bottom: bottomMenu.top
-         opacity: 0
+         opacity: 1
 
          onOpacityChanged: {
              handleOpacityChange(presInterface,0,1);
@@ -268,8 +293,8 @@ Rectangle{      //PRES INTERFACE
                     property int presShowPagesInt: 0;
                     anchors.fill: parent
                     onClicked:{
-                    window.qmlSignal("Presentation Goto First Page");
-                    console.log("Presentation Goto First Page");
+                        goToFirstPage();
+                        console.log("Presentation Goto First Page");
                     }
                 }
             }
@@ -290,7 +315,7 @@ Rectangle{      //PRES INTERFACE
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        window.qmlSignal("Presentation Goto Previous Page");
+                        goToPrevPage();
                         console.log("Presentation Goto Previous Page");
                     }
                 }
@@ -320,7 +345,7 @@ Rectangle{      //PRES INTERFACE
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        window.qmlSignal("Presentation Goto Next Page");
+                        goToNextPage();
                         console.log("Presentation Goto Next Page");
                     }
                 }
@@ -342,7 +367,7 @@ Rectangle{      //PRES INTERFACE
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        window.qmlSignal("Presentation Goto Last Page");
+                        goToLastPage();
                         console.log("Presentation Goto Last Page");
                     }
                 }
@@ -373,7 +398,7 @@ Rectangle{      //PRES INTERFACE
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        window.qmlSignal("Presentation Fit Page To Height");
+                        fitPageHeighttoScreenSize();
                         console.log("Presentation Fit Page To Height");
                     }
                 }
@@ -395,7 +420,7 @@ Rectangle{      //PRES INTERFACE
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        window.qmlSignal("Presentation Fit Page To Width");
+                        fitPageWidthToScreenSize();
                         console.log("Presentation Fit Page To Width");
                     }
                 }
@@ -417,7 +442,7 @@ Rectangle{      //PRES INTERFACE
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        window.qmlSignal("Presentation Zoom In");
+                        presZoomIn();
                         console.log("Presentation Zoom In");
                     }
                 }
@@ -439,7 +464,7 @@ Rectangle{      //PRES INTERFACE
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                         window.qmlSignal("Presentation Zoom Out");
+                         presZoomOut();
                          console.log("Presentation Zoom Out");
                     }
                 }
@@ -453,29 +478,30 @@ Rectangle{      //PRES INTERFACE
          anchors.bottom: presButtons.top
          opacity: 0
          width: window.width
-         height: window.width/6.0
+         height: window.width/7.2
+         clip: true;
          color: "#e5f97e"
 
          VisualDataModel {               //TODO: ListElement'ten File system'e gecir
              id: presPagingVisualsImgs
              model: ListModel {
                  id: presPagingVisualsListModel
-                 ListElement { name: "1"; name2: "1"; file: "images/presImages/pages/1.png" }
-                 ListElement { name: "2"; name2: "2"; file: "images/presImages/pages/2.png" }
-                 ListElement { name: "3"; name2: "3"; file: "images/presImages/pages/3.png" }
-                 ListElement { name: "4"; name2: "4"; file: "images/presImages/pages/4.png" }
-                 ListElement { name: "5"; name2: "5"; file: "images/presImages/pages/5.png" }
-                 ListElement { name: "6"; name2: "6"; file: "images/presImages/pages/6.png" }
-                 ListElement { name: "7"; name2: "7"; file: "images/presImages/pages/7.png" }
-                 ListElement { name: "8"; name2: "8"; file: "images/presImages/pages/8.png" }
-                 ListElement { name: "9"; name2: "9"; file: "images/presImages/pages/9.png" }
+                 ListElement { name: "1"; pageNo: "1"; file: "images/presImages/pages/1.png" }
+                 ListElement { name: "2"; pageNo: "2"; file: "images/presImages/pages/2.png" }
+                 ListElement { name: "3"; pageNo: "3"; file: "images/presImages/pages/3.png" }
+                 ListElement { name: "4"; pageNo: "4"; file: "images/presImages/pages/4.png" }
+                 ListElement { name: "5"; pageNo: "5"; file: "images/presImages/pages/5.png" }
+                 ListElement { name: "6"; pageNo: "6"; file: "images/presImages/pages/6.png" }
+                 ListElement { name: "7"; pageNo: "7"; file: "images/presImages/pages/7.png" }
+                 ListElement { name: "8"; pageNo: "8"; file: "images/presImages/pages/8.png" }
+                 ListElement { name: "9"; pageNo: "9"; file: "images/presImages/pages/9.png" }
              }
 
              /*
                                       }
                                   }
                                   Text{
-                                      text: name2
+                                      text: pageNo
                                       anchors.horizontalCenter: parent.horizontalCenter
                                       width: window.width/15.6
                                       font.family: "Ubuntu"
@@ -487,44 +513,55 @@ Rectangle{      //PRES INTERFACE
 
              delegate:Rectangle{
 
-                 width: 150
-                 height: 120
+                 width: window.width/6
+                 height: window.width/8
                  color:"transparent"
+                 anchors.bottom: parent.bottom
+                 anchors.bottomMargin: window.width/120
 
-                 Image {
+                 MouseArea {
+                     anchors.fill: parent
+
+                     onClicked: {
+                         //window.qmlSignal("Goto page "+ pageNo);                        //sayfaya git
+                         console.log("Goto page "+ pageNo);
+                     }
+                 }
+
+
+                 Image {                     
                      id: name
                      source: file
                      visible: true
-                     fillMode: Image.PreserveAspectFit
+                     height: window.width/8.192
+                     width: height*(sourceSize.width/sourceSize.height)
+                     //width: name.paintedWidth
+                     //fillMode: Image.PreserveAspectCrop
                      smooth: true
+                     anchors.centerIn: parent
 
+                     Image{
+                         anchors.centerIn: parent
+                         height: window.width/42.6
+                         width: height*(sourceSize.width/sourceSize.height)
+                         //width: height*(Image.width/Image.height)
+                         //fillMode: Image.PreserveAspectCrop
+                         smooth: true
+                         source: if(pageNo<999) "images/presImages/noFrame.png"
+                                 else "images/presImages/noFrameLarge.png"
 
-                }
+                         Text{
 
-                Image{
+                             text: pageNo
+                             anchors.centerIn: parent
+                             //font.bold: true
+                             font.family: "Ubuntu"
+                             font.pointSize: window.width/70
+                             color: "black"
+                         }
 
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: -window.width/29.25
-                    smooth: true
-                    source: "images/presImages/noFrame.png"
+                     }
 
-                    Text{
-
-                        text: name2
-                        anchors.centerIn: parent
-                        //font.bold: true
-                        font.family: "Ubuntu"
-                        font.pointSize: window.width/70
-                        color: "black"
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            window.qmlSignal("Goto page "+ name2);                        //sayfaya git
-                            console.log("Goto page "+ name2);
-                        }
-                    }
                 }
 
              }
@@ -536,15 +573,17 @@ Rectangle{      //PRES INTERFACE
          PathView {
              id: presPagingVisualsView
              anchors.fill: parent
-             anchors.topMargin:70
+             //anchors.topMargin:70
+
 
              //dragMargin : 90
 
              model: presPagingVisualsImgs
              path: Path {
-                 startX: 80; startY: 0
+
+                 startX: 80; startY: 0;
                  PathLine { x: window.width*1.2; y: 0; }
-                 //PathPercent { value: 0.8;}
+                 PathPercent {value: 0.8;}
 
              }
 
@@ -785,7 +824,7 @@ Rectangle{          //MM INTERFACE
 
 Rectangle{          //WEB INTERFACE
     id: webInterface
-    opacity: 1
+    opacity: 0
     width: window.width
     height: window.width/20.0
     color: "#a8b3c7"
