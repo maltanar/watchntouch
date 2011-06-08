@@ -202,6 +202,12 @@ Rectangle {
         presPagingVisualsListModel.clear();
     }
 
+    function alignPageScrollerToPageNumber(pageNo){
+        presPagingVisualsView.positionViewAtIndex(pageNo - 1,ListView.Beginning);
+    }
+
+
+
     PropertyAnimation { id: showHideMenus; target: []; property: "opacity"; to: 1; duration: 300
     onCompleted: {
         //mainMenuShowHide(false);          //TODO SOR
@@ -511,11 +517,15 @@ Rectangle{      //PRES INTERFACE
                               }
              */
 
-             delegate:Rectangle{
-
-                 width: window.width/6
-                 height: window.width/8
-                 color:"transparent"
+             delegate:Image {
+                 id: name
+                 source: file
+                 visible: true
+                 height: window.width/8.192
+                 width: height*(sourceSize.width/sourceSize.height)
+                 //width: name.paintedWidth
+                 //fillMode: Image.PreserveAspectCrop
+                 smooth: true
                  anchors.bottom: parent.bottom
                  anchors.bottomMargin: window.width/120
 
@@ -528,48 +538,64 @@ Rectangle{      //PRES INTERFACE
                      }
                  }
 
-
-                 Image {                     
-                     id: name
-                     source: file
-                     visible: true
-                     height: window.width/8.192
+                 Image{
+                     anchors.centerIn: parent
+                     height: window.width/42.6
                      width: height*(sourceSize.width/sourceSize.height)
-                     //width: name.paintedWidth
+                     //width: height*(Image.width/Image.height)
                      //fillMode: Image.PreserveAspectCrop
                      smooth: true
-                     anchors.centerIn: parent
+                     source: if(pageNo<999) "images/presImages/noFrame.png"
+                             else "images/presImages/noFrameLarge.png"
 
-                     Image{
+                     Text{
+                         text: pageNo
                          anchors.centerIn: parent
-                         height: window.width/42.6
-                         width: height*(sourceSize.width/sourceSize.height)
-                         //width: height*(Image.width/Image.height)
-                         //fillMode: Image.PreserveAspectCrop
-                         smooth: true
-                         source: if(pageNo<999) "images/presImages/noFrame.png"
-                                 else "images/presImages/noFrameLarge.png"
-
-                         Text{
-
-                             text: pageNo
-                             anchors.centerIn: parent
-                             //font.bold: true
-                             font.family: "Ubuntu"
-                             font.pointSize: window.width/70
-                             color: "black"
-                         }
-
+                         //font.bold: true
+                         font.family: "Ubuntu"
+                         font.pointSize: window.width/70
+                         color: "black"
                      }
 
-                }
+                 }
 
-             }
-
-
+            }
 
          }
 
+         Component {
+             id: highlight
+             Rectangle {
+                 width: 180; height: 40
+                 color: "lightsteelblue"; radius: 5
+                 y: list.currentItem.y
+                 Behavior on y {
+                     SpringAnimation {
+                         spring: 3
+                         damping: 0.2
+                     }
+                 }
+             }
+
+         }
+
+
+         ListView {
+             id: presPagingVisualsView
+             anchors.fill: parent
+             model: presPagingVisualsImgs
+             orientation: ListView.Horizontal
+             spacing: window.width/51.2
+
+             highlight: highlight
+             highlightFollowsCurrentItem: false
+             focus: true
+             preferredHighlightBegin: 50
+             snapMode: ListView.SnapToItem
+
+         }
+
+/*
          PathView {
              id: presPagingVisualsView
              anchors.fill: parent
@@ -587,11 +613,10 @@ Rectangle{      //PRES INTERFACE
 
              }
 
+
          }
-
+ */
     }
-
-
 }
 
 Rectangle{          //MM INTERFACE
