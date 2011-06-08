@@ -222,7 +222,7 @@ Rectangle{      //PRES INTERFACE
          id: presInterface
          objectName: "presInterface"
          anchors.bottom: bottomMenu.top
-         opacity: 1
+         opacity: 0
 
          onOpacityChanged: {
              handleOpacityChange(presInterface,0,1);
@@ -627,7 +627,7 @@ Rectangle{          //MM INTERFACE
         }
 
         id: multInterface
-        opacity: 0
+        opacity: 1
         width: window.width
         height: window.width/15.0
         color: "#a2d6d8"
@@ -774,11 +774,11 @@ Rectangle{          //MM INTERFACE
 
             Text{
                 id: passingTime
-                property string pt: "0.00"
+                property string pt: "00.00"
                 text: pt
                 width: window.width/15.6
                 font.family: "Ubuntu"
-                font.pointSize: window.width/50
+                font.pointSize: window.width/55
                 color: "black"
             }
 
@@ -795,10 +795,10 @@ Rectangle{          //MM INTERFACE
             Text{
                 width: window.width/15.6
                 id: remainingTime
-                property string rt: "0.00"
+                property string rt: "00.00"
                 text: rt
                 font.family: "Ubuntu"
-                font.pointSize: window.width/50
+                font.pointSize: window.width/55
                 color: "black"
             }
 
