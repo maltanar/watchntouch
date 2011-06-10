@@ -19,12 +19,6 @@ private:
     int capacity;
     QString itemStorageFileName;
 
-
-
-signals:
-
-public slots:
-
 };
 
 #endif // RECENTLYUSED_H

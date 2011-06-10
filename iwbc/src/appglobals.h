@@ -49,10 +49,12 @@ typedef enum _ContentType {
 
 #define NUM_RECENT_ITEMS        5
 #define RECENT_ITEMS_STORAGE    CONFIG_DIR + QString("/recent.txt")
+#define BOOKMARKS_STORAGE       CONFIG_DIR + QString("/bookmarks.txt")
 
 extern class RecentlyUsed *recentlyUsed;
 extern class GoogleDocsAccess *googleDocsAccess;
 extern class EventGenerator *eventGenerator;
+extern class BookmarkList *bookmarkList;
 
 // define the default tools for drawing
 #define DEFAULT_DRAWING_PEN     QPen(QBrush(Qt::black, Qt::SolidPattern), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)

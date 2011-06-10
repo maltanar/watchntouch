@@ -64,7 +64,8 @@ HEADERS +=          src/qmlmenulayer.h \
     src/tasks/presentationdisplaytask.h \
     src/tasks/contentdisplaytask.h \
     src/tasks/videodisplaytask.h \
-    src/tasks/webpagedisplaytask.h
+    src/tasks/webpagedisplaytask.h \
+    src/contentdisplay/webpage/bookmarklist.h
 
 SOURCES +=          src/qmlmenulayer.cpp \
                     src/mainwindow.cpp \
@@ -100,7 +101,8 @@ SOURCES +=          src/qmlmenulayer.cpp \
     src/tasks/presentationdisplaytask.cpp \
     src/tasks/contentdisplaytask.cpp \
     src/tasks/videodisplaytask.cpp \
-    src/tasks/webpagedisplaytask.cpp
+    src/tasks/webpagedisplaytask.cpp \
+    src/contentdisplay/webpage/bookmarklist.cpp
 
 RESOURCES +=        resources.qrc
 

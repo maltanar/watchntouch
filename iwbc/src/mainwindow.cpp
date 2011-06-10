@@ -16,6 +16,7 @@
 #include "contentselector.h"
 #include "googledocsaccess.h"
 #include "eventgenerator.h"
+#include "bookmarklist.h"
 
 #include <QMetaMethod>
 
@@ -24,6 +25,7 @@
 RecentlyUsed *recentlyUsed;
 GoogleDocsAccess *googleDocsAccess;
 EventGenerator *eventGenerator;
+BookmarkList *bookmarkList;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -139,6 +141,7 @@ void MainWindow::initGlobals()
     recentlyUsed = new RecentlyUsed();
     googleDocsAccess = new GoogleDocsAccess();
     eventGenerator = new EventGenerator();
+    bookmarkList = new BookmarkList();
 }
 
 void MainWindow::deleteGlobals()

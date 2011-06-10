@@ -1,4 +1,5 @@
 #include "webpagedisplaytask.h"
+#include "bookmarklist.h"
 
 WebPageDisplayTask::WebPageDisplayTask(QWidget *parent) :
     ContentDisplayTask(parent)
@@ -76,6 +77,8 @@ void WebPageDisplayTask::activate()
     connect(m_panel, SIGNAL(webAnnotationStatus(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
     connect(m_panel, SIGNAL(gotoURL(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
     connect(m_panel, SIGNAL(gotoBookmark(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
+    connect(m_panel, SIGNAL(bookmarkRequest(QString)), this, SLOT(bookmarkRequest(QString)));
+    connect(m_panel, SIGNAL(deleteBookmarkRequest(QString,int)), this, SLOT(deleteBookmarkRequest(QString,int)));
 
     /*signal back()
     signal next()
@@ -85,6 +88,7 @@ void WebPageDisplayTask::activate()
     // TODO sync other stats as well
     setWebGuiReadOnlyStatus(m_annotationWidget->isReadOnly());
     setWebGuiURLText(m_webDisplay->getCurrentURL().toString());
+    updateBookmarksList();
 }
 
 void WebPageDisplayTask::deactivate()
@@ -98,6 +102,11 @@ void WebPageDisplayTask::deactivate()
     disconnect(m_panel, SIGNAL(webAnnotationStatus(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
     disconnect(m_panel, SIGNAL(gotoURL(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
     disconnect(m_panel, SIGNAL(gotoBookmark(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
+    disconnect(m_panel, SIGNAL(bookmarkRequest(QString)), this, SLOT(bookmarkRequest(QString)));
+    disconnect(m_panel, SIGNAL(deleteBookmarkRequest(QString,int)), this, SLOT(deleteBookmarkRequest(QString,int)));
+
+    // save the bookmarks list at this point
+    bookmarkList->writeToStorage();
 }
 
 void WebPageDisplayTask::setWebGuiReadOnlyStatus(bool readOnly)
@@ -112,4 +121,56 @@ void WebPageDisplayTask::setWebGuiURLText(QString urlString)
     QVariant sUrlString = QVariant::fromValue(urlString);
 
     QMetaObject::invokeMethod(m_panel, "setURLText", Q_ARG(QVariant, sUrlString));
+}
+
+void WebPageDisplayTask::webGuiAddBookmark(QString urlString)
+{
+    QVariant sUrlString = QVariant::fromValue(urlString);
+
+    QMetaObject::invokeMethod(m_panel, "addBookmark", Q_ARG(QVariant, sUrlString));
+}
+
+void WebPageDisplayTask::webGuiRemoveBookmark(int index)
+{
+    QVariant iIndex = QVariant::fromValue(index);
+
+    QMetaObject::invokeMethod(m_panel, "deleteBookmark", Q_ARG(QVariant, iIndex));
+}
+
+void WebPageDisplayTask::bookmarkRequest(QString URL)
+{
+    qWarning() << "got bookmark request for" << URL;
+
+    if(!bookmarkList->contains(URL)) {
+        webGuiAddBookmark(URL);
+        bookmarkList->append(URL);  // TODO check for duplicates before adding!
+    }
+
+    // TODO IMPORTANT refresh bookmarks when button pressed? notify with signals?
+}
+
+void WebPageDisplayTask::deleteBookmarkRequest(QString URL, int index)
+{
+    qWarning() << "remove bookmark" << URL << "index" << index;
+
+    if(bookmarkList->contains(URL))  {
+        bookmarkList->removeOne(URL);
+        webGuiRemoveBookmark(index);
+    }
+
+    // TODO IMPORTANT remove given bookmark from storage
+}
+
+void WebPageDisplayTask::updateBookmarksList()
+{
+    webGuiClearBookmarks();
+
+    for(int i=0; i<bookmarkList->count(); i++)
+        webGuiAddBookmark(bookmarkList->at(i));
+}
+
+
+void WebPageDisplayTask::webGuiClearBookmarks()
+{
+    QMetaObject::invokeMethod(m_panel, "clearBookmarkList");
 }

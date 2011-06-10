@@ -120,7 +120,7 @@ Rectangle {
     signal refresh()
     signal bookmarkRequest(string URL)
     signal gotoBookmark(string URL)
-    signal deleteBookmarkSignal(string id)
+    signal deleteBookmarkRequest(string URL, int index)
     signal bookmarkMenuShowHide(bool showhide)
     signal webAnnotationStatus(bool onOff)
     signal gotoURL(string URL)
@@ -136,6 +136,10 @@ Rectangle {
 
     function deleteBookmark(index){
         weblistModelSketch.remove(index);
+    }
+
+    function clearBookmarkList() {
+        weblistModelSketch.clear();
     }
 
     function closeBookmarkList(){
@@ -875,13 +879,11 @@ Rectangle{          //WEB INTERFACE
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            deleteBookmarkSignal(index);
+                            deleteBookmarkRequest(val, index);
                             console.log("Remove "+ index);
                         }
                     }
-
                 }
-
 
             }
 

@@ -26,6 +26,12 @@ protected:
     WebControlPanel * m_webControlPanel;
 
     void showHidePanel(bool show);
+    void updateBookmarksList();
+
+
+    void webGuiAddBookmark(QString URL);
+    void webGuiRemoveBookmark(int index);
+    void webGuiClearBookmarks();
 
     void setWebGuiReadOnlyStatus(bool readOnly);
     void setWebGuiURLText(QString urlString);
@@ -36,6 +42,8 @@ protected slots:
 signals:
 
 public slots:
+    void bookmarkRequest(QString URL);
+    void deleteBookmarkRequest(QString URL, int index);
 
 
     /*
@@ -45,7 +53,7 @@ public slots:
     signal refresh()
     signal bookmarkRequest(string URL)
     signal gotoBookmark(string URL)
-    signal deleteBookmarkSignal(string id)
+    signal deleteBookmarkSignal(string URL)
     signal bookmarkMenuShowHide(bool showhide)
     signal webAnnotationStatus(bool onOff)
     signal gotoURL(string URL)
