@@ -29,7 +29,11 @@ signals:
     void scrollRequested ( int dx, int dy);
 
 public slots:
-    void loadWebPage(QUrl newLocation);
+    void loadWebPage(QString newLocation);
+    void forward();
+    void back();
+    void reload();
+    void stop();
 
 private slots:
     void webPageLoadStartInternal();

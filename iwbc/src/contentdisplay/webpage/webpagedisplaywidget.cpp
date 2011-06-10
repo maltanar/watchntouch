@@ -49,9 +49,9 @@ void WebpageDisplayWidget::generateContentIdentifier()
     contentMD5 = QString(QCryptographicHash::hash(mUrlString.toAscii(), QCryptographicHash::Md5).toHex().constData());
 }
 
-void WebpageDisplayWidget::loadWebPage(QUrl newLocation)
+void WebpageDisplayWidget::loadWebPage(QString newLocation)
 {
-    selectContent(newLocation.toString());
+    selectContent(newLocation);
 }
 
 void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
@@ -73,4 +73,24 @@ void WebpageDisplayWidget::webPageLoadFinishedInternal(bool ok)
 void WebpageDisplayWidget::setExternalViewportSize(QSize newSize)
 {
     m_externalViewportSize = newSize;
+}
+
+void WebpageDisplayWidget::forward()
+{
+   mWebView->forward();
+}
+
+void WebpageDisplayWidget::back()
+{
+    mWebView->back();
+}
+
+void WebpageDisplayWidget::reload()
+{
+    mWebView->reload();
+}
+
+void WebpageDisplayWidget::stop()
+{
+    mWebView->stop();
 }

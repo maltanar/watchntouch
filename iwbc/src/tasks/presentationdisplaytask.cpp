@@ -45,10 +45,10 @@ void PresentationDisplayTask::deactivate()
 
     // TODO disconnect qml menu signals
 
-    disconnect(m_panel, SIGNAL(goToFirstPage()), m_contentDisplay, SLOT(goToFirstSlide()));
-    disconnect(m_panel, SIGNAL(goToLastPage()), m_contentDisplay, SLOT(goToLastSlide()));
-    disconnect(m_panel, SIGNAL(goToNextPage()), m_contentDisplay, SLOT(goToNextSlide()));
-    disconnect(m_panel, SIGNAL(goToPrevPage()), m_contentDisplay, SLOT(goToPrevSlide()));
+    disconnect(m_panel, SIGNAL(goToFirstPage()), m_contentDisplay, SLOT(gotoFirstSlide()));
+    disconnect(m_panel, SIGNAL(goToLastPage()), m_contentDisplay, SLOT(gotoLastSlide()));
+    disconnect(m_panel, SIGNAL(goToNextPage()), m_contentDisplay, SLOT(gotoNextSlide()));
+    disconnect(m_panel, SIGNAL(goToPrevPage()), m_contentDisplay, SLOT(gotoPrevSlide()));
 }
 
 void PresentationDisplayTask::goToPageNumber(QString no)

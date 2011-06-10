@@ -9,12 +9,17 @@
 QMLMenuLayer::QMLMenuLayer(QWidget *parent) :
     QDeclarativeView(parent)
 {
-    this->installEventFilter(this);
-    m_maskHeight = 0;
+
     setSource(QUrl("qrc:/qml/wtui.qml"));
     setAlignment(Qt::AlignBottom);
     setStyleSheet("background: transparent");
-    // TODO MAJOR adjust mask rect size according to menu's current size!
+
+    QRectF qmlRect = rootObject()->boundingRect();
+
+    m_qmlWidth = qmlRect.width();
+    m_qmlHeight = qmlRect.height();
+
+    setQMLMask();
 
     connect(rootObject(), SIGNAL(mousePressed(int,int,int,int)), this, SLOT(qmlMousePressed(int,int,int,int)));
     connect(rootObject(), SIGNAL(mouseMoved(int,int,int,int)), this, SLOT(qmlMouseMoved(int,int,int,int)));
@@ -22,14 +27,21 @@ QMLMenuLayer::QMLMenuLayer(QWidget *parent) :
 
 }
 
+void QMLMenuLayer::setQMLMask()
+{
+    QRegion newMask = QRegion((width() - m_qmlWidth)/2, height() - m_qmlHeight, m_qmlWidth, m_qmlHeight);
+
+    qWarning() << "new width" << width() <<  "new QML menu mask:" << newMask;
+
+    clearMask();
+    setMask(newMask);
+}
+
 void QMLMenuLayer::resizeEvent(QResizeEvent *event)
 {
     QDeclarativeView::resizeEvent(event);
 
-    if(m_maskHeight) {
-        clearMask();
-        setMask(QRegion(0, height() - m_maskHeight, width() , m_maskHeight));
-    }
+    setQMLMask();
 }
 
 void QMLMenuLayer::qmlMousePressed(int x, int y, int button, int buttons)

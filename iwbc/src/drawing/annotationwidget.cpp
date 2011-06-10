@@ -6,6 +6,7 @@ AnnotationWidget::AnnotationWidget(QWidget *parent) :
     BaseDrawingWidget(parent)
 {
     currentContentDisplay = NULL;
+    m_isReadOnly = false;
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -89,11 +90,8 @@ void AnnotationWidget::attachToContentDisplay(ContentDisplay *display)
 void AnnotationWidget::requestReadOnlyStatus(bool readOnly)
 {
     qWarning() << "read only status" << readOnly;
-    if(readOnly != m_isReadOnly)
-    {
-        m_isReadOnly = readOnly;
-        setAttribute(Qt::WA_TransparentForMouseEvents, readOnly);
-    }
+    m_isReadOnly = readOnly;
+    setAttribute(Qt::WA_TransparentForMouseEvents, readOnly);
 }
 
 void AnnotationWidget::scrollRequest(int dx, int dy)
@@ -107,4 +105,9 @@ void AnnotationWidget::scrollRequest(int dx, int dy)
 
     centerOn(sceneCenter);
 
+}
+
+bool AnnotationWidget::isReadOnly()
+{
+    return m_isReadOnly;
 }

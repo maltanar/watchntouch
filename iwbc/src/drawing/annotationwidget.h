@@ -13,6 +13,8 @@ public:
 
     void attachToContentDisplay(ContentDisplay *display);
 
+    bool isReadOnly();
+
 private:
     QString currentContent;
     QString currentContext;

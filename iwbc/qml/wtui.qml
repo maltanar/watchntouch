@@ -138,6 +138,17 @@ Rectangle {
         favListHide.running=true;
     }
 
+    function setWebReadOnlyStatus(readOnly) {
+        console.log("QML::setWebReadOnlyStatus " + readOnly);
+        if (readOnly){
+            webAnnoImg.webReadOnly = 1;
+            webAnnoImg.source = "images/webImages/annooff.png";
+        } else {
+            webAnnoImg.webReadOnly = 0;
+            webAnnoImg.source = "images/webImages/annoon.png"
+        }
+    }
+
 
     //PRESENTATION SIGNALS AND FUNCTIONS
 
@@ -1055,20 +1066,22 @@ Rectangle{
                     width: window.width/26.94; height: window.width/26.94   // CALCULATION: width: window.width/ (1024/ImageWidth)
                     fillMode: Image.PreserveAspectFit
                     smooth: true
-                    source: "images/webImages/annooff.png"
+                    source: "images/webImages/annoon.png"
+                    property int webReadOnly: 0
                     MouseArea {
                         anchors.fill: parent
-                        property int webAnnoNo: 0
+
                         onClicked: {
                             console.log("Web Annotation On-Off");
-                            webAnnoNo = webAnnoNo+1;
-                            if (webAnnoNo%2==0){
+
+                            if (webAnnoImg.webReadOnly == 0){
+                                webAnnoImg.webReadOnly = 1;
                                 webAnnoImg.source = "images/webImages/annooff.png";
-                                webAnnotationStatus(false);
-                            }
-                            if (webAnnoNo%2==1){
-                                webAnnoImg.source = "images/webImages/annoon.png"
                                 webAnnotationStatus(true);
+                            } else {
+                                webAnnoImg.webReadOnly = 0;
+                                webAnnoImg.source = "images/webImages/annoon.png"
+                                webAnnotationStatus(false);
                             }
                         }
                     }

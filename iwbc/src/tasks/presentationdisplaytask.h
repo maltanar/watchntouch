@@ -37,6 +37,7 @@ public slots:
     // Incoming information from PresentationDisplayWidget
     void pageNumberChanged(int pageNo, int pageCount);
 
+    // TODO IMPORTANT finalize QML connections for presentations
 /*    signal goToFirstPage()
     signal goToPrevPage()
     signal goToNextPage()

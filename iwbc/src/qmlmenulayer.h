@@ -10,11 +10,10 @@ public:
     explicit QMLMenuLayer(QWidget *parent = 0);
 
 protected:
-    unsigned int m_maskHeight;
+    unsigned int m_qmlWidth, m_qmlHeight;
 
+    void setQMLMask();
     void resizeEvent(QResizeEvent *event);
-
-
 
 signals:
     void mousePressSignal(QPoint p, int button, int buttons);

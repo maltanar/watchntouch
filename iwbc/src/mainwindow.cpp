@@ -208,9 +208,9 @@ void MainWindow::setActiveTask(QString taskID)
             // deactivate previous task
             m_activeTask->deactivate();
             // disconnect mouse event signals and slots
-            disconnect(m_qmlMenu, SIGNAL(mousePressSignal(QPoint,int)), m_activeTask, SLOT(mousePress(QPoint,int)));
-            disconnect(m_qmlMenu, SIGNAL(mouseMoveSignal(QPoint,int)), m_activeTask, SLOT(mouseMove(QPoint,int)));
-            disconnect(m_qmlMenu, SIGNAL(mouseReleaseSignal(QPoint,int)), m_activeTask, SLOT(mouseRelease(QPoint,int)));
+            disconnect(m_qmlMenu, SIGNAL(mousePressSignal(QPoint,int)), m_activeTask, SLOT(mousePress(QPoint,int,int)));
+            disconnect(m_qmlMenu, SIGNAL(mouseMoveSignal(QPoint,int)), m_activeTask, SLOT(mouseMove(QPoint,int,int)));
+            disconnect(m_qmlMenu, SIGNAL(mouseReleaseSignal(QPoint,int)), m_activeTask, SLOT(mouseRelease(QPoint,int,int)));
         }
         // TODO let the menu know that the active task changed
        m_currentTaskContainer->setWidget(theTask);
