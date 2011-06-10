@@ -125,6 +125,10 @@ Rectangle {
     signal webAnnotationStatus(bool onOff)
     signal gotoURL(string URL)
 
+    function setURLText(URL) {
+        webTextInput.text = URL;
+    }
+
 
     function addBookmark(URL){
         weblistModelSketch.append({"val": URL});
@@ -974,7 +978,6 @@ Rectangle{
                         anchors.fill: parent
                         onClicked: {
                             next();
-                            showHideWeb(false);
                             console.log("Web Goto Next Page");
                         }
                     }
@@ -1705,7 +1708,6 @@ Row{                //BOTTOM MENU
                             activePresentation.visible = false;
                             activeWeb.visible = true;
                             activeMultimedia.visible = false;
-                            activeConfig.visible = false;
                         }
                     }
                 }

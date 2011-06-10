@@ -28,6 +28,10 @@ protected:
     void showHidePanel(bool show);
 
     void setWebGuiReadOnlyStatus(bool readOnly);
+    void setWebGuiURLText(QString urlString);
+
+protected slots:
+    void urlChanged(QUrl newUrl);
 
 signals:
 

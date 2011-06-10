@@ -16,6 +16,8 @@ public:
 
     void setExternalViewportSize(QSize newSize);
 
+    QUrl getCurrentURL();
+
 private:
     QWebView * mWebView;
     QString mUrlString;

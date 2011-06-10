@@ -30,17 +30,26 @@ WebPageDisplayTask::WebPageDisplayTask(QWidget *parent) :
     setContextMenu(new ContextMenu(this));
 
     connect(m_webDisplay, SIGNAL(requestReadOnlyAnnotation(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
+    connect(m_webDisplay, SIGNAL(webPageUrlChanged(QUrl)), this, SLOT(urlChanged(QUrl)));
+
+    // TODO IMPORTANT remove this when QML progressbar is ready
+    connect(m_webDisplay, SIGNAL(webPageLoadProgress(int)), m_webControlPanel, SLOT(loadProgress(int)));
 
     /*connect(m_webControlPanel, SIGNAL(locationChanged(QUrl)), m_webDisplay, SLOT(loadWebPage(QUrl)));
     connect(m_webControlPanel, SIGNAL(requestReadOnly(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
 
 
     connect(m_webDisplay, SIGNAL(webPageLoadStarted()), m_webControlPanel, SLOT(loadStarted()));
-    connect(m_webDisplay, SIGNAL(webPageLoadProgress(int)), m_webControlPanel, SLOT(loadProgress(int)));
+
     connect(m_webDisplay, SIGNAL(webPageLoadFinished(bool)), m_webControlPanel, SLOT(loadFinished(bool)));
     connect(m_webDisplay, SIGNAL(webPageUrlChanged(QUrl)), m_webControlPanel, SLOT(loadedPageChanged(QUrl)));*/
 
     m_annotationWidget->raise();
+}
+
+void WebPageDisplayTask::urlChanged(QUrl newUrl)
+{
+    setWebGuiURLText(newUrl.toString());
 }
 
 ContentType WebPageDisplayTask::getContentType()
@@ -55,6 +64,7 @@ void WebPageDisplayTask::showHidePanel(bool show)
     QMetaObject::invokeMethod(m_panel, "showHideWeb", Q_ARG(QVariant, showHide));
 }
 
+
 void WebPageDisplayTask::activate()
 {
     ContentDisplayTask::activate();
@@ -64,6 +74,8 @@ void WebPageDisplayTask::activate()
     connect(m_panel, SIGNAL(next()), m_webDisplay, SLOT(forward()));
     connect(m_panel, SIGNAL(refresh()), m_webDisplay, SLOT(reload()));
     connect(m_panel, SIGNAL(webAnnotationStatus(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
+    connect(m_panel, SIGNAL(gotoURL(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
+    connect(m_panel, SIGNAL(gotoBookmark(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
 
     /*signal back()
     signal next()
@@ -72,6 +84,7 @@ void WebPageDisplayTask::activate()
     // sync with webpage status
     // TODO sync other stats as well
     setWebGuiReadOnlyStatus(m_annotationWidget->isReadOnly());
+    setWebGuiURLText(m_webDisplay->getCurrentURL().toString());
 }
 
 void WebPageDisplayTask::deactivate()
@@ -83,6 +96,8 @@ void WebPageDisplayTask::deactivate()
     disconnect(m_panel, SIGNAL(next()), m_webDisplay, SLOT(forward()));
     disconnect(m_panel, SIGNAL(refresh()), m_webDisplay, SLOT(reload()));
     disconnect(m_panel, SIGNAL(webAnnotationStatus(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
+    disconnect(m_panel, SIGNAL(gotoURL(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
+    disconnect(m_panel, SIGNAL(gotoBookmark(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
 }
 
 void WebPageDisplayTask::setWebGuiReadOnlyStatus(bool readOnly)
@@ -90,4 +105,11 @@ void WebPageDisplayTask::setWebGuiReadOnlyStatus(bool readOnly)
     QVariant bReadOnly = QVariant::fromValue(readOnly);
 
     QMetaObject::invokeMethod(m_panel, "setWebReadOnlyStatus", Q_ARG(QVariant, bReadOnly));
+}
+
+void WebPageDisplayTask::setWebGuiURLText(QString urlString)
+{
+    QVariant sUrlString = QVariant::fromValue(urlString);
+
+    QMetaObject::invokeMethod(m_panel, "setURLText", Q_ARG(QVariant, sUrlString));
 }

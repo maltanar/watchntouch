@@ -31,8 +31,6 @@ void QMLMenuLayer::setQMLMask()
 {
     QRegion newMask = QRegion((width() - m_qmlWidth)/2, height() - m_qmlHeight, m_qmlWidth, m_qmlHeight);
 
-    qWarning() << "new width" << width() <<  "new QML menu mask:" << newMask;
-
     clearMask();
     setMask(newMask);
 }

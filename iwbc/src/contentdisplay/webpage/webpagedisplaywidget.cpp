@@ -25,7 +25,7 @@ WebpageDisplayWidget::WebpageDisplayWidget(QWidget *parent) :
 bool WebpageDisplayWidget::selectContent(QString location)
 {
     // load the requested webpage
-    mWebView->load(QUrl(location));
+    mWebView->load(QUrl::fromUserInput(location));
     // TODO we should actually return the value for the loadFinished OK parameter here
     return true;
 }
@@ -51,6 +51,7 @@ void WebpageDisplayWidget::generateContentIdentifier()
 
 void WebpageDisplayWidget::loadWebPage(QString newLocation)
 {
+    qWarning() << "WebpageDisplayWidget loadWebPage" << newLocation;
     selectContent(newLocation);
 }
 
@@ -93,4 +94,9 @@ void WebpageDisplayWidget::reload()
 void WebpageDisplayWidget::stop()
 {
     mWebView->stop();
+}
+
+QUrl WebpageDisplayWidget::getCurrentURL()
+{
+    return mWebView->url();
 }
