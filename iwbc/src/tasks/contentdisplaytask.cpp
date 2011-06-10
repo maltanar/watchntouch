@@ -134,20 +134,23 @@ void ContentDisplayTask::mousePress(QPoint p, int button, int buttons)
 
     QWidget * theChild = childAt(mapFromGlobal(p));
     qWarning() << "child" << theChild;
-    qApp->postEvent(theChild, new QMouseEvent(QEvent::MouseButtonPress, theChild->mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
+    if(theChild)
+        qApp->postEvent(theChild, new QMouseEvent(QEvent::MouseButtonPress, theChild->mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
 }
 
 void ContentDisplayTask::mouseMove(QPoint p, int button, int buttons)
 {
     // qWarning() << "mouseMove" << p << button << buttons;
     QWidget * theChild = childAt(mapFromGlobal(p));
-    qApp->postEvent(theChild, new QMouseEvent(QEvent::MouseMove, theChild->mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
+    if(theChild)
+        qApp->postEvent(theChild, new QMouseEvent(QEvent::MouseMove, theChild->mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
 }
 
 void ContentDisplayTask::mouseRelease(QPoint p, int button, int buttons)
 {
     // qWarning() << "mouseRelease" << p << button << buttons;
     QWidget * theChild = childAt(mapFromGlobal(p));
-    qApp->postEvent(theChild, new QMouseEvent(QEvent::MouseButtonRelease, theChild->mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
+    if(theChild)
+        qApp->postEvent(theChild, new QMouseEvent(QEvent::MouseButtonRelease, theChild->mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
 }
 
