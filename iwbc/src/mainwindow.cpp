@@ -65,13 +65,7 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(webPressed()), this, SLOT(webPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(multimediaPressed()), this, SLOT(multimediaPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(sketchPressed()), this, SLOT(sketchPressed()));
-
-    connect(m_qmlMenu->rootObject(), SIGNAL(adjustInteractiveHeight(int)), m_qmlMenu, SLOT(adjustInteractiveHeight(int)));
-
-    // set the default interactive height for the menu
-    QVariant defIntHeight;
-    QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "getMenuDefaultInteractiveHeight", Q_RETURN_ARG(QVariant, defIntHeight));
-    m_qmlMenu->adjustInteractiveHeight(defIntHeight.toInt());
+    // TODO remove adjustInteractiveHeight code
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)
@@ -193,6 +187,8 @@ void MainWindow::openPresentation()
     if(m_selectedContent != "") {
         // create and insert new task into the list of active tasks
         newTask = new PresentationDisplayTask(this);
+        // set the task panel as the QML menu root object
+        newTask->setPanel(m_qmlMenu->rootObject());
         newTaskID = "presentation_" + QString::number(QDateTime::currentMSecsSinceEpoch());
         qWarning() << "new task identifier:" << newTaskID;
         m_tasks.insert(newTaskID, newTask);
@@ -211,12 +207,20 @@ void MainWindow::setActiveTask(QString taskID)
         if(m_activeTask) {
             // deactivate previous task
             m_activeTask->deactivate();
+            // disconnect mouse event signals and slots
+            disconnect(m_qmlMenu, SIGNAL(mousePressSignal(QPoint,int)), m_activeTask, SLOT(mousePress(QPoint,int)));
+            disconnect(m_qmlMenu, SIGNAL(mouseMoveSignal(QPoint,int)), m_activeTask, SLOT(mouseMove(QPoint,int)));
+            disconnect(m_qmlMenu, SIGNAL(mouseReleaseSignal(QPoint,int)), m_activeTask, SLOT(mouseRelease(QPoint,int)));
         }
         // TODO let the menu know that the active task changed
        m_currentTaskContainer->setWidget(theTask);
        m_activeTask = theTask;
        // let the active widget know it's been activated
        m_activeTask->activate();
+        // connect mouse event signals and slots
+       connect(m_qmlMenu, SIGNAL(mousePressSignal(QPoint,int,int)), m_activeTask, SLOT(mousePress(QPoint,int,int)));
+       connect(m_qmlMenu, SIGNAL(mouseMoveSignal(QPoint,int,int)), m_activeTask, SLOT(mouseMove(QPoint,int,int)));
+       connect(m_qmlMenu, SIGNAL(mouseReleaseSignal(QPoint,int,int)), m_activeTask, SLOT(mouseRelease(QPoint,int,int)));
        // TODO RESIZING erronous logic here?
        theTask->resize(m_currentTaskContainer->size() - QSize(5,5));
     }
@@ -232,6 +236,8 @@ void MainWindow::openWebPage()
     if(m_selectedContent != "") {
         // create and insert new task into the list of active tasks
         newTask = new WebPageDisplayTask(this);
+        // set the task panel as the QML menu root object
+        newTask->setPanel(m_qmlMenu->rootObject());
         newTaskID = "webpage_" + QString::number(QDateTime::currentMSecsSinceEpoch());
         qWarning() << "new task identifier:" << newTaskID;
         m_tasks.insert(newTaskID, newTask);
@@ -252,6 +258,8 @@ void MainWindow::openMultimedia()
     if(m_selectedContent != "") {
         // create and insert new task into the list of active tasks
         newTask = new VideoDisplayTask(this);
+        // set the task panel as the QML menu root object
+        newTask->setPanel(m_qmlMenu->rootObject());
         newTaskID = "video_" + QString::number(QDateTime::currentMSecsSinceEpoch());
         qWarning() << "new task identifier:" << newTaskID;
         m_tasks.insert(newTaskID, newTask);
@@ -277,65 +285,6 @@ QString MainWindow::openContent(ContentType type)
     // it is still saved when we close the app but we shouldn't rely on that
 
     return csel.getSelectedContent();
-
-    /*if(selectedContent == "$screenshot$") {
-        openScreenshot();
-    } else if (selectedContent == "$newsketch$") {
-        openNewSketch();
-    } else if (selectedContent == "$existingsketch$") {
-        openExistingSketch();
-    } else if (selectedContent == "$webpage$") {
-        // TODO move to own function
-        widgetStack->setCurrentIndex(WEBPAGE_ANNOTATION);
-        widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
-        groupBoxForWeb->resize(ui->scrollArea->size()-QSize(10,10));
-        webDraw->attachToContentDisplay(webDisplay);
-        //webDisplay->selectContent("");
-        webDisplay->raise();
-        webDraw->raise();
-    }
-    else {
-        // TODO check content type before loading?
-        // TODO the code below won't apply once we have fit to height/width options
-        // set desired image size to a bit smaller than the scroll area size
-        if(selectedContent.endsWith("pdf") || selectedContent.endsWith("ppt") || selectedContent.endsWith("odp") ) {
-
-            widgetStack->setCurrentIndex(PRESENTATION_ANNOTATION);
-
-            display->setDesiredSize(ui->scrollArea->size()-QSize(10,10));
-            draw->attachToContentDisplay(display);  // TODO bunu bir presentation actıktan sonra yapmak lazım ?
-            display->selectContent(csel.getSelectedContent());
-
-            widgetStack->resize(display->getContentSize());
-            if(widgetStack->width() < 800)
-                widgetStack->resize(800, widgetStack->height());
-            draw->raise();
-            //qmlMenu->raise();
-
-        } else if(selectedContent.endsWith("mp4") || selectedContent.endsWith("avi") || selectedContent.endsWith("flv")) {
-
-            widgetStack->setCurrentIndex(VIDEO_ANNOTATION);
-
-            widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
-            videoDraw->attachToContentDisplay(videoPlayer);
-            videoPlayer->selectContent(selectedContent);
-            videoPlayer->raise();
-            videoDraw->raise();
-
-        } else if(selectedContent.endsWith("html") || selectedContent.endsWith("htm") || selectedContent.startsWith("www") || selectedContent.startsWith("http")) {
-            // TODO webpage resize problems
-            // TODO find a way to scroll the webpage
-            widgetStack->setCurrentIndex(WEBPAGE_ANNOTATION);
-
-            widgetStack->resize(ui->scrollArea->size()-QSize(10,10));
-            groupBoxForWeb->resize(ui->scrollArea->size()-QSize(10,10));
-            //webCanvas->resize(ui->scrollArea->size()-QSize(50,10));
-            webDraw->attachToContentDisplay(webDisplay);
-            webDisplay->selectContent(selectedContent);
-            webDisplay->raise();
-            webDraw->raise();
-        }
-    }*/
 }
 
 
@@ -343,3 +292,5 @@ void MainWindow::sketchPressed()
 {
     m_selectedContent = openContent(CONTENTTYPE_SKETCH);
 }
+
+

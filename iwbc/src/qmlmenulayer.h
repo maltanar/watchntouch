@@ -17,9 +17,16 @@ protected:
 
 
 signals:
+    void mousePressSignal(QPoint p, int button, int buttons);
+    void mouseMoveSignal(QPoint p, int button, int buttons);
+    void mouseReleaseSignal(QPoint p, int button, int buttons);
 
 public slots:
-    void adjustInteractiveHeight(int heightAdjustment);
+
+protected slots:
+    void qmlMousePressed(int x, int y, int button, int buttons);
+    void qmlMouseMoved(int x, int y, int button, int buttons);
+    void qmlMouseReleased(int x, int y, int button, int buttons);
 
 };
 

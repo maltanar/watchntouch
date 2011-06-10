@@ -44,7 +44,6 @@ bool displayYesNoMessage(QString messageText, QString messageTitle)
 {
     QMessageBox inf;
 
-
     inf.setWindowTitle(messageTitle);
     inf.setText(messageText);
     inf.setStandardButtons(QMessageBox::No | QMessageBox::Yes);

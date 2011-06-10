@@ -7,8 +7,12 @@ ContentDisplayTask::ContentDisplayTask(QWidget *parent) :
     m_annotationWidget = NULL;
     m_contextMenu = NULL;
     m_contentDisplay = NULL;
+    m_panel = NULL;
+}
 
-    setContextMenuPolicy(Qt::CustomContextMenu);
+void ContentDisplayTask::setPanel(QObject *panel)
+{
+    m_panel = panel;
 }
 
 void ContentDisplayTask::setContextMenu(ContextMenu *newMenu)
@@ -19,7 +23,7 @@ void ContentDisplayTask::setContextMenu(ContextMenu *newMenu)
     m_contextMenu = newMenu;
     m_contextMenu->hide();
 
-     connect(this, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(showContextMenu(QPoint)));
+    connect(m_annotationWidget, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(showContextMenu(QPoint)));
 
     // connect the context menu signals/slots with the annotation widget
     connect(m_contextMenu,SIGNAL(colorSelected(QColor)),m_annotationWidget, SLOT(setDrawingColor(QColor)));
@@ -41,6 +45,8 @@ void ContentDisplayTask::activate()
         // m_contentDisplay->grabKeyboard();
         // TODO IMPORTANT GESTURE grab pinch gesture!
     }
+
+    showHidePanel(true);
 }
 
 void ContentDisplayTask::deactivate()
@@ -52,6 +58,8 @@ void ContentDisplayTask::deactivate()
         // m_contentDisplay->releaseKeyboard();
         // TODO IMPORTANT GESTURE release the pinch gesture
     }
+
+    showHidePanel(false);
 }
 
 void ContentDisplayTask::setAnnotationWidget(AnnotationWidget * newWidget)
@@ -88,7 +96,10 @@ ContextMenu * ContentDisplayTask::getContextMenu()
 
 void ContentDisplayTask::showContextMenu(QPoint p)
 {
+    // context menu coordinates are global
+    p = mapFromGlobal(p);
     qWarning() << "caylar da caymis hani...o zaman context menu acalim. hoppala yavrum kokakola.";
+    m_contextMenu->setParent(qApp->topLevelWidgets().at(0));
     m_contextMenu->move(p - QPoint(m_contextMenu->width()/2, m_contextMenu->height()/2));
     m_contextMenu->show();
     m_contextMenu->raise();
@@ -114,3 +125,27 @@ QImage ContentDisplayTask::getTaskScreenshot()
 
     return resultImage;
 }
+
+
+// Route all mouse events received from QML to the annotation widget
+void ContentDisplayTask::mousePress(QPoint p, int button, int buttons)
+{
+    qWarning() << "mousePress" << p << button << buttons;
+    if(m_annotationWidget)
+        qApp->postEvent(m_annotationWidget->viewport(), new QMouseEvent(QEvent::MouseButtonPress, mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
+}
+
+void ContentDisplayTask::mouseMove(QPoint p, int button, int buttons)
+{
+    qWarning() << "mouseMove" << p << button << buttons;
+    if(m_annotationWidget)
+        qApp->postEvent(m_annotationWidget->viewport(), new QMouseEvent(QEvent::MouseMove, mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
+}
+
+void ContentDisplayTask::mouseRelease(QPoint p, int button, int buttons)
+{
+    qWarning() << "mouseRelease" << p << button << buttons;
+    if(m_annotationWidget)
+        qApp->postEvent(m_annotationWidget->viewport(), new QMouseEvent(QEvent::MouseButtonRelease, mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
+}
+

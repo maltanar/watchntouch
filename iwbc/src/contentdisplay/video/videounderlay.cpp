@@ -261,6 +261,7 @@ void VideoUnderlay::lock( struct ctx* ctx, void** pp_ret )
 
 void VideoUnderlay::unlock( struct ctx* ctx )
 {
+    // TODO IMPORTANT video crashes here when we create another task on top of it
     // As we are in a static method we don't have an instance
     // of the VideoUnderlay here. Fortunately we created a copy
     // of our instance pointer into the ctx structure,

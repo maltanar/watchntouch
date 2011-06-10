@@ -47,3 +47,10 @@ ContentType WebPageDisplayTask::getContentType()
 {
     return CONTENTTYPE_WEBPAGE;
 }
+
+void WebPageDisplayTask::showHidePanel(bool show)
+{
+    QVariant showHide = QVariant::fromValue(show);
+
+    QMetaObject::invokeMethod(m_panel, "showHideWeb", Q_ARG(QVariant, showHide));
+}

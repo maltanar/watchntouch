@@ -23,3 +23,25 @@ ContentType PresentationDisplayTask::getContentType()
 {
     return CONTENTTYPE_PRESENTATION;
 }
+
+void PresentationDisplayTask::activate()
+{
+    ContentDisplayTask::activate();
+
+    // TODO connect qml menu signals
+
+}
+
+void PresentationDisplayTask::deactivate()
+{
+    ContentDisplayTask::deactivate();
+
+    // TODO disconnect qml menu signals
+}
+
+void PresentationDisplayTask::showHidePanel(bool show)
+{
+    QVariant showHide = QVariant::fromValue(show);
+
+    QMetaObject::invokeMethod(m_panel, "showHidePresentation", Q_ARG(QVariant, showHide));
+}

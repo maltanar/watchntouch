@@ -19,6 +19,7 @@ BaseDrawingWidget::BaseDrawingWidget(QWidget *parent) :
     // set background as transparent
     setStyleSheet("background: transparent");
 
+    setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 BaseDrawingWidget::~BaseDrawingWidget()
@@ -28,18 +29,23 @@ BaseDrawingWidget::~BaseDrawingWidget()
 
 void BaseDrawingWidget::mouseMoveEvent (QMouseEvent * event)
 {
+    qWarning() << "mouse moveeeeee!";
     if(event->buttons() & Qt::LeftButton)
         drawingUpdate(mapToScene(event->pos()));
 }
 
 void BaseDrawingWidget::mousePressEvent (QMouseEvent * event)
 {
+    qWarning() << "mouse presss!";
     if(event->button() == Qt::LeftButton)
         drawingStart(mapToScene(event->pos()));
+    else if(event->button() == Qt::RightButton)
+        emit customContextMenuRequested(event->globalPos());
 }
 
 void BaseDrawingWidget::mouseReleaseEvent (QMouseEvent * event)
 {
+    qWarning() << "mouse releaseee!";
     if(event->button() == Qt::LeftButton)
         drawingEnd(mapToScene(event->pos()));
 }

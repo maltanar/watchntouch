@@ -6,67 +6,77 @@ Rectangle {
     width: 1024
     height: 600
     color: "transparent"
+
+
     property string activeFunction: ""
 
     signal qmlSignal(string msg)
     signal notifyRegionChange(bool isDisplayed, int top, int left, int w, int h, string name)
     signal adjustInteractiveHeight(int amount)
 
+    signal mousePressed(int x, int y, int button, int buttons)
+    signal mouseMoved(int x, int y, int buttons, int buttons)
+    signal mouseReleased(int x, int y, int buttons, int buttons)
+
+    function getMenuDefaultInteractiveHeight() {
+        return upButtonRect.height;
+    }
 
     function showHideCollaboration(showHide){
-        showHideMenus.target=colInterface;
         if(showHide){
-            showHideMenus.to=1;
+            showMenus.target=colInterface;
+            showMenus.running=true;
         }
         else{
-            showHideMenus.to=0;
+            hideMenus.target=colInterface;
+            hideMenus.running=true;
         }
-        showHideMenus.running=true;
     }
 
     function showHideSketch(showHide){
-        showHideMenus.target=sketchInterface;
         if(showHide){
-            showHideMenus.to=1;
+            showMenus.target=sketchInterface;
+            showMenus.running=true;
         }
         else{
-            showHideMenus.to=0;
+            hideMenus.target=sketchInterface;
+            hideMenus.running=true;
         }
-        showHideMenus.running=true;
     }
 
     function showHidePresentation(showHide){
-        showHideMenus.target=presInterface;
         if(showHide){
-            showHideMenus.to=1;
+            showMenus.target=presInterface;
+            showMenus.running=true;
         }
         else{
-            showHideMenus.to=0;
+            hideMenus.target=presInterface;
+            hideMenus.running=true;
         }
-        showHideMenus.running=true;
     }
 
     function showHideWeb(showHide){
-        showHideMenus.target=webInterface;
         if(showHide){
-            showHideMenus.to=1;
+            showMenus.target=webInterface;
+            showMenus.running=true;
         }
         else{
-            showHideMenus.to=0;
+            hideMenus.target=webInterface;
+            hideMenus.running=true;
         }
-        showHideMenus.running=true;
     }
 
     function showHideMultimedia(showHide){
-        showHideMenus.target=multInterface;
         if(showHide){
-            showHideMenus.to=1;
+            showMenus.target=multInterface;
+            showMenus.running=true;
         }
         else{
-            showHideMenus.to=0;
+            hideMenus.target=multInterface;
+            hideMenus.running=true;
         }
-        showHideMenus.running=true;
     }
+
 
 
     //BOTTOM MENU SIGNALS AND FUNCTIONS
@@ -85,35 +95,6 @@ Rectangle {
             adjustInteractiveHeight(-rect.height);
         } else if(rect.opacity == opacity1) {
             adjustInteractiveHeight(rect.height);
-        }
-    }
-
-    function handleUpRectParent(parent){
-        switch(parent){
-        case 0:{
-            upButtonImg.parent = upButtonRect;
-        }
-        break;
-        case 1:{
-            upButtonImg.parent = sketchInterface;
-        }
-        break;
-        case 2:{
-            upButtonImg.parent = presInterface;
-        }
-        break;
-        case 3:{
-            upButtonImg.parent = webInterface;
-        }
-        break;
-        case 4:{
-            upButtonImg.parent = multInterface;
-        }
-        break;
-        default:{
-            upButtonImg.parent = upButtonRect;
-        }
-        break;
         }
     }
 
@@ -148,10 +129,6 @@ Rectangle {
         volumeControlIndicatorImage.x=(a*(window.width/9.54))/100;
     }
 
-    function getMenuDefaultInteractiveHeight() {
-        return upButtonRect.height;
-    }
-
     //WEB SIGNALS AND FUNCTIONS
 
     signal back()
@@ -176,6 +153,7 @@ Rectangle {
     function closeBookmarkList(){
         favListHide.running=true;
     }
+
 
     //PRESENTATION SIGNALS AND FUNCTIONS
 
@@ -208,26 +186,15 @@ Rectangle {
 
 
 
-    PropertyAnimation { id: showHideMenus; target: []; property: "opacity"; to: 1; duration: 300
-    onCompleted: {
-        //mainMenuShowHide(false);          //TODO SOR
-        if(showHideMenus.to==1)
-            adjustInteractiveHeight(showHideMenus.target.height);
-        else if(showHideMenus.to==0)
-            adjustInteractiveHeight(-showHideMenus.target.height);
-    }
-    }
+    PropertyAnimation { id: showMenus; target: []; property: "opacity"; to: 1; duration: 300 }
+
+    PropertyAnimation { id: hideMenus; target: []; property: "opacity"; to: 0; duration: 300 }
 
 Rectangle{      //PRES INTERFACE
          id: presInterface
          objectName: "presInterface"
          anchors.bottom: bottomMenu.top
          opacity: 0
-
-         onOpacityChanged: {
-             handleOpacityChange(presInterface,0,1);
-         }
-
 
     Rectangle{      //buttons
         id: presButtons
@@ -488,6 +455,10 @@ Rectangle{      //PRES INTERFACE
          clip: true;
          color: "#e5f97e"
 
+         onOpacityChanged: {
+             handleOpacityChange(presPagingVisualsRect,0,1);
+         }
+
          VisualDataModel {               //TODO: ListElement'ten File system'e gecir
              id: presPagingVisualsImgs
              model: ListModel {
@@ -627,7 +598,7 @@ Rectangle{          //MM INTERFACE
         }
 
         id: multInterface
-        opacity: 1
+        opacity: 0
         width: window.width
         height: window.width/15.0
         color: "#a2d6d8"
@@ -925,9 +896,6 @@ Rectangle{          //WEB INTERFACE
             }
 
         }
-
-
-
 
         Image{
             id:favsBackgroundImg
@@ -1685,7 +1653,6 @@ Row{                //BOTTOM MENU
                             activePresentation.visible = true;
                             activeWeb.visible = false;
                             activeMultimedia.visible = false;
-                            activeConfig.visible = false;
                         }
                     }
                 }
@@ -1935,5 +1902,24 @@ Row{                //BOTTOM MENU
 
     }
 
+MouseArea {
+        anchors.fill: parent
+        id: globalMouseArea
+        z: -1
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+
+        onPressed: {
+            mousePressed(mouseX, mouseY, mouse.button, mouse.buttons);
+        }
+
+        onMousePositionChanged: {
+            mouseMoved(mouseX, mouseY, mouse.button, mouse.buttons);
+        }
+
+        onReleased:  {
+            mouseReleased(mouseX, mouseY, mouse.button, mouse.buttons);
+        }
+    }
 
 }

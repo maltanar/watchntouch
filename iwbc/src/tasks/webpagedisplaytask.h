@@ -22,6 +22,8 @@ protected:
     AnnotationWidget * m_webDraw;
     WebControlPanel * m_webControlPanel;
 
+    void showHidePanel(bool show);
+
 signals:
 
 public slots:

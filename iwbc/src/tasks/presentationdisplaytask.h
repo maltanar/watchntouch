@@ -15,8 +15,13 @@ public:
 
     ContentType getContentType();
 
+    void activate();
+    void deactivate();
+
 protected:
     QStackedLayout m_layout;
+
+    void showHidePanel(bool show);
 
 
 signals:
