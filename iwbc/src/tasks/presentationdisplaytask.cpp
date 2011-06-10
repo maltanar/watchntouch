@@ -16,6 +16,8 @@ PresentationDisplayTask::PresentationDisplayTask(QWidget *parent) :
 
     setLayout(&m_layout);
 
+    connect(m_contentDisplay, SIGNAL(pageNumberChanged(int,int)), this, SLOT(pageNumberChanged(int,int)));
+
     m_annotationWidget->raise();
 }
 
@@ -30,6 +32,11 @@ void PresentationDisplayTask::activate()
 
     // TODO connect qml menu signals
 
+    connect(m_panel, SIGNAL(goToFirstPage()), m_contentDisplay, SLOT(gotoFirstSlide()));
+    connect(m_panel, SIGNAL(goToLastPage()), m_contentDisplay, SLOT(gotoLastSlide()));
+    connect(m_panel, SIGNAL(goToNextPage()), m_contentDisplay, SLOT(gotoNextSlide()));
+    connect(m_panel, SIGNAL(goToPrevPage()), m_contentDisplay, SLOT(gotoPrevSlide()));
+
 }
 
 void PresentationDisplayTask::deactivate()
@@ -37,6 +44,22 @@ void PresentationDisplayTask::deactivate()
     ContentDisplayTask::deactivate();
 
     // TODO disconnect qml menu signals
+
+    disconnect(m_panel, SIGNAL(goToFirstPage()), m_contentDisplay, SLOT(goToFirstSlide()));
+    disconnect(m_panel, SIGNAL(goToLastPage()), m_contentDisplay, SLOT(goToLastSlide()));
+    disconnect(m_panel, SIGNAL(goToNextPage()), m_contentDisplay, SLOT(goToNextSlide()));
+    disconnect(m_panel, SIGNAL(goToPrevPage()), m_contentDisplay, SLOT(goToPrevSlide()));
+}
+
+void PresentationDisplayTask::goToPageNumber(QString no)
+{
+    // TODO go to specified page
+}
+
+void PresentationDisplayTask::setSlideNumberDisplay(QString text)
+{
+    QVariant txt = QVariant::fromValue(text);
+    QMetaObject::invokeMethod(m_panel, "setSlideNumber", Q_ARG(QVariant, txt));
 }
 
 void PresentationDisplayTask::showHidePanel(bool show)
@@ -44,4 +67,10 @@ void PresentationDisplayTask::showHidePanel(bool show)
     QVariant showHide = QVariant::fromValue(show);
 
     QMetaObject::invokeMethod(m_panel, "showHidePresentation", Q_ARG(QVariant, showHide));
+}
+
+void PresentationDisplayTask::pageNumberChanged(int pageNo, int pageCount)
+{
+    qWarning() << "page change:" << pageNo << "of" << pageCount;
+    setSlideNumberDisplay(QString::number(pageNo) + " / " + QString::number(pageCount));
 }

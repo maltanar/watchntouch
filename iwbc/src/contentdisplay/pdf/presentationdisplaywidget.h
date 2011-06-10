@@ -42,6 +42,7 @@ private:
     QString convertToPDF(QString inputFile);
 
 signals:
+    void pageNumberChanged(int pageNo, int total);
 
 public slots:
     void gotoNextSlide();

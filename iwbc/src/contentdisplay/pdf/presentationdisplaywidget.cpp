@@ -199,6 +199,8 @@ void PresentationDisplayWidget::gotoSlide(int slideNo)
     // TODO do error checking
     currentSlide = slideNo;
     emit contextChanged(getContentContext());
+
+    emit pageNumberChanged(slideNo, slideCount);
 }
 
 void PresentationDisplayWidget::generateContentIdentifier()
