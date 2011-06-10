@@ -161,6 +161,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // TODO IMPORTANT save all active tasks' changes!
     if(displayYesNoMessage("Are you sure you want to exit?", "Exiting Watch and Touch")) {
         recentlyUsed->writeToStorage();
+        bookmarkList->writeToStorage();
         event->accept();
     } else
         event->ignore();
