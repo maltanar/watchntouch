@@ -10,17 +10,9 @@ Rectangle {
 
     property string activeFunction: ""
 
-    signal qmlSignal(string msg)
-    signal notifyRegionChange(bool isDisplayed, int top, int left, int w, int h, string name)
-    signal adjustInteractiveHeight(int amount)
-
     signal mousePressed(int x, int y, int button, int buttons)
     signal mouseMoved(int x, int y, int buttons, int buttons)
     signal mouseReleased(int x, int y, int buttons, int buttons)
-
-    function getMenuDefaultInteractiveHeight() {
-        return upButtonRect.height;
-    }
 
     function showHideCollaboration(showHide){
         if(showHide){
@@ -89,14 +81,6 @@ Rectangle {
     signal webPressed()
     signal multimediaPressed()
     signal sketchPressed()
-
-    function handleOpacityChange(rect,opacity0,opacity1){
-        if(rect.opacity == opacity0) {
-            adjustInteractiveHeight(-rect.height);
-        } else if(rect.opacity == opacity1) {
-            adjustInteractiveHeight(rect.height);
-        }
-    }
 
     //MULTIMEDIA SIGNALS AND FUNCTIONS
 
@@ -228,7 +212,6 @@ Rectangle{      //PRES INTERFACE
                 property int presShowPagesInt: 0;
                 anchors.fill: parent
                 onClicked:{
-                window.qmlSignal("Presentation Paging");
                 console.log("Presentation Paging");
                 presShowPagesInt = presShowPagesInt+1;
                     if (presShowPagesInt%2==0){
@@ -455,10 +438,6 @@ Rectangle{      //PRES INTERFACE
          clip: true;
          color: "#e5f97e"
 
-         onOpacityChanged: {
-             handleOpacityChange(presPagingVisualsRect,0,1);
-         }
-
          VisualDataModel {               //TODO: ListElement'ten File system'e gecir
              id: presPagingVisualsImgs
              model: ListModel {
@@ -504,7 +483,6 @@ Rectangle{      //PRES INTERFACE
                      anchors.fill: parent
 
                      onClicked: {
-                         //window.qmlSignal("Goto page "+ pageNo);                        //sayfaya git
                          console.log("Goto page "+ pageNo);
                      }
                  }
@@ -683,7 +661,6 @@ Rectangle{          //MM INTERFACE
                 }
 
                 onClicked: {
-                    window.qmlSignal("Play-Pause Video");
                     console.log("Play-Pause Video");
                     videoPlayPauseNo = videoPlayPauseNo+1;
                         if (videoPlayPauseNo%2==0){
@@ -710,7 +687,6 @@ Rectangle{          //MM INTERFACE
                     source: "images/MMImages/MMPrevAnnotation.png"
                 }
                 onClicked: {
-                    window.qmlSignal("Goto Previous Video Annotation")
                     window.gotoPrevAnnotation();
                     console.log("Goto Previous Video Annotation");
                 }
@@ -730,7 +706,6 @@ Rectangle{          //MM INTERFACE
                     source: "images/MMImages/MMNextAnnotation.png"
                 }
                 onClicked: {
-                    window.qmlSignal("Goto Next Video Annotation")
                     window.gotoNextAnnotation();
                     console.log("Goto Next Video Annotation");
                 }
@@ -908,10 +883,6 @@ Rectangle{          //WEB INTERFACE
             anchors.bottom: webRow.top;
             anchors.bottomMargin: window.width/160
             x: window.width-window.width/2.95
-
-            onOpacityChanged: {
-                handleOpacityChange(favsBackgroundImg,0,1);
-            }
             }
 
 Rectangle{
@@ -1053,7 +1024,6 @@ Rectangle{
                             webFavNo = webFavNo+1;
                             if (webFavNo%2==0){
                                 webFavImg.source = "images/webImages/favList.png";
-                                //window.qmlSignal("Web Close Favourites List");
                                 console.log("Web Close Favourites List");
                                 //console.log(webFavImg.mapToItem(window,0,0).x);
                                 //console.log(webFavImg.mapToItem(window,0,0).y);
@@ -1063,7 +1033,6 @@ Rectangle{
 
                             if (webFavNo%2==1){
                                 webFavImg.source = "images/webImages/favListOn.png"
-                                //window.qmlSignal("Web Open Favourites List");
                                 console.log("Web Open Favourites List");
                                 favListReveal.running = true;
                                 bookmarkMenuShowHide(true);
@@ -1142,11 +1111,7 @@ Rectangle{ // MENU UP
                 menuUpAnimation.running = true
                 upButtonDisappearAnimation.running = true
                 mainMenuShowHide(true);
-                adjustInteractiveHeight(menuUpDown.height);
             }
-        }
-        onOpacityChanged: {
-            handleOpacityChange(upButtonImg,0,0.8);
         }
     }
 
@@ -1851,7 +1816,6 @@ Row{                //BOTTOM MENU
             PropertyAnimation { id: menuDownAnimation; target: bottomMenu; property: "y"; to: window.height; duration: 250
                 onCompleted: {
                     mainMenuShowHide(false);
-                    adjustInteractiveHeight(-menuUpDown.height);
                 }
             }
             PropertyAnimation { id: menuUpAnimation; target: bottomMenu; property: "y"; to: window.height - bottomMenu.height; duration: 250 }

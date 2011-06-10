@@ -130,21 +130,21 @@ QImage ContentDisplayTask::getTaskScreenshot()
 // Route all mouse events received from QML to the annotation widget
 void ContentDisplayTask::mousePress(QPoint p, int button, int buttons)
 {
-    qWarning() << "mousePress" << p << button << buttons;
+    // qWarning() << "mousePress" << p << button << buttons;
     if(m_annotationWidget)
         qApp->postEvent(m_annotationWidget->viewport(), new QMouseEvent(QEvent::MouseButtonPress, mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
 }
 
 void ContentDisplayTask::mouseMove(QPoint p, int button, int buttons)
 {
-    qWarning() << "mouseMove" << p << button << buttons;
+    // qWarning() << "mouseMove" << p << button << buttons;
     if(m_annotationWidget)
         qApp->postEvent(m_annotationWidget->viewport(), new QMouseEvent(QEvent::MouseMove, mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
 }
 
 void ContentDisplayTask::mouseRelease(QPoint p, int button, int buttons)
 {
-    qWarning() << "mouseRelease" << p << button << buttons;
+    // qWarning() << "mouseRelease" << p << button << buttons;
     if(m_annotationWidget)
         qApp->postEvent(m_annotationWidget->viewport(), new QMouseEvent(QEvent::MouseButtonRelease, mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
 }
