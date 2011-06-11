@@ -239,6 +239,8 @@ Rectangle {
 
     signal newTask(int taskType);  //taskType: 0-collaboration 1-sketch 2-presentation 3-web 4-multimedia
     signal switchToTask(int taskId);
+    signal killTask(int taskId);
+
 
     function alignTaskScrollerToSelectedTask(index){
         taskPagingVisualsView.currentIndex = index;
@@ -333,6 +335,7 @@ Rectangle {
                          anchors.fill: parent
                          onClicked: {            // TODO: AIT OLAN PENCEREYI KAPATACAK
                              taskPagingVisualsListModel.remove(index);
+                             killTask(taskId);
                          }
                      }
                  }
