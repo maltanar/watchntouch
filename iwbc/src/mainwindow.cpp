@@ -69,7 +69,16 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(webPressed()), this, SLOT(webPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(multimediaPressed()), this, SLOT(multimediaPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(sketchPressed()), this, SLOT(sketchPressed()));
+    connect(m_qmlMenu->rootObject(), SIGNAL(fullscreenStateChange()), this, SLOT(fullscreenStateChange()));
     // TODO remove adjustInteractiveHeight code
+}
+
+void MainWindow::fullscreenStateChange()
+{
+    if(isFullScreen())
+        showMaximized();
+    else
+        showFullScreen();
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)

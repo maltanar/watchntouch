@@ -65,6 +65,7 @@ private slots:
     void webPressed();
     void multimediaPressed();
     void sketchPressed();
+    void fullscreenStateChange();
     void receiveScreenshot(QPixmap img);
 
 
