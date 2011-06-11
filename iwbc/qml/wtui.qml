@@ -2037,11 +2037,16 @@ Row{                //BOTTOM MENU
                     fillMode: Image.PreserveAspectFit
                     smooth: true
                     source: "images/mainmenu/fullscreenOn.png"
+                    property bool fullscreenActive: false
                 }
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        console.log("fullscreenStateChange");
+                        if(!fullscreenImg.fullscreenActive)
+                            fullscreenImg.source = "images/mainmenu/fullscreenOff.png";
+                        else
+                            fullscreenImg.source = "images/mainmenu/fullscreenOn.png";
+                        fullscreenImg.fullscreenActive = !fullscreenImg.fullscreenActive;
                         fullscreenStateChange();
 
                     }
