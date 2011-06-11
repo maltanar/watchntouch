@@ -235,6 +235,9 @@ Rectangle {
         presPagingVisualsView.currentIndex = pageNo-1;
     }
 
+    //TASK MANAGER SIGNALS AND FUNCTIONS
+
+    signal newTask(int taskType);  //taskType: 0-collaboration 1-sketch 2-presentation 3-web 4-multimedia
     signal switchToTask(int taskId);
 
     function alignTaskScrollerToSelectedTask(index){
@@ -242,7 +245,16 @@ Rectangle {
         taskPagingVisualsView.positionViewAtIndex(index,ListView.Center);
     }
 
-    signal newTask(int taskType);  //taskType: 0-collaboration 1-sketch 2-presentation 3-web 4-multimedia
+    function addToTaskManagerScroller(pathOfTheImage, taskId){
+        taskPagingVisualsListModel.append({"name": taskId, "taskId": taskId,"file": pathOfTheImage })
+    }
+
+    function clearTaskManagerScroller(){
+        taskPagingVisualsListModel.clear();
+    }
+
+
+
 
 
     PropertyAnimation { id: showMenus; target: []; property: "opacity"; to: 1; duration: 300 }
@@ -343,7 +355,6 @@ Rectangle {
 
          Row{
              id: taskManagerRow
-
              width: window.width
              height: window.width/7.2
              //color: "transparent"
@@ -354,8 +365,8 @@ Rectangle {
                  color:"transparent"
                  Image{
                      id: newTaskButtonImg
-                     width: window.width/16
-                     height: window.width/16
+                     width: window.width/20
+                     height: window.width/20
                      anchors.centerIn: parent
                      smooth: true
                      source: "images/mainmenu/menuNew3.png"
