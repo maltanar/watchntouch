@@ -18,6 +18,9 @@ Rectangle {
         if(showHide){
             showMenus.target=colInterface;
             showMenus.running=true;
+            taskManagerRect.color = "#de9ce4";
+            taskHighlight.color = "#a900bd";
+            taskManagerRect.taskManagerTaskType = 0;
         }
         else{
             hideMenus.target=colInterface;
@@ -29,6 +32,9 @@ Rectangle {
         if(showHide){
             showMenus.target=sketchInterface;
             showMenus.running=true;
+            taskManagerRect.color = "#f9d299";
+            taskHighlight.color = "#f18e00";
+            taskManagerRect.taskManagerTaskType = 1;
         }
         else{
             hideMenus.target=sketchInterface;
@@ -43,6 +49,10 @@ Rectangle {
 
             showMenus.target=presInterface;
             showMenus.running=true;
+
+            taskManagerRect.color = "#dbdea5";
+            taskHighlight.color = "#a8ad25";
+            taskManagerRect.taskManagerTaskType = 2;
         }
         else{
             hideMenus.target=presInterface;
@@ -57,6 +67,10 @@ Rectangle {
 
             showMenus.target=webInterface;
             showMenus.running=true;
+
+            taskManagerRect.color = "#a8b3c7";
+            taskHighlight.color = "#254273";
+            taskManagerRect.taskManagerTaskType = 3;
         }
         else{
             hideMenus.target=webInterface;
@@ -71,6 +85,10 @@ Rectangle {
 
             showMenus.target=multInterface;
             showMenus.running=true;
+
+            taskManagerRect.color = "#a2d6d8";
+            taskHighlight.color = "#17989d";
+            taskManagerRect.taskManagerTaskType = 4;
         }
         else{
             hideMenus.target=multInterface;
@@ -213,9 +231,18 @@ Rectangle {
     }
 
     function alignPageScrollerToPageNumber(pageNo){
-        presPagingVisualsView.positionViewAtIndex(pageNo - 1,ListView.Beginning);
+        presPagingVisualsView.positionViewAtIndex(pageNo - 1,ListView.Center);
         presPagingVisualsView.currentIndex = pageNo-1;
     }
+
+    signal switchToTask(int taskId);
+
+    function alignTaskScrollerToSelectedTask(index){
+        taskPagingVisualsView.currentIndex = index;
+        taskPagingVisualsView.positionViewAtIndex(index,ListView.Center);
+    }
+
+    signal newTask(int taskType);  //taskType: 0-collaboration 1-sketch 2-presentation 3-web 4-multimedia
 
 
     PropertyAnimation { id: showMenus; target: []; property: "opacity"; to: 1; duration: 300 }
@@ -230,6 +257,149 @@ Rectangle {
                  hideMenus2.running = true;
              }
          }
+
+    Rectangle{      // TASK MANAGER
+         id: taskManagerRect
+         anchors.bottom: bottomMenu.top
+         anchors.bottomMargin: -1
+         opacity: 1
+         width: window.width
+         height: window.width/7.2
+         clip: true;
+         color: "#f9d299"
+
+         property int taskManagerTaskType:0
+
+         VisualDataModel {               //TODO: ListElement'ten File system'e gecir
+             id: taskPagingVisualsImgs
+             model: ListModel {
+                 id: taskPagingVisualsListModel
+                 ListElement { name: "1"; taskId: "1"; file: "images/presImages/pages/1.png" }
+                 ListElement { name: "2"; taskId: "2"; file: "images/presImages/pages/2.png" }
+                 ListElement { name: "3"; taskId: "3"; file: "images/presImages/pages/3.png" }
+                 ListElement { name: "4"; taskId: "4"; file: "images/presImages/pages/4.png" }
+                 ListElement { name: "5"; taskId: "5"; file: "images/presImages/pages/5.png" }
+                 ListElement { name: "6"; taskId: "6"; file: "images/presImages/pages/6.png" }
+                 ListElement { name: "7"; taskId: "7"; file: "images/presImages/pages/7.png" }
+                 ListElement { name: "8"; taskId: "8"; file: "images/presImages/pages/8.png" }
+                 ListElement { name: "9"; taskId: "9"; file: "images/presImages/pages/9.png" }
+             }
+
+             delegate:Image {
+                 id: name
+                 source: file
+                 visible: true
+                 height: window.width/8.192
+                 width: height*(sourceSize.width/sourceSize.height)
+                 //width: name.paintedWidth
+                 //fillMode: Image.PreserveAspectCrop
+                 smooth: true
+                 anchors.bottom: parent.bottom
+                 anchors.bottomMargin: window.width/120
+
+                 MouseArea {
+                     anchors.fill: parent
+
+                     onClicked: {
+                         console.log("Switch to task "+ taskId);
+                         switchToTask(taskId);
+                         alignTaskScrollerToSelectedTask(index);
+                     }
+                 }
+
+                 Image{
+                     anchors.right: parent.right
+                     anchors.top: parent.top
+                     anchors.topMargin: window.width/341.3
+                     anchors.rightMargin: window.width/341.3
+                        // CALCULATION: width: window.width/ (1024/ImageWidth)
+                     width: window.width/25.6; height: window.width/25.6
+                     fillMode: Image.PreserveAspectFit
+                     smooth: true
+                     source: "images/mainmenu/menuClose3.png"
+                     MouseArea {
+                         anchors.fill: parent
+                         onClicked: {            // TODO: AIT OLAN PENCEREYI KAPATACAK
+                             taskPagingVisualsListModel.remove(index);
+                         }
+                     }
+                 }
+
+            }
+
+         }
+
+         Component {
+             id: taskHighlight
+             Rectangle {
+                 width: list.currentItem.width; height: window.width/7.2
+                 color: "#f18e00"; radius: 5
+                 //anchors.centerIn: list.currentItem
+                 //y: list.currentItem.y
+
+             }
+
+         }
+
+         Row{
+             id: taskManagerRow
+
+             width: window.width
+             height: window.width/7.2
+             //color: "transparent"
+
+             Rectangle{
+                 width: window.width/10.24
+                 height: window.width/7.2
+                 color:"transparent"
+                 Image{
+                     id: newTaskButtonImg
+                     width: window.width/16
+                     height: window.width/16
+                     anchors.centerIn: parent
+                     smooth: true
+                     source: "images/mainmenu/menuNew3.png"
+                     MouseArea{
+                         anchors.fill: parent
+                         onClicked: {
+                             console.log("New task "+ taskManagerRect.taskManagerTaskType);
+                             newTask(taskManagerRect.taskManagerTaskType);
+                     }
+                 }
+                 }
+             }
+
+             Rectangle{
+                 width: window.width/1.108
+                 height: window.width/7.2
+                 clip: true
+                 color: "transparent"
+
+                 ListView {
+
+                     id: taskPagingVisualsView
+
+                     anchors.fill: parent
+                     model: taskPagingVisualsImgs
+                     orientation: ListView.Horizontal
+                     spacing: window.width/51.2
+
+                     highlight: taskHighlight
+                     highlightFollowsCurrentItem: true
+                     highlightMoveDuration: 1
+                     highlightResizeDuration: 1
+                     focus: true
+                     //preferredHighlightBegin: 50
+                     snapMode: ListView.SnapToItem
+
+                 }
+             }
+
+
+         }
+
+
+    }
 
 Rectangle{      //PRES INTERFACE
 
@@ -605,7 +775,7 @@ Rectangle{      //PRES INTERFACE
          }
 
          Component {
-             id: highlight
+             id: presHighlight
              Rectangle {
                  width: list.currentItem.width; height: window.width/7.2
                  color: "#5d5526"; radius: 5
@@ -624,7 +794,7 @@ Rectangle{      //PRES INTERFACE
              orientation: ListView.Horizontal
              spacing: window.width/51.2
 
-             highlight: highlight
+             highlight: presHighlight
              highlightFollowsCurrentItem: true
              highlightMoveDuration: 1
              highlightResizeDuration: 1
@@ -2043,12 +2213,11 @@ Row{                //BOTTOM MENU
                     anchors.fill: parent
                     onClicked: {
                         if(!fullscreenImg.fullscreenActive)
-                            fullscreenImg.source = "images/mainmenu/fullscreenOff.png";
+                                fullscreenImg.source = "images/mainmenu/fullscreenOff.png";
                         else
-                            fullscreenImg.source = "images/mainmenu/fullscreenOn.png";
-                        fullscreenImg.fullscreenActive = !fullscreenImg.fullscreenActive;
+                                fullscreenImg.source = "images/mainmenu/fullscreenOn.png";
+                                fullscreenImg.fullscreenActive = !fullscreenImg.fullscreenActive;
                         fullscreenStateChange();
-
                     }
                 }
 
