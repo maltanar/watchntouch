@@ -33,6 +33,11 @@ void ContentDisplayTask::setContextMenu(ContextMenu *newMenu)
     }
 }
 
+int ContentDisplayTask::getPanelHeight()
+{
+    return 0;
+}
+
 void ContentDisplayTask::activate()
 {
     // make this task the active task

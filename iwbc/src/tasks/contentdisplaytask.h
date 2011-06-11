@@ -35,6 +35,7 @@ protected:
     virtual void setContextMenu(ContextMenu *newMenu);
 
     virtual void showHidePanel(bool show) = 0;
+    virtual int getPanelHeight();
 
     void resizeEvent(QResizeEvent *);
 

@@ -36,7 +36,6 @@ void PresentationDisplayTask::activate()
     connect(m_panel, SIGNAL(goToLastPage()), m_contentDisplay, SLOT(gotoLastSlide()));
     connect(m_panel, SIGNAL(goToNextPage()), m_contentDisplay, SLOT(gotoNextSlide()));
     connect(m_panel, SIGNAL(goToPrevPage()), m_contentDisplay, SLOT(gotoPrevSlide()));
-
 }
 
 void PresentationDisplayTask::deactivate()
@@ -73,4 +72,12 @@ void PresentationDisplayTask::pageNumberChanged(int pageNo, int pageCount)
 {
     qWarning() << "page change:" << pageNo << "of" << pageCount;
     setSlideNumberDisplay(QString::number(pageNo) + " / " + QString::number(pageCount));
+}
+
+int PresentationDisplayTask::getPanelHeight()
+{
+    QVariant ret_arg = QVariant::fromValue(0);
+    QMetaObject::invokeMethod(m_panel, "getPresentationPanelHeight", Q_RETURN_ARG(QVariant, ret_arg));
+
+    return ret_arg.toInt();
 }

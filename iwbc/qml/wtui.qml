@@ -47,6 +47,10 @@ Rectangle {
         }
     }
 
+    function getPresentationPanelHeight() {
+        return presButtons.height;
+    }
+
     function showHideWeb(showHide){
         if(showHide){
             showMenus.target=webInterface;
@@ -58,6 +62,11 @@ Rectangle {
         }
     }
 
+
+    function getWebPanelHeight() {
+        return webInterface.height;
+    }
+
     function showHideMultimedia(showHide){
         if(showHide){
             showMenus.target=multInterface;
@@ -67,6 +76,10 @@ Rectangle {
             hideMenus.target=multInterface;
             hideMenus.running=true;
         }
+    }
+
+    function getMultimediaPanelHeight() {
+        return multInterface.height;
     }
 
     function webLoadingBar(percent){
@@ -375,6 +388,7 @@ Rectangle{      //PRES INTERFACE
             anchors.left: presMainButtonRow.right;
             anchors.leftMargin: window.width/17.0
             anchors.verticalCenter:parent.verticalCenter;
+            opacity: 0
 
             Rectangle{
                 id: presFitHeight

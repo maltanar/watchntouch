@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // create the QML main menu
     m_qmlMenu = new QMLMenuLayer(this);
     m_currentTaskContainer = new QScrollArea(this);
+    centralStretcher->setContentsMargins(1,1,1,1);
+    centralStack->setContentsMargins(1,1,1,1);
     centralStack->addWidget(m_currentTaskContainer);
     centralStack->addWidget(m_qmlMenu);
     centralStack->setStackingMode(QStackedLayout::StackAll);

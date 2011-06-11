@@ -22,6 +22,7 @@ protected:
     QStackedLayout m_layout;
 
     void showHidePanel(bool show);
+    int getPanelHeight();
 
     // QML status control functions
     void setSlideNumberDisplay(QString text);
