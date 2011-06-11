@@ -214,6 +214,7 @@ Rectangle {
 
     function alignPageScrollerToPageNumber(pageNo){
         presPagingVisualsView.positionViewAtIndex(pageNo - 1,ListView.Beginning);
+        presPagingVisualsView.currentIndex = pageNo-1;
     }
 
 
@@ -224,7 +225,7 @@ Rectangle {
 
     Timer {
         id:showHideTimer
-        interval: 3000; running: true; repeat: true
+        interval: 3000; running: false; repeat: true
              onTriggered: {
                  hideMenus2.running = true;
              }
@@ -234,10 +235,31 @@ Rectangle{      //PRES INTERFACE
 
 
          id: presInterface
+         width: window.width
+         height: presButtons.height;
          objectName: "presInterface"
          anchors.bottom: bottomMenu.top
          opacity: 0
 
+
+         MouseArea{
+             id: presShowHideMouseArea
+             hoverEnabled : true
+             anchors.fill: parent
+             property int presHover:0
+             onHoveredChanged: {
+                 if(presHover%2==0){
+                     console.log("TIMER STOPPED");
+                     showHideTimer.stop();
+                     showMenus2.running=true;
+                 }
+                 else{
+                     console.log("TIMER STARTED");
+                     showHideTimer.restart();
+                 }
+                 presHover++;
+             }
+         }
 
 
     Rectangle{      //buttons
@@ -248,17 +270,7 @@ Rectangle{      //PRES INTERFACE
         height: window.width/15.0
         color: "#dbdea5"
 
-        MouseArea{
-            id: presShowHideMouseArea
-            hoverEnabled : true
-            anchors.fill: parent
-            onHoveredChanged: {
-                showMenus2.running = true;
-            }
-            onMousePositionChanged: {
-                showHideTimer.restart();
-            }
-        }
+
 
         PropertyAnimation { id: presVisualsReveal; target:presPagingVisualsRect; property: "opacity"; to: 1; duration: 300 }
         PropertyAnimation { id: presVisualsHide; target:presPagingVisualsRect; property: "opacity"; to: 0; duration: 300 }
@@ -284,13 +296,16 @@ Rectangle{      //PRES INTERFACE
                 property int presShowPagesInt: 0;
                 anchors.fill: parent
                 onClicked:{
+
                 console.log("Presentation Paging");
                 presShowPagesInt = presShowPagesInt+1;
                     if (presShowPagesInt%2==0){
+                        presInterface.height-=window.width/7.2;
                         presShowPagesImg.source = "images/presImages/showPages.png";
                         presVisualsHide.running=true;
                     }
                     if (presShowPagesInt%2==1){
+                        presInterface.height+=window.width/7.2;
                         presShowPagesImg.source = "images/presImages/showPagesOn.png";
                         presVisualsReveal.running=true
                     }
@@ -494,6 +509,7 @@ Rectangle{      //PRES INTERFACE
                     anchors.fill: parent
                     onClicked: {
                          presZoomOut();
+
                          console.log("Presentation Zoom Out");
                     }
                 }
@@ -558,6 +574,7 @@ Rectangle{      //PRES INTERFACE
                      onClicked: {
                          console.log("Goto page "+ pageNo);
                          goToPageNumber(pageNo);
+                         alignPageScrollerToPageNumber(pageNo);
                      }
                  }
 
@@ -590,15 +607,11 @@ Rectangle{      //PRES INTERFACE
          Component {
              id: highlight
              Rectangle {
-                 width: 180; height: 40
-                 color: "lightsteelblue"; radius: 5
-                 y: list.currentItem.y
-                 Behavior on y {
-                     SpringAnimation {
-                         spring: 3
-                         damping: 0.2
-                     }
-                 }
+                 width: list.currentItem.width; height: window.width/7.2
+                 color: "#5d5526"; radius: 5
+                 //anchors.centerIn: list.currentItem
+                 //y: list.currentItem.y
+
              }
 
          }
@@ -612,9 +625,11 @@ Rectangle{      //PRES INTERFACE
              spacing: window.width/51.2
 
              highlight: highlight
-             highlightFollowsCurrentItem: false
+             highlightFollowsCurrentItem: true
+             highlightMoveDuration: 1
+             highlightResizeDuration: 1
              focus: true
-             preferredHighlightBegin: 50
+             //preferredHighlightBegin: 50
              snapMode: ListView.SnapToItem
 
          }
@@ -662,13 +677,22 @@ Rectangle{          //MM INTERFACE
             id: multShowHideMouseArea
             hoverEnabled : true
             anchors.fill: parent
+            property int presHover:0
             onHoveredChanged: {
-                showMenus2.running = true;
-            }
-            onMousePositionChanged: {
-                showHideTimer.restart();
+                if(presHover%2==0){
+                    console.log("TIMER STOPPED");
+                    showHideTimer.stop();
+                    showMenus2.running=true;
+                }
+                else{
+                    console.log("TIMER STARTED");
+                    showHideTimer.restart();
+                }
+                presHover++;
             }
         }
+
+
 
         Image{
             anchors.horizontalCenter: multInterface.horizontalCenter
@@ -892,11 +916,18 @@ Rectangle{          //WEB INTERFACE
         id: webShowHideMouseArea
         hoverEnabled : true
         anchors.fill: parent
+        property int presHover:0
         onHoveredChanged: {
-            showMenus2.running = true;
-        }
-        onMousePositionChanged: {
-            showHideTimer.restart();
+            if(presHover%2==0){
+                console.log("TIMER STOPPED");
+                showHideTimer.stop();
+                showMenus2.running=true;
+            }
+            else{
+                console.log("TIMER STARTED");
+                showHideTimer.restart();
+            }
+            presHover++;
         }
     }
 
