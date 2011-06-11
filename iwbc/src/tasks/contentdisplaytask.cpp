@@ -17,21 +17,20 @@ void ContentDisplayTask::setPanel(QObject *panel)
 
 void ContentDisplayTask::setContextMenu(ContextMenu *newMenu)
 {
-    // remove the connections with old context menu, if exists
-    disconnect(this);
-
     m_contextMenu = newMenu;
     m_contextMenu->hide();
 
-    connect(m_annotationWidget, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(showContextMenu(QPoint)));
+    if(m_annotationWidget) {
+        connect(m_annotationWidget, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(showContextMenu(QPoint)));
 
-    // connect the context menu signals/slots with the annotation widget
-    connect(m_contextMenu,SIGNAL(colorSelected(QColor)),m_annotationWidget, SLOT(setDrawingColor(QColor)));
-    connect(m_contextMenu, SIGNAL(undo()), m_annotationWidget->getDrawingData()->getUndoStack(), SLOT(undo()));
-    connect(m_contextMenu, SIGNAL(redo()), m_annotationWidget->getDrawingData()->getUndoStack(), SLOT(redo()));
-    connect(m_contextMenu, SIGNAL(toolSelected(DrawingMode)), m_annotationWidget, SLOT(setDrawingMode(DrawingMode)));
-    connect(m_contextMenu, SIGNAL(penWidthIncrease()), m_annotationWidget, SLOT(increasePenWidth()));
-    connect(m_contextMenu, SIGNAL(penWidthDecrease()), m_annotationWidget, SLOT(decreasePenWidth()));
+        // connect the context menu signals/slots with the annotation widget
+        connect(m_contextMenu,SIGNAL(colorSelected(QColor)),m_annotationWidget, SLOT(setDrawingColor(QColor)));
+        connect(m_contextMenu, SIGNAL(undo()), m_annotationWidget->getDrawingData()->getUndoStack(), SLOT(undo()));
+        connect(m_contextMenu, SIGNAL(redo()), m_annotationWidget->getDrawingData()->getUndoStack(), SLOT(redo()));
+        connect(m_contextMenu, SIGNAL(toolSelected(DrawingMode)), m_annotationWidget, SLOT(setDrawingMode(DrawingMode)));
+        connect(m_contextMenu, SIGNAL(penWidthIncrease()), m_annotationWidget, SLOT(increasePenWidth()));
+        connect(m_contextMenu, SIGNAL(penWidthDecrease()), m_annotationWidget, SLOT(decreasePenWidth()));
+    }
 }
 
 void ContentDisplayTask::activate()
@@ -66,7 +65,7 @@ void ContentDisplayTask::setAnnotationWidget(AnnotationWidget * newWidget)
 {
     m_annotationWidget = newWidget;
 
-    if(m_annotationWidget)
+    if(m_contentDisplay)
         m_annotationWidget->attachToContentDisplay(m_contentDisplay);
 }
 

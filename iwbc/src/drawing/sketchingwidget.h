@@ -10,6 +10,9 @@ class SketchingWidget : public BaseDrawingWidget
 public:
     explicit SketchingWidget(QWidget *parent = 0);
 
+protected:
+    void resizeEvent(QResizeEvent *event);
+
 private:
     QString currentContent;
     QString currentContext;

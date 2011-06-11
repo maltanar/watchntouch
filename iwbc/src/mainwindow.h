@@ -9,6 +9,7 @@
 #include "presentationdisplaytask.h"
 #include "videodisplaytask.h"
 #include "webpagedisplaytask.h"
+#include "sketchingtask.h"
 
 #include "screencasting.h"
 #include "screenshot.h"

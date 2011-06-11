@@ -294,7 +294,28 @@ QString MainWindow::openContent(ContentType type)
 
 void MainWindow::sketchPressed()
 {
+    SketchingTask * newTask;
+    QString newTaskID;
+
     m_selectedContent = openContent(CONTENTTYPE_SKETCH);
+
+    if(m_selectedContent != "") {
+        // create and insert new task into the list of active tasks
+        newTask = new SketchingTask(this);
+        // set the task panel as the QML menu root object
+        newTask->setPanel(m_qmlMenu->rootObject());
+        newTaskID = "sketch_" + QString::number(QDateTime::currentMSecsSinceEpoch());
+        qWarning() << "new task identifier:" << newTaskID;
+        m_tasks.insert(newTaskID, newTask);
+        // set this as the active task
+        setActiveTask(newTaskID);
+
+        if(m_selectedContent == "$newsketch$") {
+            // TODO IMPORTANT add to recently used list
+            newTask->newSketch("sketch - " + QDateTime::currentDateTime().toString());
+        }
+
+    }
 }
 
 
