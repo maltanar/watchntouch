@@ -1,4 +1,5 @@
 #include "presentationdisplaytask.h"
+#include <QUrl>
 
 PresentationDisplayTask::PresentationDisplayTask(QWidget *parent) :
     ContentDisplayTask(parent)
@@ -17,6 +18,7 @@ PresentationDisplayTask::PresentationDisplayTask(QWidget *parent) :
     setLayout(&m_layout);
 
     connect(m_contentDisplay, SIGNAL(pageNumberChanged(int,int)), this, SLOT(pageNumberChanged(int,int)));
+    connect(m_contentDisplay, SIGNAL(pageThumbnailReady(QString, int)), this, SLOT(pageThumbReady(QString,int)));
 
     m_annotationWidget->raise();
 }
@@ -36,6 +38,10 @@ void PresentationDisplayTask::activate()
     connect(m_panel, SIGNAL(goToLastPage()), m_contentDisplay, SLOT(gotoLastSlide()));
     connect(m_panel, SIGNAL(goToNextPage()), m_contentDisplay, SLOT(gotoNextSlide()));
     connect(m_panel, SIGNAL(goToPrevPage()), m_contentDisplay, SLOT(gotoPrevSlide()));
+    connect(m_panel, SIGNAL(goToPageNumber(QString)), this, SLOT(goToPageNumber(QString)));
+
+    // TODO IMPORTANT clear and insert the thumbnails, align to current page
+    updateThumbnails();
 }
 
 void PresentationDisplayTask::deactivate()
@@ -43,16 +49,18 @@ void PresentationDisplayTask::deactivate()
     ContentDisplayTask::deactivate();
 
     // TODO disconnect qml menu signals
-
     disconnect(m_panel, SIGNAL(goToFirstPage()), m_contentDisplay, SLOT(gotoFirstSlide()));
     disconnect(m_panel, SIGNAL(goToLastPage()), m_contentDisplay, SLOT(gotoLastSlide()));
     disconnect(m_panel, SIGNAL(goToNextPage()), m_contentDisplay, SLOT(gotoNextSlide()));
     disconnect(m_panel, SIGNAL(goToPrevPage()), m_contentDisplay, SLOT(gotoPrevSlide()));
+    disconnect(m_panel, SIGNAL(goToPageNumber(QString)), this, SLOT(goToPageNumber(QString)));
 }
 
 void PresentationDisplayTask::goToPageNumber(QString no)
 {
     // TODO go to specified page
+    qWarning() << "go to page number" << no;
+    ((PresentationDisplayWidget*)m_contentDisplay)->gotoSlide(no.toInt());
 }
 
 void PresentationDisplayTask::setSlideNumberDisplay(QString text)
@@ -80,4 +88,51 @@ int PresentationDisplayTask::getPanelHeight()
     QMetaObject::invokeMethod(m_panel, "getPresentationPanelHeight", Q_RETURN_ARG(QVariant, ret_arg));
 
     return ret_arg.toInt();
+}
+
+void PresentationDisplayTask::PresentationGui_addToPageScroller(QString path, int pageNo)
+{
+    qWarning() << "PresentationGui_addToPageScroller" << path << pageNo;
+    QVariant sImagePath = QVariant::fromValue("file://"+path);
+    QVariant iPageNo = QVariant::fromValue(pageNo);
+    QMetaObject::invokeMethod(m_panel, "addToPageScroller", Q_ARG(QVariant, sImagePath), Q_ARG(QVariant, iPageNo));
+}
+
+void PresentationDisplayTask::PresentationGui_clearPageScroller()
+{
+    qWarning() << "PresentationGui_clearPageScroller";
+    QMetaObject::invokeMethod(m_panel, "clearPageScroller");
+}
+
+void PresentationDisplayTask::PresentationGui_alignPageScrollerToPageNumber(int pageNo)
+{
+    QVariant iPageNo = QVariant::fromValue(pageNo);
+    QMetaObject::invokeMethod(m_panel, "alignPageScrollerToPageNumber", Q_ARG(QVariant, iPageNo));
+}
+
+void PresentationDisplayTask::PresentationGui_setPageScrollerImageAtIndex(QString pathOfTheImage, int pageNo)
+{
+    qWarning() << "PresentationGui_setPageScrollerImageAtIndex" << pathOfTheImage << pageNo;
+    QVariant sImagePath = QVariant::fromValue(pathOfTheImage);
+    QVariant iPageNo = QVariant::fromValue(QString::number(pageNo));
+    QMetaObject::invokeMethod(m_panel, "setPageScrollerImageAtIndex", Q_ARG(QVariant, sImagePath), Q_ARG(QVariant, iPageNo));
+}
+
+void PresentationDisplayTask::pageThumbReady(QString path, int pageNo)
+{
+    qWarning() << "thumb ready" << path << pageNo;
+    m_thumbs.append(path);
+    PresentationGui_addToPageScroller(path, pageNo);
+}
+
+void PresentationDisplayTask::updateThumbnails()
+{
+    // TODO IMPORTANT insert / update the thumbnails inside the list
+    PresentationGui_clearPageScroller();
+
+    for(int i = 0; i < m_thumbs.count(); i++) {
+        qWarning() << "zelelelele" << i;
+        PresentationGui_addToPageScroller(m_thumbs.at(i), i);
+    }
+
 }

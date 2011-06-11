@@ -3,6 +3,7 @@
 
 #include "contentdisplaytask.h"
 #include <QStackedLayout>
+#include <QStringList>
 #include <presentationdisplaywidget.h>
 #include <annotationwidget.h>
 #include <contextmenu.h>
@@ -20,13 +21,20 @@ public:
 
 protected:
     QStackedLayout m_layout;
+    QStringList m_thumbs;
 
     void showHidePanel(bool show);
     int getPanelHeight();
 
+    void updateThumbnails();
+
     // QML status control functions
     void setSlideNumberDisplay(QString text);
 
+    void PresentationGui_clearPageScroller();
+    void PresentationGui_alignPageScrollerToPageNumber(int pageNo);
+    void PresentationGui_setPageScrollerImageAtIndex(QString pathOfTheImage, int pageNo);
+    void PresentationGui_addToPageScroller(QString path, int pageNo);
 
 signals:
 
@@ -37,6 +45,7 @@ public slots:
 
     // Incoming information from PresentationDisplayWidget
     void pageNumberChanged(int pageNo, int pageCount);
+    void pageThumbReady(QString path, int pageNo);
 
     // TODO IMPORTANT finalize QML connections for presentations
 /*    signal goToFirstPage()

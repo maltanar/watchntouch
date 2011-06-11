@@ -23,6 +23,8 @@ protected:
     void keyPressEvent(QKeyEvent *ev);
     void resizeEvent(QResizeEvent *ev);
 
+    void prepareThumbnails();
+
 private:
     int currentSlide;
     int slideCount;
@@ -43,6 +45,7 @@ private:
 
 signals:
     void pageNumberChanged(int pageNo, int total);
+    void pageThumbnailReady(QString fileName, int pageNo);
 
 public slots:
     void gotoNextSlide();

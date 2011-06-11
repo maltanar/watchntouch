@@ -204,7 +204,8 @@ Rectangle {
     }
 
     function addToPageScroller(pathOfTheImage, pageNo){
-        presPagingVisualsListModel.append({"file": pathOfTheImage, "pageNo": pageNo})
+
+        presPagingVisualsListModel.append({"name": pageNo, "pageNo": pageNo, "file": pathOfTheImage })
     }
 
     function clearPageScroller(){
@@ -555,6 +556,7 @@ Rectangle{      //PRES INTERFACE
 
                      onClicked: {
                          console.log("Goto page "+ pageNo);
+                         goToPageNumber(pageNo);
                      }
                  }
 

@@ -10,6 +10,8 @@
 #include <QKeyEvent>
 #include <QResizeEvent>
 #include <QVBoxLayout>
+#include <QDir>
+#include <QFile>
 
 #include "recentlyused.h"
 
@@ -153,6 +155,7 @@ bool PresentationDisplayWidget::loadPDF(QString fileName)
         doc->setRenderHint(Poppler::Document::TextAntialiasing);
         currentSlide = 0;
         slideCount = doc->numPages();
+        prepareThumbnails();
         //loader.slideCount = c.slideCount = slideCount = doc->numPages();
         //loader.start();
         gotoSlide(1);
@@ -216,4 +219,28 @@ void PresentationDisplayWidget::gotoFirstSlide()
 void PresentationDisplayWidget::gotoLastSlide()
 {
     gotoSlide(slideCount);
+}
+
+void PresentationDisplayWidget::prepareThumbnails()
+{
+    // TODO IMPORTANT this function should reside in a thread!
+    // create the cache directory in which the thumbnails will reside
+    QString cachePath = QString(CACHE_DIR + "/" + getContentIdentifier());
+    QDir dir(cachePath);
+    // check if annotations directory exists
+    if(!dir.exists()) {
+        // directory does not exist, create it
+        dir.mkpath(cachePath);
+    }
+    QImage currentThumb;
+    QString currentFileName;
+    for(int i=0; i < slideCount; i++) {
+        currentFileName = cachePath + "/" + QString::number(i) + ".png";
+        if(!QFile::exists(currentFileName)) {
+            currentThumb = doc->page(i)->renderToImage(15, 15);
+            qWarning() << "original thumb size" << currentThumb.size() << "filename" << currentFileName;
+            currentThumb.save(currentFileName);
+        }
+        emit pageThumbnailReady(currentFileName, i+1);
+    }
 }
