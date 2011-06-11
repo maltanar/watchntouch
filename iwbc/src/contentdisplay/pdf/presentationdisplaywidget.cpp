@@ -235,7 +235,7 @@ void PresentationDisplayWidget::prepareThumbnails()
     QImage currentThumb;
     QString currentFileName;
     for(int i=0; i < slideCount; i++) {
-        currentFileName = cachePath + "/" + QString::number(i) + ".png";
+        currentFileName = cachePath + "/" + QString::number(i) + "_t.png";
         if(!QFile::exists(currentFileName)) {
             currentThumb = doc->page(i)->renderToImage(15, 15);
             qWarning() << "original thumb size" << currentThumb.size() << "filename" << currentFileName;
