@@ -75,7 +75,7 @@ Rectangle {
             webLoadingHide.running=true;
         }
         else if(webLoadingImg.opacity!=1){
-            webLoadingShow.running=true;
+            webLoadingImg.opacity=1;
         }
     }
 
@@ -833,7 +833,7 @@ Rectangle{          //MM INTERFACE
 
 Rectangle{          //WEB INTERFACE
     id: webInterface
-    opacity: 1
+    opacity: 0
     width: window.width
     height: window.width/20.0
     color: "#a8b3c7"

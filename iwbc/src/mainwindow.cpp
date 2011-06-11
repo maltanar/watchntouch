@@ -252,8 +252,10 @@ void MainWindow::openWebPage()
         m_tasks.insert(newTaskID, newTask);
         // set this as the active task
         setActiveTask(newTaskID);
-        // load the content
-        newTask->getContentDisplay()->selectContent(m_selectedContent);
+        if(m_selectedContent != "$webpage$") {
+            // load the content
+            newTask->getContentDisplay()->selectContent(m_selectedContent);
+        }
     }
 }
 
