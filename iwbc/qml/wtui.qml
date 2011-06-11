@@ -69,6 +69,16 @@ Rectangle {
         }
     }
 
+    function webLoadingBar(percent){
+        webLoadingImg.width = (percent * (window.width/1.79))/100;
+        if(percent==100 || percent==0){
+            webLoadingHide.running=true;
+        }
+        else if(webLoadingImg.opacity!=1){
+            webLoadingShow.opacity=1;
+        }
+    }
+
 
 
     //BOTTOM MENU SIGNALS AND FUNCTIONS
@@ -814,7 +824,7 @@ Rectangle{          //MM INTERFACE
 
 Rectangle{          //WEB INTERFACE
     id: webInterface
-    opacity: 0
+    opacity: 1
     width: window.width
     height: window.width/20.0
     color: "#a8b3c7"
@@ -827,7 +837,7 @@ Rectangle{          //WEB INTERFACE
             id: webVisualDataModel
             model: ListModel {
                 id: weblistModelSketch
-                ListElement { name: "0";  val: "www.google.com" }
+                ListElement { name: "0";  val: "www.googleasdasdasdsadasdasd.com" }
                 ListElement { name: "1";  val: "www.moogle.com" }
                 ListElement { name: "2";  val: "www.noogle.com" }
                 ListElement { name: "3";  val: "www.noonle.com" }
@@ -843,13 +853,24 @@ Rectangle{          //WEB INTERFACE
                 id: webFavouritesRow
                 spacing: window.width/80.0
 
-                Text{
-                    text: val
-                    width: window.width/4.4
-                    font.family: "Ubuntu"
-                    font.pointSize: window.width/80
-                    color: "black"
-                }
+                    Flickable {
+                        width: window.width/4.26
+                        height: window.width/34.13
+                        clip: true
+                        flickableDirection :Flickable.HorizontalFlick
+
+
+                        Text{
+                            text: val
+                            font.family: "Ubuntu"
+                            font.pointSize: window.width/80
+                            color: "black"
+                        }
+
+                    }
+
+
+
 
                 Image{
                     width: window.width/31.03
@@ -925,12 +946,25 @@ Rectangle{
             id: webRow
             spacing: window.width/60.0
             anchors.centerIn: parent;
+
+            PropertyAnimation { id: webLoadingShow; target: webLoadingImg; property: "opacity"; to: 1; duration: 300 }
+            PropertyAnimation { id: webLoadingHide; target: webLoadingImg; property: "opacity"; to: 0; duration: 300 }
+
             Image{
 
                 width: window.width/1.79; height: window.width/26.94   // CALCULATION: width: window.width/ (1024/ImageWidth)
                 fillMode: Image.PreserveAspectFit
                 smooth: true
                 source: "images/webImages/addressbar.png"
+
+
+                Image{
+                    id: webLoadingImg
+                    width: 0; height: window.width/26.94
+                    smooth: true
+                    source: "images/webImages/addressbarloading.png"
+                    opacity:1
+                }
 
                 TextInput {
                     id: webTextInput
@@ -949,6 +983,7 @@ Rectangle{
 
                  }
             }
+
 
             Row{
 
@@ -977,6 +1012,7 @@ Rectangle{
                     smooth: true
                     source: "images/webImages/next.png"
                     MouseArea {
+                        property int a:0
                         anchors.fill: parent
                         onClicked: {
                             next();
