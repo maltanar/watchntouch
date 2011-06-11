@@ -14,13 +14,30 @@ Rectangle {
     signal mouseMoved(int x, int y, int buttons, int buttons)
     signal mouseReleased(int x, int y, int buttons, int buttons)
 
+    function taskManagerPreparation(rectColor, highlightColor, taskType){
+        if(!(taskManagerRect.opacity==1 && taskManagerRect.taskManagerTaskType!=taskType))
+            taskManagerRect.color = rectColor;
+
+        taskManagerRect.taskManagerTaskType = taskType;
+       // taskHighlightRect.color=  highlightColor;
+    }
+
+    function taskManagerShowHide(){
+        if(taskManagerRect.opacity==1){
+            hideMenus.target=taskManagerRect;
+            hideMenus.running=true;
+        }
+        else if(taskManagerRect.opacity==0){
+            showMenus.target=taskManagerRect;
+            showMenus.running=true;
+        }
+    }
+
     function showHideCollaboration(showHide){
         if(showHide){
             showMenus.target=colInterface;
             showMenus.running=true;
-            taskManagerRect.color = "#de9ce4";
-            taskHighlight.color = "#a900bd";
-            taskManagerRect.taskManagerTaskType = 0;
+
         }
         else{
             hideMenus.target=colInterface;
@@ -32,9 +49,7 @@ Rectangle {
         if(showHide){
             showMenus.target=sketchInterface;
             showMenus.running=true;
-            taskManagerRect.color = "#f9d299";
-            taskHighlight.color = "#f18e00";
-            taskManagerRect.taskManagerTaskType = 1;
+
         }
         else{
             hideMenus.target=sketchInterface;
@@ -50,9 +65,8 @@ Rectangle {
             showMenus.target=presInterface;
             showMenus.running=true;
 
-            taskManagerRect.color = "#dbdea5";
-            taskHighlight.color = "#a8ad25";
-            taskManagerRect.taskManagerTaskType = 2;
+
+
         }
         else{
             hideMenus.target=presInterface;
@@ -68,9 +82,7 @@ Rectangle {
             showMenus.target=webInterface;
             showMenus.running=true;
 
-            taskManagerRect.color = "#a8b3c7";
-            taskHighlight.color = "#254273";
-            taskManagerRect.taskManagerTaskType = 3;
+
         }
         else{
             hideMenus.target=webInterface;
@@ -86,9 +98,8 @@ Rectangle {
             showMenus.target=multInterface;
             showMenus.running=true;
 
-            taskManagerRect.color = "#a2d6d8";
-            taskHighlight.color = "#17989d";
-            taskManagerRect.taskManagerTaskType = 4;
+
+
         }
         else{
             hideMenus.target=multInterface;
@@ -126,6 +137,96 @@ Rectangle {
 
     function fullscreenImgOff(){
         fullscreenImg.source = "images/mainmenu/fullscreenOff.png";
+    }
+
+    function taskTypeCounterIncrementOne(type){ //taskType: 0-collaboration 1-sketch 2-presentation 3-web 4-multimedia
+        switch(type){
+        case 0:{
+            textColl.no++;
+            if(textColl.no>0){
+                textCollBackgroundCircle.visible = true;
+                textColl.visible = true;
+            }
+        }
+        break;
+        case 1:{
+            textSketch.no++;
+            if(textSketch.no>0){
+                textSketchBackgroundCircle.visible = true;
+                textSketch.visible = true;
+            }
+        }
+        break;
+        case 2:{
+            textPres.no++;
+            if(textPres.no>0){
+                textPresBackgroundCircle.visible = true;
+                textPres.visible = true;
+            }
+        }
+        break;
+        case 3:{
+             textWeb.no++;
+            if(textWeb.no>0){
+                textWebBackgroundCircle.visible = true;
+                textWeb.visible = true;
+            }
+        }
+        break;
+        case 4:{
+             textMM.no++;
+            if(textMM.no>0){
+                textMMBackgroundCircle.visible = true;
+                textMM.visible = true;
+            }
+        }
+        break;
+        }
+    }
+
+    function taskTypeCounterDecrementOne(type){ //taskType: 0-collaboration 1-sketch 2-presentation 3-web 4-multimedia
+        switch(type){
+        case 0:{
+            textColl.no--;
+            if(textColl.no==0){
+                textCollBackgroundCircle.visible = false;
+                textColl.visible = false;
+            }
+        }
+        break;
+        case 1:{
+            textSketch.no--;
+            if(textSketch.no==0){
+                textSketchBackgroundCircle.visible = false;
+                textSketch.visible = false;
+            }
+        }
+        break;
+        case 2:{
+            textPres.no--;
+            if(textPres.no==0){
+                textPresBackgroundCircle.visible = false;
+                textPres.visible = false;
+            }
+        }
+        break;
+        case 3:{
+             textWeb.no--;
+            if(textWeb.no==0){
+                textWebBackgroundCircle.visible = false;
+                textWeb.visible = false;
+            }
+        }
+        break;
+        case 4:{
+             textMM.no--;
+            if(textMM.no==0){
+                textMMBackgroundCircle.visible = false;
+                textMM.visible = false;
+            }
+        }
+        break;
+        }
     }
 
     //MULTIMEDIA SIGNALS AND FUNCTIONS
@@ -240,6 +341,7 @@ Rectangle {
     signal newTask(int taskType);  //taskType: 0-collaboration 1-sketch 2-presentation 3-web 4-multimedia
     signal switchToTask(int taskId);
     signal killTask(int taskId);
+    signal openTaskManager(int taskType);
 
 
     function alignTaskScrollerToSelectedTask(index){
@@ -254,6 +356,8 @@ Rectangle {
     function clearTaskManagerScroller(){
         taskPagingVisualsListModel.clear();
     }
+
+
 
 
 
@@ -276,11 +380,12 @@ Rectangle {
          id: taskManagerRect
          anchors.bottom: bottomMenu.top
          anchors.bottomMargin: -1
-         opacity: 1
+         opacity: 0
          width: window.width
          height: window.width/7.2
          clip: true;
          color: "#f9d299"
+
 
          property int taskManagerTaskType:0
 
@@ -347,8 +452,10 @@ Rectangle {
          Component {
              id: taskHighlight
              Rectangle {
-                 width: list.currentItem.width; height: window.width/7.2
-                 color: "#f18e00"; radius: 5
+                 id: taskHighlightRect
+                 width: list.currentItem.width
+                 height: window.width/7.2
+                 color: "red"; radius: 5
                  //anchors.centerIn: list.currentItem
                  //y: list.currentItem.y
 
@@ -1557,22 +1664,10 @@ Row{                //BOTTOM MENU
                     anchors.fill: parent
                     onClicked: {
                         window.activeFunction = "collaboration"
-                        textColl.no=textColl.no+1;
-                        if(textColl.no==0){
-                            textCollBackgroundCircle.visible = false;
-                            textColl.visible = false;
-                        }
-                        else{
-                            textCollBackgroundCircle.visible = true;
-                            textColl.visible = true;
-                            activeCollaboration.visible = true;
-                            activeSketch.visible = false;
-                            activePresentation.visible = false;
-                            activeWeb.visible = false;
-                            activeMultimedia.visible = false;
-                            activeConfig.visible = false;
-                        }
-
+                        taskManagerPreparation("#de9ce4","#a900bd",0 );
+                        openTaskManager(0);
+                        taskManagerShowHide();
+                        //textColl.no=textColl.no+1;
                     }
                 }
                 Text{
@@ -1638,65 +1733,12 @@ Row{                //BOTTOM MENU
 
                     onClicked: {
                         sketchPressed();
-                        if(rectSketch.isMenuOn){
-                        sketchMenuHide.running = true;
-                        //sketchButtonMenuHide.running = true;
-                        //sketchButtonHide.running = true;
-                        rectSketch.isMenuOn = false;
-
-                        }
-                        else{
-                        sketchMenuReveal.running = true;
-                        //sketchButtonMenuReveal.running = true;
-                        //sketchButtonReveal.running = true;
-                        rectSketch.isMenuOn = true;
-                        }
-
-                        //window.state = "addButtonReveal"
-                        /*
-                        if(acik birseyler varsa)
-                                             onlari dikey sirala
-
-                                        yeni butonunu goster
-
-                                        */
-                        window.activeFunction = "sketch"
-                        textSketch.no=textSketch.no+1;
-
-                        if(listModelSketch.count>0){
-                        sketchButtonMenu.height = (window.width/8) * listModelSketch.count + window.width/100
-                        }
-                        else{
-                        sketchButtonMenu.height = 0
-                        }
-
-                        if(textSketch.no==0){
-                            textSketchBackgroundCircle.visible = false;
-                            textSketch.visible = false;
-                        }
-                        else{
-                            textSketchBackgroundCircle.visible = true;
-                            textSketch.visible = true;
-                            activeCollaboration.visible = false;
-                            activeSketch.visible = true;
-                            activePresentation.visible = false;
-                            activeWeb.visible = false;
-                            activeMultimedia.visible = false;
-                        }
+                        taskManagerPreparation("#f9d299","#f18e00",1 );
+                        taskManagerShowHide();
+                        openTaskManager(1);
                     }
                 }
 
-                /*states: State {         //TODO: add button dokununca acilsin
-                    name: "addButtonReveal"
-                    when: !sketchButtonMouseArea.
-                    //PropertyChanges { target: contextMenu; x: 0; open: true }
-                    //PropertyChanges { target: mainView; x: 130 }
-                    PropertyChanges { target: addButtonSketchRect; opacity: 1 }
-                }
-
-                transitions: Transition {
-                    NumberAnimation { properties: "x,opacity"; duration: 300; easing.type: Easing.OutQuint }
-                }*/
 
                 Text{
                     id: textSketch
@@ -1717,192 +1759,6 @@ Row{                //BOTTOM MENU
                     height: (width/30)
                 }
 
-
-                Rectangle{
-                    id: sketchButtonMenu
-                    color: "#f18e00"
-                    opacity: 0
-                    anchors.bottom: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width + window.width/34.13
-                    height: window.width/100 // TODO: List'te uc tane var
-
-                    //height: sketchListView.height + window.width/5
-
-                    /*
-                    states: State {
-                             name: "moved"; when: mouseArea.pressed
-                             PropertyChanges { target: rect; x: 50; y: 50 }
-                         }
-
-                    transitions: Transition {
-                             NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
-                    */
-
-                    VisualDataModel {               //TODO: ListElement'ten File system'e gecir
-                        id: visualModel
-                        model: ListModel {
-                            id: listModelSketch
-                            ListElement { name: "0";  file: "images/ske1.png" }
-                            ListElement { name: "1";  file: "images/ske2.png" }
-                            ListElement { name: "2";  file: "images/ske3.png" }
-                        }
-
-                        delegate: Rectangle {
-                            height: window.width/8
-                            width: window.width/6
-                            color: "transparent"
-                            //color: model.modelData.color
-                            //Text { text: name }
-
-                            Image{
-                                id: name
-                                width: window.width/7
-                                height: width //onemli degil, aspect ratio korunuyor
-                                source: file
-                                anchors.centerIn: parent
-                                visible: true
-                                fillMode: Image.PreserveAspectFit
-                                smooth: true
-                            }
-
-                                Image{
-                                    //x: window.width/
-                                    anchors.right: parent.right
-                                    width: window.width/18.96; height: window.width/18.28   // CALCULATION: width: window.width/ (1024/ImageWidth)
-                                    fillMode: Image.PreserveAspectFit
-                                    smooth: true
-                                    source: "images/mainmenu/menuClose3.png"
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {            // TODO: AIT OLAN PENCEREYI KAPATACAK
-                                            listModelSketch.remove(index);
-                                            if(listModelSketch.count>0){
-                                            sketchButtonMenu.height = (window.width/8) * listModelSketch.count + window.width/100;
-                                            }
-                                            else{
-                                            sketchButtonMenu.height = 0;
-                                            }
-                                        }
-                                    }
-                                }
-
-
-                        }
-
-                    }
-
-
-                    ListView {              // TODO: butonun altina giriyor, bug var
-                        id: sketchListView
-                        anchors.fill: parent
-                        model: visualModel
-                    }
-                    /*
-                    Column {
-                        id: sketchColumn
-                        spacing: 2
-                        add: Transition {
-                            PropertyAnimation {
-                                id: addSketchAnimation
-                                target: sketchButtonMenu
-                                property: "y"
-                                to: sketchButtonMenu.y + 100
-                                duration: 300
-                            }
-                        }
-                        move: Transition {
-                            NumberAnimation {
-                                properties: "y"
-                                easing.type: Easing.OutBounce
-                            }
-                        }
-
-                        Rectangle{                          //SKETCH ELEMENT 1
-                            width: window.width/6
-                            height: window.width/9
-                            color:"red"     //TODO: KALDIR
-
-                            Image{
-                                id: skeImg
-                                anchors.centerIn: parent
-                                visible: true
-                                fillMode: Image.PreserveAspectFit
-                                smooth: true
-                                source: "images/ske.png"
-                            }
-
-                        }
-
-                    }
-
-
-*/
-                }
-
-
-
-                Rectangle{  // sol kanat
-                    id: sketchLeftWing
-                    opacity: 0
-                    color: "#f18e00"
-                    anchors.right: parent.left
-                    anchors.top: activeSketch.top
-                    width: window.width/65
-                    height: parent.height + activeSketch.height
-                    //y: (window.width/8) * 3 + window.width/100 //TODO: yukariya bak
-                }
-
-                Rectangle{  // sag kanat
-                    id: sketchRightWing
-                    opacity: 0
-                    color: "#f18e00"
-                    anchors.left: parent.right
-                    anchors.top: activeSketch.top
-                    width: window.width/70
-                    height: parent.height + activeSketch.height
-                    //y: (window.width/8) * 3 + window.width/100 //TODO: yukariya bak
-                }
-
-
-                Rectangle{
-                    id: addButtonSketchRect
-                    color:"transparent"
-                    opacity: 0
-                    //y: (window.width/8) * 3 + window.width/100 //TODO: yukariya bak
-                    //x: window.width/72
-
-                    Image{
-                        id: addButtonSketchImg
-                        x: -window.width/60
-                        y: -window.width/60
-                        //anchors.horizontalCenter: rectCollaboration.horizontalCenter
-                        width: window.width/18.96; height: window.width/18.28   // CALCULATION: width: window.width/ (1024/ImageWidth)
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        source: "images/mainmenu/menuNew3.png"
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {            //YENI SKETCH MENU ACACAK
-
-                        }
-
-                    }
-
-                }
-
-                PropertyAnimation { id: sketchMenuReveal; targets: [sketchButtonMenu, addButtonSketchRect, sketchLeftWing, sketchRightWing]; property: "opacity"; to: 1; duration: 300 }
-                PropertyAnimation { id: sketchMenuHide; targets: [sketchButtonMenu, addButtonSketchRect, sketchLeftWing, sketchRightWing]; property: "opacity"; to: 0; duration: 300 }
-                /*
-                PropertyAnimation { id: sketchWingsReveal; targets: [sketchLeftWing, sketchRightWing]; property: "opacity"; to: 1; duration: 300 }
-                PropertyAnimation { id: sketchWingsHide; targets: [sketchLeftWing, sketchRightWing]; property: "opacity"; to: 0; duration: 300 }
-                PropertyAnimation { id: sketchButtonReveal; target: addButtonSketchRect; property: "opacity"; to: 1; duration: 300 }
-                PropertyAnimation { id: sketchButtonHide; target: addButtonSketchRect; property: "opacity"; to: 0; duration: 300 }
-                PropertyAnimation { id: sketchButtonMenuReveal; target: sketchButtonMenu; property: "opacity"; to: 1; duration: 150 }
-                PropertyAnimation { id: sketchButtonMenuHide; target: sketchButtonMenu; property: "opacity"; to: 0; duration: 150 }
-                */
             }
 
             Rectangle {                     // PRESENTATION BUTTON
@@ -1941,23 +1797,11 @@ Row{                //BOTTOM MENU
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: {
-                        window.activeFunction = "presentation"
-                        textPres.no=textPres.no+1;
+                    onClicked: {                        
                         presentationPressed();
-                        if(textPres.no==0){
-                            textPresBackgroundCircle.visible = false;
-                            textPres.visible = false;
-                        }
-                        else{
-                            textPresBackgroundCircle.visible = true;
-                            textPres.visible = true;
-                            activeCollaboration.visible = false;
-                            activeSketch.visible = false;
-                            activePresentation.visible = true;
-                            activeWeb.visible = false;
-                            activeMultimedia.visible = false;
-                        }
+                        taskManagerPreparation("#dbdea5","#a8ad25",2 );
+                        openTaskManager(2);
+                        taskManagerShowHide();
                     }
                 }
                 Text{
@@ -2016,22 +1860,10 @@ Row{                //BOTTOM MENU
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        window.activeFunction = "web"
-                        textWeb.no=textWeb.no+1;
                         webPressed()
-                        if(textWeb.no==0){
-                            textWebBackgroundCircle.visible = false;
-                            textWeb.visible = false;
-                        }
-                        else{
-                            textWebBackgroundCircle.visible = true;
-                            textWeb.visible = true;
-                            activeCollaboration.visible = false;
-                            activeSketch.visible = false;
-                            activePresentation.visible = false;
-                            activeWeb.visible = true;
-                            activeMultimedia.visible = false;
-                        }
+                        taskManagerPreparation("#a8b3c7","#254273",3 );
+                        openTaskManager(3);
+                        taskManagerShowHide();
                     }
                 }
                 Text{
@@ -2090,23 +1922,10 @@ Row{                //BOTTOM MENU
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        window.activeFunction = "multimedia"
-                        textMM.no=textMM.no+1;
-                        multimediaPressed()
-                        if(textMM.no==0){
-                            textMMBackgroundCircle.visible = false;
-                            textMM.visible = false;
-                        }
-                        else{
-                            textMMBackgroundCircle.visible = true;
-                            textMM.visible = true;
-                            activeCollaboration.visible = false;
-                            activeSketch.visible = false;
-                            activePresentation.visible = false;
-                            activeWeb.visible = false;
-                            activeMultimedia.visible = true;
-                            activeConfig.visible = false;
-                        }
+                        multimediaPressed();
+                        taskManagerPreparation("#a2d6d8","#17989d",4 );
+                        openTaskManager(4);
+                        taskManagerShowHide();
                     }
                 }
                 Text{
