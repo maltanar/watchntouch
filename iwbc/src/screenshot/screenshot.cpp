@@ -22,5 +22,10 @@ void Screenshot::on_scrnshot_clicked()
 {
     hide();
     sleep(1);
-    emit goBack();
+
+    usleep(5000);
+
+    QPixmap thePixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
+
+    emit acquiredScreenshot(thePixmap);
 }

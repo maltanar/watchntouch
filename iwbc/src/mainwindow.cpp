@@ -54,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //m_currentTaskContainer->setStyleSheet("border: 3px solid yellow; background: red");
     ui->theCentralWidget->setLayout(centralStretcher);
 
+    connect(&m_screenshot, SIGNAL(acquiredScreenshot(QPixmap)), this, SLOT(receiveScreenshot(QPixmap)));
+
 }
 
 void MainWindow::connectMainMenuSignals()
@@ -313,9 +315,15 @@ void MainWindow::sketchPressed()
         if(m_selectedContent == "$newsketch$") {
             // TODO IMPORTANT add to recently used list
             newTask->newSketch("sketch - " + QDateTime::currentDateTime().toString());
+        } else if(m_selectedContent == "$screenshot$")
+        {
+            m_screenshot.show();
         }
 
     }
 }
 
-
+void MainWindow::receiveScreenshot(QPixmap img)
+{
+    ((SketchingTask*)m_activeTask)->sketchFromImage("screenshot- " + QDateTime::currentDateTime().toString(), img);
+}

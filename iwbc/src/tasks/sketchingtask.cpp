@@ -35,3 +35,9 @@ void SketchingTask::newSketch(QString id)
 {
     m_sketchingWidget->contextChanged(id);
 }
+
+void SketchingTask::sketchFromImage(QString id, QPixmap img)
+{
+    img.save(m_matcher.matchingAnnotation("sketch", id), "PNG");
+    m_sketchingWidget->contextChanged(id);
+}

@@ -19,7 +19,7 @@ public slots:
     void on_scrnshot_clicked();
 
 signals:
-    void goBack();
+    void acquiredScreenshot(QPixmap screenShot);
 
 private:
     Ui::Screenshot *ui;

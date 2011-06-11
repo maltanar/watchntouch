@@ -36,7 +36,7 @@ private:
     QUndoStack undoStack;
     DrawingAction *currentAction;
     bool modified;
-    QImage *stage;
+    QImage stage;
 
 signals:
 

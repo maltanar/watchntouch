@@ -38,7 +38,7 @@ protected:
     QString m_selectedContent;
     QHash<QString, ContentDisplayTask *> m_tasks;
     ContentDisplayTask * m_activeTask;
-
+    Screenshot m_screenshot;
     Screencasting m_screencast;
 
     void initGlobals();
@@ -65,6 +65,7 @@ private slots:
     void webPressed();
     void multimediaPressed();
     void sketchPressed();
+    void receiveScreenshot(QPixmap img);
 
 
 };

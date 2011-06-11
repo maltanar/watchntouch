@@ -5,6 +5,7 @@
 #include "sketchingwidget.h"
 #include "contextmenu.h"
 #include <QVBoxLayout>
+#include "contentmatcher.h"
 
 class SketchingTask : public ContentDisplayTask
 {
@@ -14,12 +15,14 @@ public:
     ContentType getContentType();
 
     void newSketch(QString id);
+    void sketchFromImage(QString id, QPixmap img);
 
 protected:
     void showHidePanel(bool show);
 
     QVBoxLayout m_layout;
     SketchingWidget *m_sketchingWidget;
+    ContentMatcher m_matcher;
 
 signals:
 
