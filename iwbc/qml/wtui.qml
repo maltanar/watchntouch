@@ -38,6 +38,10 @@ Rectangle {
 
     function showHidePresentation(showHide){
         if(showHide){
+            showHideMouseArea.parent=presButtons;
+            showMenus2.target=presInterface;
+            hideMenus2.target=presInterface;
+
             showMenus.target=presInterface;
             showMenus.running=true;
         }
@@ -47,12 +51,12 @@ Rectangle {
         }
     }
 
-    function getPresentationPanelHeight() {
-        return presButtons.height;
-    }
-
     function showHideWeb(showHide){
         if(showHide){
+            showHideMouseArea.parent=webInterface;
+            showMenus2.target=webInterface;
+            hideMenus2.target=webInterface;
+
             showMenus.target=webInterface;
             showMenus.running=true;
         }
@@ -62,13 +66,12 @@ Rectangle {
         }
     }
 
-
-    function getWebPanelHeight() {
-        return webInterface.height;
-    }
-
     function showHideMultimedia(showHide){
         if(showHide){
+            showHideMouseArea.parent=multInterface;
+            showMenus2.target=multInterface;
+            hideMenus2.target=multInterface;
+
             showMenus.target=multInterface;
             showMenus.running=true;
         }
@@ -78,17 +81,13 @@ Rectangle {
         }
     }
 
-    function getMultimediaPanelHeight() {
-        return multInterface.height;
-    }
-
     function webLoadingBar(percent){
         webLoadingImg.width = (percent * (window.width/1.79))/100;
         if(percent==100 || percent==0){
             webLoadingHide.running=true;
         }
         else if(webLoadingImg.opacity!=1){
-            webLoadingImg.opacity=1;
+            webLoadingShow.opacity=1;
         }
     }
 
@@ -221,15 +220,42 @@ Rectangle {
 
 
 
-    PropertyAnimation { id: showMenus; target: []; property: "opacity"; to: 1; duration: 300 }
 
+
+    PropertyAnimation { id: showMenus; target: []; property: "opacity"; to: 1; duration: 300 }
     PropertyAnimation { id: hideMenus; target: []; property: "opacity"; to: 0; duration: 300 }
+    PropertyAnimation { id: showMenus2; target: []; property: "opacity"; to: 1; duration: 300 }
+    PropertyAnimation { id: hideMenus2; target: []; property: "opacity"; to: 0.01; duration: 300 }
+
+    Timer {
+        id:showHideTimer
+        interval: 3000; running: true; repeat: true
+             onTriggered: {
+                 hideMenus2.running = true;
+             }
+         }
+
+    MouseArea{
+        id: showHideMouseArea
+        hoverEnabled : true
+        anchors.fill: parent
+        onHoveredChanged: {
+            showMenus2.running = true;
+        }
+        onMousePositionChanged: {
+            showHideTimer.restart();
+        }
+    }
 
 Rectangle{      //PRES INTERFACE
+
+
          id: presInterface
          objectName: "presInterface"
          anchors.bottom: bottomMenu.top
          opacity: 0
+
+
 
     Rectangle{      //buttons
         id: presButtons
@@ -388,7 +414,6 @@ Rectangle{      //PRES INTERFACE
             anchors.left: presMainButtonRow.right;
             anchors.leftMargin: window.width/17.0
             anchors.verticalCenter:parent.verticalCenter;
-            opacity: 0
 
             Rectangle{
                 id: presFitHeight
@@ -634,6 +659,7 @@ Rectangle{          //MM INTERFACE
         color: "#a2d6d8"
         anchors.bottom: bottomMenu.top
         property int fullLength: 1123;   //TODO: Assign video length in sec.
+
 
         Image{
             anchors.horizontalCenter: multInterface.horizontalCenter
@@ -1959,21 +1985,13 @@ Row{                //BOTTOM MENU
                     fillMode: Image.PreserveAspectFit
                     smooth: true
                     source: "images/mainmenu/fullscreenOn.png"
-                    property bool activated: false
                 }
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
                         console.log("fullscreenStateChange");
                         fullscreenStateChange();
-                        if(!fullscreenImg.activated) {
-                            fullscreenImg.source = "images/mainmenu/fullscreenOff.png";
-                            fullscreenImg.activated = true;
-                        }
-                        else {
-                            fullscreenImg.source = "images/mainmenu/fullscreenOn.png";
-                            fullscreenImg.activated = false;
-                        }
+
                     }
                 }
 
