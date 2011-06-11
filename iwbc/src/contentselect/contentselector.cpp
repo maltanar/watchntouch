@@ -31,6 +31,9 @@ ContentSelector::ContentSelector(ContentType desiredContentType, QWidget *parent
 
     loadRecentlyUsedList();
 
+    if(desiredContentType == CONTENTTYPE_SKETCH)
+        ui->tabWidget->setCurrentIndex(2);
+
     // TODO rework the content selection interface
 
 }

@@ -116,7 +116,8 @@ void VideoDisplayTask::sliderMouseUp( int timelineSizeInPixels, int relativePosi
 
 void VideoDisplayTask::sliderMouseMove( int timelineSizeInPixels, int relativePositionOfTimeIndicatorInPixels )
 {
-    qWarning() << "slider pos" << timelineSizeInPixels << relativePositionOfTimeIndicatorInPixels;
+    float frac = ((float) relativePositionOfTimeIndicatorInPixels) / ((float) timelineSizeInPixels);
+    m_videoPlayer->seekTo(m_currentMediaLen * frac);
 }
 
 void VideoDisplayTask::volumeMouseDown(int volume)
