@@ -26,8 +26,6 @@ void DrawingData::saveImage(QString fileName)
 void DrawingData::loadImage(QString fileName)
 {
     clear();
-    // TODO should check for the file's resolution and upscale/downscale to current if needed
-    QImage newImage;
     stage.load(fileName, "png");
 
     stage = stage.scaled(sceneRect().size().toSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation);

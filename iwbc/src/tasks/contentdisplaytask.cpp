@@ -58,6 +58,11 @@ void ContentDisplayTask::deactivate()
         // TODO IMPORTANT GESTURE release the pinch gesture
     }
 
+    if(m_annotationWidget) {
+        // force save the current content
+        m_annotationWidget->requestSave();
+    }
+
     showHidePanel(false);
 }
 

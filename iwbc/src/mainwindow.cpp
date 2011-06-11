@@ -164,6 +164,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if(displayYesNoMessage("Are you sure you want to exit?", "Exiting Watch and Touch")) {
         recentlyUsed->writeToStorage();
         bookmarkList->writeToStorage();
+        if(m_activeTask) {
+            m_activeTask->deactivate();
+        }
         event->accept();
     } else
         event->ignore();

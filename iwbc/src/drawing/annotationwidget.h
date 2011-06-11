@@ -33,6 +33,7 @@ public slots:
     void contextChanged(QString newContext);
     void scrollRequest(int dx, int dy);
     void requestReadOnlyStatus(bool readOnly);
+    void requestSave();
 
 };
 

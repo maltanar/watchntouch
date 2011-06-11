@@ -12,6 +12,14 @@ AnnotationWidget::AnnotationWidget(QWidget *parent) :
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
+void AnnotationWidget::requestSave()
+{
+    if(currentContent != "" && getDrawingData()->isModified()) {
+        getDrawingData()->saveImage(getCurrentAnnotation());
+        qWarning()<< "force saving annotation" << currentContent << currentContext;
+    }
+}
+
 void AnnotationWidget::contentChanged(QString newContent)
 {
     if(currentContent != "" && getDrawingData()->isModified()) {
