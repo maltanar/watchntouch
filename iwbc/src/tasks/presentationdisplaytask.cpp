@@ -80,6 +80,7 @@ void PresentationDisplayTask::pageNumberChanged(int pageNo, int pageCount)
 {
     qWarning() << "page change:" << pageNo << "of" << pageCount;
     setSlideNumberDisplay(QString::number(pageNo) + " / " + QString::number(pageCount));
+    PresentationGui_alignPageScrollerToPageNumber(pageNo);
 }
 
 int PresentationDisplayTask::getPanelHeight()
