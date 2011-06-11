@@ -9,8 +9,6 @@ WebPageDisplayTask::WebPageDisplayTask(QWidget *parent) :
     m_webDisplay = new WebpageDisplayWidget(m_webCanvas);
     m_webDraw = new AnnotationWidget(m_webCanvas);
 
-    m_webControlPanel = new WebControlPanel(this);
-
     QStackedLayout *layoutForWebCanvas = new QStackedLayout();
     layoutForWebCanvas->addWidget(m_webDisplay);
     layoutForWebCanvas->addWidget(m_webDraw);
@@ -22,7 +20,6 @@ WebPageDisplayTask::WebPageDisplayTask(QWidget *parent) :
 
     QVBoxLayout *layoutForWeb = new QVBoxLayout();
     layoutForWeb->addWidget(m_webCanvas);
-    layoutForWeb->addWidget(m_webControlPanel);
 
     this->setLayout(layoutForWeb);
 
@@ -33,15 +30,6 @@ WebPageDisplayTask::WebPageDisplayTask(QWidget *parent) :
     connect(m_webDisplay, SIGNAL(requestReadOnlyAnnotation(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
     connect(m_webDisplay, SIGNAL(webPageUrlChanged(QUrl)), this, SLOT(urlChanged(QUrl)));
     connect(m_webDisplay, SIGNAL(webPageLoadProgress(int)), this, SLOT(loadProgress(int)));
-
-    /*connect(m_webControlPanel, SIGNAL(locationChanged(QUrl)), m_webDisplay, SLOT(loadWebPage(QUrl)));
-    connect(m_webControlPanel, SIGNAL(requestReadOnly(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
-
-
-    connect(m_webDisplay, SIGNAL(webPageLoadStarted()), m_webControlPanel, SLOT(loadStarted()));
-
-    connect(m_webDisplay, SIGNAL(webPageLoadFinished(bool)), m_webControlPanel, SLOT(loadFinished(bool)));
-    connect(m_webDisplay, SIGNAL(webPageUrlChanged(QUrl)), m_webControlPanel, SLOT(loadedPageChanged(QUrl)));*/
 
     m_annotationWidget->raise();
 }

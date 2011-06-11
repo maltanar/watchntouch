@@ -84,7 +84,7 @@ Rectangle {
             webLoadingHide.running=true;
         }
         else if(webLoadingImg.opacity!=1){
-            webLoadingShow.opacity=1;
+            webLoadingImg.opacity=1;
         }
     }
 
@@ -409,6 +409,7 @@ Rectangle{      //PRES INTERFACE
             anchors.left: presMainButtonRow.right;
             anchors.leftMargin: window.width/17.0
             anchors.verticalCenter:parent.verticalCenter;
+            opacity: 0
 
             Rectangle{
                 id: presFitHeight
@@ -560,6 +561,8 @@ Rectangle{      //PRES INTERFACE
                      }
                  }
 
+
+
                  Image{
                      anchors.centerIn: parent
                      height: window.width/42.6
@@ -580,7 +583,6 @@ Rectangle{      //PRES INTERFACE
                      }
 
                  }
-
             }
 
          }

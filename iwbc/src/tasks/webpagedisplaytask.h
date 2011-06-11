@@ -4,7 +4,6 @@
 #include "contentdisplaytask.h"
 #include <QStackedLayout>
 #include <webpagedisplaywidget.h>
-#include <webcontrolpanel.h>
 #include <annotationwidget.h>
 #include <QGroupBox>
 #include <contextmenu.h>
@@ -23,7 +22,6 @@ protected:
     QWidget * m_webCanvas;
     WebpageDisplayWidget * m_webDisplay;
     AnnotationWidget * m_webDraw;
-    WebControlPanel * m_webControlPanel;
 
     void showHidePanel(bool show);
     void updateBookmarksList();
