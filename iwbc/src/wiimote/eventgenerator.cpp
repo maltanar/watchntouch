@@ -5,96 +5,103 @@ EventGenerator::EventGenerator(QObject *parent) :
     QObject(parent)
 {
     dpy = XOpenDisplay(NULL);
-
-    smoothCounter = 0;
     full = false;
+    isMouseButtonDown = false;
+    smoothCounter = 0;
+    m_timeoutFlag = false;
+    m_visibleCount = 0;
 
     for(int i = 0 ; i < 10; i++) {
         smoothPoints[i] = QPoint(0,0);
     }
 
-    prev_point = QPoint(0,0);
-    prev_i = 0;
-    prev_type = -1;
-    prev_visibleCount = 0;
+    m_currentState = STATE_NOTHING;
 
-    isMouseButtonDown = false;
-
-    gestureFilter = new QjtMouseGestureFilter(Qt::RightButton,this);
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
 }
 
 EventGenerator::~EventGenerator()
 {
     XCloseDisplay(dpy);
-    delete gestureFilter;
 }
 
-void EventGenerator::addGesture(QjtMouseGesture * gesture)
+void EventGenerator::handleStateChange()
 {
-    gestureFilter->addGesture(gesture);
-}
+    //TODO
 
-void EventGenerator::clearGestures()
-{
-    gestureFilter->clearGestures();
+    if(m_currentState == STATE_NOTHING && m_visibleCount == 1) {
+        // start timer and move to buffering state
+        m_currentState = STATE_FIRST_VISIBLE;
+        m_timer.start(GESTURE_START_DELAY);
+    } else if(m_currentState == STATE_FIRST_VISIBLE && m_timeoutFlag) {
+        // we are no longer accepting gestures
+        // start regular drawing
+        m_currentState = STATE_NORMAL_DRAW;
+        m_timeoutFlag = false;
+    } else if(m_currentState == STATE_NORMAL_DRAW && m_visibleCount == 0) {
+        // stop drawing
+        m_currentState = STATE_DRAW_RELEASE;
+    } else if(m_currentState == STATE_DRAW_RELEASE) {
+        // go back to initial state
+        m_currentState = STATE_NOTHING;
+    }
 }
 
 // will be executed when a new calibration point data is received
-void EventGenerator::processInputData(QPoint newPoint, int i,int type,int visibleCount)
+void EventGenerator::processInputData(QPoint *newpoints, int i,int type,int visibleCount)
 {
-    newPoint = applySmoothing(newPoint);
-    int mouseButton = Button1;  // the left mouse button is Button1
+    newpoints[0] = applySmoothing(newpoints[0]);
 
-    // TODO check upper bounds for points as well?
-    if(newPoint.x() < 0) newPoint.setX(0);
-    if(newPoint.y() < 0) newPoint.setY(0);
-
-    // any more points than 2 is equivalent to 2
-    if(visibleCount > 2)
-        visibleCount = 2;
-
-    // for now, we have states for 0, 1 or 2 points
-    if(visibleCount == 2) {
-        // we always get 1 visible point first, than 2
-        // finalize previous mouse event (release button)
-        // TODO find a way to undo the mouse event..?
-        if(prev_visibleCount == 1) {
-            mouseRelease(mouseButton, newPoint);
-            gestureFilter->gestureStart(newPoint);
-        } else if(prev_visibleCount == 2) {
-            gestureFilter->gestureMove(newPoint);
-        }
-
-    } else if(visibleCount <= 1) {
-        // TODO cancel/execute any pending gesture events
-        // TODO should no mouse event generation while exiting from 2 points
-        // generate a mouse event
-        if(prev_visibleCount == 2) {
-            // tell the gesture system that the gesture is finalized
-            gestureFilter->gestureEnd(newPoint);
-        }
-        switch(type) {
-            case MOUSE_PRESSED:
-                mousePress(mouseButton,newPoint);
-                break;
-            case MOUSE_MOVE:
-                mouseMove(mouseButton,newPoint);
-                break;
-            case MOUSE_RELEASED:
-                mouseRelease(mouseButton,newPoint);
-                break;
-        }
+    for(int i = 0; i < 4; i++) {
+        if(newpoints[i].x() < 0)
+            newpoints[i].setX(0);
+        if(newpoints[i].y() < 0)
+            newpoints[i].setY(0);
     }
 
-    updateState(newPoint, i, type, visibleCount);
+    // TODO handle state changes first!
+    m_visibleCount = visibleCount;
+    handleStateChange();
+
+    switch(m_currentState) {
+        case STATE_FIRST_VISIBLE:
+            // don't generate any events, buffer incoming points
+            // TODO check for mouse release at this stage and generate buffered events if needed
+            m_pointBuffer.append(newpoints[0]);
+            break;
+        case  STATE_NORMAL_DRAW:
+            // generate mouse events for buffered points
+            if(m_pointBuffer.size() > 0) {
+                for(int i=0; i < m_pointBuffer.count(); i++) {
+                    if(i == 0)
+                        mousePress(Button1, m_pointBuffer.at(i));
+                    else
+                        mouseMove(Button1, m_pointBuffer.at(i));
+                }
+                m_pointBuffer.clear();
+            }
+            // generate mouse events
+            mouseMove(Button1, newpoints[0]);
+            break;
+        case STATE_DRAW_RELEASE:
+            mouseRelease(Button1, newpoints[0]);
+            break;
+        case  STATE_SECOND_VISIBLE:
+            break;
+        case  STATE_GESTURING:
+            break;
+        case  STATE_SINGLE_IGNORE:
+            break;
+    }
+
 }
 
-void EventGenerator::updateState(QPoint pt,int i,int type,int visibleCount)
+void EventGenerator:: timeout()
 {
-    prev_point = pt;
-    prev_i = i;
-    prev_type = type;
-    prev_visibleCount = visibleCount;
+    // TODO handle state change
+    m_timer.stop();
+    m_timeoutFlag = true;
+    handleStateChange();
 }
 
 QPoint EventGenerator::applySmoothing(QPoint inputPoint)

@@ -3,13 +3,23 @@
 
 #include <QObject>
 #include <QPoint>
-#include "QjtMouseGestureFilter.h"
-#include "QjtMouseGesture.h"
+#include <QList>
+#include <QTimer>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/XTest.h>
+
+#define STATE_NOTHING           0
+#define STATE_FIRST_VISIBLE     1
+#define STATE_NORMAL_DRAW       2
+#define STATE_DRAW_RELEASE      3
+#define STATE_SECOND_VISIBLE    4
+#define STATE_GESTURING         5
+#define STATE_SINGLE_IGNORE     6
+
+#define GESTURE_START_DELAY     300
 
 class EventGenerator : public QObject
 {
@@ -18,26 +28,24 @@ public:
     explicit EventGenerator(QObject *parent = 0);
     ~EventGenerator();
 
-    void processInputData(QPoint pt,int i,int type,int visibleCount);
-
-    void addGesture(QjtMouseGesture * gesture);
-    void clearGestures();
+    void processInputData(QPoint* pt,int i,int type,int visibleCount);
 
 private:
+    int m_currentState;
+    QList<QPoint> m_pointBuffer;
+    QTimer m_timer;
+    int m_visibleCount;
+    bool m_timeoutFlag;
+
+    void handleStateChange();
+
     // X display variable to generate pointer events
     Display * dpy;
     // vars related to smoothing
     QPointF smoothPoints[10];
     int smoothCounter;
     bool full;
-    // state variables
-    QPoint prev_point;
-    int prev_i;
-    int prev_type;
-    int prev_visibleCount;
     bool isMouseButtonDown;
-    // filter for gesture recognizer
-    QjtMouseGestureFilter *gestureFilter;
 
     void mousePress(int button,QPoint p);
     void mouseMove(int button,QPoint p);
@@ -45,9 +53,10 @@ private:
 
     QPoint applySmoothing(QPoint inputPoint);
 
-    void updateState(QPoint pt,int i,int type,int visibleCount);
-
 signals:
+
+protected slots:
+    void timeout();
 
 public slots:
 

@@ -5,10 +5,28 @@
 
 #include "inputcalibration.h"
 
+
 // class constructor
 // - get screen width/height and store them
 InputCalibration::InputCalibration()
 {
+    /*
+
+     TuioServer.cpp den
+        1) Constuctor daki SendEmpty... ler atıldı
+        2) Destructor daki sendEmpty... ler atıldı
+        3) CommitFrame icindeki biri cursor biri object icin olmak uzere iki tane else if
+           kısmı atıldı
+     tuio client olarak alınan mesajin dogru alinması icin OscReceivedElement.cpp'den
+        1)  if( *typeTagsBegin_ != ',' )
+                throw MalformedMessageException( "type tags not present" );
+            satırındaki throw silindi yerine "return;" getirildi.
+     Ayrıca Endian ayarı yapıldı.
+
+     qtuio.cpp deki satır 212 düzetildi. theView && condition ı eklendi, yoksa nullpointerexception alıyorduk.
+
+    */
+
     QDesktopWidget * desktop = QApplication::desktop();
     QRect rect = desktop->screenGeometry(-1);
     screenWidth = rect.width();
@@ -17,7 +35,7 @@ InputCalibration::InputCalibration()
     isCalibrated = false;
 
     pointCounter = 0;
-    sampleCounterForCurrentPoint = 0;    
+    sampleCounterForCurrentPoint = 0;
 }
 
 // specify a new set of calibration points
@@ -31,6 +49,7 @@ void InputCalibration::setCalibrationPoints(QPoint *newPoints)
     calibrationPoints[3] = newPoints[3];
 
     isCalibrated = true;
+
 }
 
 // have we received calibration info yet?
@@ -52,14 +71,14 @@ void InputCalibration::addCalibrationSample(QPoint newPoint)
     // TODO the following conditional ignores repeated press events during calibration
     // this should be handled with TouchBegin - TouchEnd instead
     // but we may want to keep the following for extra security...just in case
-    qWarning() << "points:" << newPoint << prevSample << "samplecounter" << sampleCounterForCurrentPoint;
+
     if((prevSample-newPoint).manhattanLength() < CALIBRATION_POINT_THRESHOLD && prevSample != QPoint(0,0))
     {
-        qWarning() << "ignoring repeated calibration sample";
+        //qWarning() << "ignoring repeated calibration sample";
         return;
     }
     else
-        qWarning() << "actually received new calibration sample";
+        ;
 
 
     // sum with existing values
@@ -98,39 +117,85 @@ void InputCalibration::addCalibrationSample(QPoint newPoint)
 
         // state the polygons that are to be transformed - from one ---> two
         one << calibrationPoints[0] << calibrationPoints[1] << calibrationPoints[2] << calibrationPoints[3];
-        two << QPointF(0.0,0.0) << QPointF(screenWidth,0.0) << QPointF(screenWidth,screenHeight) <<  QPointF(0.0,screenHeight);        
+        two << QPointF(0.0,0.0) << QPointF(screenWidth,0.0) << QPointF(screenWidth,screenHeight) <<  QPointF(0.0,screenHeight);
 
         // set transformation affine
         transform.toAffine();
         bool wtf = t.quadToQuad(one,two,transform);
-        qWarning() << "TRANSFORM operation is " << wtf;
+        //qWarning() << "TRANSFORM operation is " << wtf;
 
     }
 }
 
 // map from Wiimote coordinates to screen coordinates
 // according to current calibration information
-QPoint InputCalibration::mapFromWiimoteToScreen(QPoint inputPoint)
+QPoint *InputCalibration::mapFromWiimoteToScreen(QPoint * inputPoints)
 {
     // if calibration was not performed, return the same point
-
     if(!isCalibrated)
-        return inputPoint;
+        return inputPoints;
 
-    qreal x = inputPoint.x();
-    qreal y = inputPoint.y();
+    QPoint * newpoints = new QPoint[4];
 
-    qreal newx,newy;
-    transform.map(x,y,&newx,&newy);
+    for(int i = 0 ; i < 4 ; i++) {
+        if(inputPoints[i].x() > 0) {
+            qreal x = inputPoints[i].x();
+            qreal y = inputPoints[i].y();
 
-    //qWarning() << "GELEN: " << x << y << " GIDEN " << newx << newy;
+            qreal newx,newy;
+            transform.map(x,y,&newx,&newy);
 
-    return QPoint(newx,newy);
+            newpoints[i].setX(newx);
+            newpoints[i].setY(newy);
+        }
+        //qWarning() << "GELEN: " << x << y << " GIDEN " << newx << newy;
+    }
+
+    /*tuioServer->initFrame(TuioTime::getSessionTime());
+    for(int i = 0 ; i < 4; i++)
+        tuioServer->addTuioCursor(newpoints[i].x(),newpoints[i].y());
+    tuioServer->commitFrame();*/
+/*
+    tuioServer->initFrame(TuioTime::getSessionTime());
+
+    for(int i = 0 ; i < 2; i++) {
+        if(cursors[i] == NULL && newpoints[i].x() >= 0) {
+            // point data but no cursor object - create cursor
+            cursors[i] = tuioServer->addTuioCursor(newpoints[i].x(),newpoints[i].y());
+            qWarning() << "creating cursor" << i << newpoints[i];
+        } else if(cursors[i] != NULL && newpoints[i].x() >= 0) {
+            // point data and cursor object exists - update cursor
+            tuioServer->updateTuioCursor(cursors[i], newpoints[i].x(),newpoints[i].y());
+            qWarning() << "updating cursor" << i << newpoints[i];
+        } else if(cursors[i] != NULL && newpoints[i].x() < 0) {
+            // cursor exists but no point data - remove cursor
+            tuioServer->removeTuioCursor(cursors[i]);
+            cursors[i] = NULL;
+            qWarning() << "removing cursor" << i << newpoints[i];
+        }
+    }
+
+    tuioServer->commitFrame();
+*/
+    //server->sendFullMessages();
+
+    /*server->startCursorBundle();    // alive for each cursor
+
+    std::list<TuioCursor*> cursorList = server->getTuioCursors();  // set messages
+    for(std::list<TuioCursor*>::iterator tuioCursor = cursorList.begin(); tuioCursor!=cursorList.end(); tuioCursor++) {
+        server->addCursorMessage(*tuioCursor);
+    }
+
+    server->sendCursorBundle(fseq++); //fseq messages*/
+
+    return newpoints;
 }
+
+
 
 void InputCalibration::processWiimotePoint(QPoint inputPoint)
 {
-    QPoint mappedPoint = mapFromWiimoteToScreen(inputPoint);
+    //QPoint mappedPoint = mapFromWiimoteToScreen(inputPoint);
 
     // TOOD send point to event generator
 }

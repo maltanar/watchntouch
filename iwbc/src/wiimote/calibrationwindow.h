@@ -64,10 +64,10 @@ private:
     void setCalibrationPointTouchStatus(int touchedCount);
 
 protected:
-    bool event(QEvent *event);    
+    bool event(QEvent *event);
 
 public slots:
-    void inputReceived(int x,int y,int i,int type,int visibleCount);
+    void inputReceived(QPoint * irpoints,int i,int type,int visibleCount);
     void calibrationPointReceived(QPoint p);
     void connected();
     void calibrationComplete();

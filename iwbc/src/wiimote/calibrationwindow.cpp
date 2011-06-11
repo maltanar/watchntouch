@@ -46,7 +46,7 @@ CalibrationWindow::CalibrationWindow(QWidget *parent) :
 
     receiver = new IRThread();  // create input receiver thread
 
-    QObject::connect(receiver,SIGNAL(IRInputReceived(int,int,int,int,int)),this,SLOT(inputReceived(int,int,int,int,int)));
+    QObject::connect(receiver,SIGNAL(IRInputReceived(QPoint *,int,int,int)),this,SLOT(inputReceived(QPoint *,int,int,int)));
     QObject::connect(receiver,SIGNAL(connected()),this,SLOT(connected()));
 
     receiver->start();
@@ -155,14 +155,15 @@ void CalibrationWindow::setCalibrationPointTouchStatus(int touchedCount)
 }
 
 // will be executed when a new calibration point data is received
-void CalibrationWindow::inputReceived(int x,int y,int i,int type,int visibleCount)
+void CalibrationWindow::inputReceived(QPoint * irpoints,int i,int type,int visibleCount)
 {
     // TODO for calibration, we should gather multiple (4-5) datapoints for each calibration point and get their avg
     if(!mapper.calibrated() && i == 0) {
-        mapper.addCalibrationSample(QPoint(x,y));
+        mapper.addCalibrationSample(QPoint(irpoints[i].x(),irpoints[i].y()));
     }
     else if(mapper.calibrated()) {
-        eventGenerator->processInputData(mapper.mapFromWiimoteToScreen(QPoint(x,y)),i,type,visibleCount);
+        eventGenerator->processInputData(mapper.mapFromWiimoteToScreen(irpoints),i,type,visibleCount);
+        //mapper.mapFromWiimoteToScreen(irpoints);
     }
 }
 

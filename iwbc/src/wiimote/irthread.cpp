@@ -13,6 +13,8 @@ IRThread::IRThread()
 {
     isConnected = 0;
     found = 0;
+    irpoints = new QPoint[4];
+    previousPoints = new QPoint[4];
 }
 
 
@@ -90,8 +92,12 @@ void IRThread::initialize()
 
     //wiiuse_set_ir_sensitivity(wiimotes[0], 2);
 
-    previousPoint.setX(0);
-    previousPoint.setY(0);
+    for(int i = 0; i < 4; i++) {
+        previousPoints[i].setX(0);
+        previousPoints[i].setY(0);
+        irpoints[i].setX(0);
+        irpoints[i].setY(0);
+    }
 
     previous[0] = false;
 }
@@ -116,31 +122,40 @@ void IRThread::run()
         if (poll_res) {
             //qWarning() << "wii event: " << wiimotes[0]->event;
             if(wiimotes[0]->event == WIIUSE_EVENT) {
-                //qWarning() << "1";
                 if (WIIUSE_USING_IR(wiimotes[0])) {
                     int i = 0;
                     //count number of visible points
                     visiblePointCount = 0;
-                    for(int i = 0; i < 4; i++)
-                        if(wiimotes[0]->ir.dot[i].visible)
+                    for(int i = 0; i < 4; i++) {
+                        if(wiimotes[0]->ir.dot[i].visible) {
+                            irpoints[i].setX(wiimotes[0]->ir.dot[i].rx);
+                            irpoints[i].setY(wiimotes[0]->ir.dot[i].ry);
                             visiblePointCount++;
+                        }
+                        else {
+                            //qWarning() << "else";
+                            irpoints[i].setX(-1);
+                            irpoints[i].setY(-1);
+                        }
+                    }
+                    //qWarning() << "visible points:" << visiblePointCount;
                     // process ir dot #0
                     if (wiimotes[0]->ir.dot[0].visible) {
                         if(previous[0] == false) {
                             previous[0] = true;
-                            emit IRInputReceived(wiimotes[0]->ir.dot[0].rx, wiimotes[0]->ir.dot[0].ry,0,MOUSE_PRESSED,visiblePointCount);
-                            previousPoint = QPoint(wiimotes[0]->ir.dot[0].rx,wiimotes[0]->ir.dot[0].ry);
+                            emit IRInputReceived(irpoints,0,MOUSE_PRESSED,visiblePointCount);
+                            copyPoints(irpoints,previousPoints);
                         }
                         else if(previous[0] == true) {
-                            emit IRInputReceived(wiimotes[0]->ir.dot[0].rx, wiimotes[0]->ir.dot[0].ry,0,MOUSE_MOVE,visiblePointCount);
-                            previousPoint = QPoint(wiimotes[0]->ir.dot[0].rx,wiimotes[0]->ir.dot[0].ry);
+                            emit IRInputReceived(irpoints,0,MOUSE_MOVE,visiblePointCount);
+                            copyPoints(irpoints,previousPoints);
                         }
                     }
                     else if(previous[0] == true) {
                         previous[0] = false;
                         //emit IRInputReceived(wiimotes[0]->ir.dot[0].rx, wiimotes[0]->ir.dot[0].ry,0,MOUSE_RELEASED,visiblePointCount);
                         //previousPoint = QPoint(wiimotes[0]->ir.dot[0].rx,wiimotes[0]->ir.dot[0].ry);
-                        emit IRInputReceived(previousPoint.x(), previousPoint.y(), 0, MOUSE_RELEASED, visiblePointCount);
+                        emit IRInputReceived(previousPoints, 0, MOUSE_RELEASED, visiblePointCount);
                     }
                     else if(previous[0] == false) {
                         // do nothing
@@ -154,6 +169,13 @@ void IRThread::run()
 }
 
 
+void IRThread::copyPoints(QPoint *p1, QPoint *p2)
+{
+    for(int i = 0 ; i < 4; i++) {
+        p2[i].setX(p1[i].x());
+        p2[i].setY(p1[i].y());
+    }
+}
 
 
 

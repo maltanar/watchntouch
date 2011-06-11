@@ -27,7 +27,7 @@ public:
     void run(); // From QThread
 
 signals:
-    void IRInputReceived(int x,int y,int i,int type,int count);
+    void IRInputReceived(QPoint * irpoints,int i,int type,int count);
     void connected();
 
 private:
@@ -35,10 +35,12 @@ private:
     int found;
     int isConnected;
     QPoint currentPoint;
-    QPoint previousPoint;
+    QPoint * previousPoints;
     bool previous[4];
+    QPoint * irpoints;
 
     void initialize();
+    void copyPoints(QPoint * p1, QPoint * p2);
 
 
 };

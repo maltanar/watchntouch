@@ -17,7 +17,6 @@
 #define NUM_SAMPLES_PER_POINT       1   // WARNING if this is >1 the threshold thing must be removed
 #define CALIBRATION_POINT_THRESHOLD 400 // minimum Manhattan spacing for calibration points
 
-
 class InputCalibration : public QObject
 {
     Q_OBJECT
@@ -29,11 +28,12 @@ public:
     void addCalibrationSample(QPoint newPoint);
     bool calibrated();
 
-    QPoint mapFromWiimoteToScreen(QPoint inputPoint);
+    QPoint* mapFromWiimoteToScreen(QPoint * inputPoint);
     void processWiimotePoint(QPoint inputPoint);
 
     void recalibrate();
     double getCalibratedDistance(QPoint p1, QPoint p2, QPoint p3);
+
 
 private:
     QTransform transform;
@@ -43,7 +43,7 @@ private:
     int screenWidth, screenHeight;
     bool isCalibrated;
     int sampleCounterForCurrentPoint;
-    int pointCounter;    
+    int pointCounter;
 
 signals:
     void calibrationPointReceived(QPoint p);
