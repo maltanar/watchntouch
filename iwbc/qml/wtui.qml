@@ -38,7 +38,6 @@ Rectangle {
 
     function showHidePresentation(showHide){
         if(showHide){
-            showHideMouseArea.parent=presButtons;
             showMenus2.target=presInterface;
             hideMenus2.target=presInterface;
 
@@ -53,7 +52,6 @@ Rectangle {
 
     function showHideWeb(showHide){
         if(showHide){
-            showHideMouseArea.parent=webInterface;
             showMenus2.target=webInterface;
             hideMenus2.target=webInterface;
 
@@ -68,7 +66,6 @@ Rectangle {
 
     function showHideMultimedia(showHide){
         if(showHide){
-            showHideMouseArea.parent=multInterface;
             showMenus2.target=multInterface;
             hideMenus2.target=multInterface;
 
@@ -219,9 +216,6 @@ Rectangle {
     }
 
 
-
-
-
     PropertyAnimation { id: showMenus; target: []; property: "opacity"; to: 1; duration: 300 }
     PropertyAnimation { id: hideMenus; target: []; property: "opacity"; to: 0; duration: 300 }
     PropertyAnimation { id: showMenus2; target: []; property: "opacity"; to: 1; duration: 300 }
@@ -234,18 +228,6 @@ Rectangle {
                  hideMenus2.running = true;
              }
          }
-
-    MouseArea{
-        id: showHideMouseArea
-        hoverEnabled : true
-        anchors.fill: parent
-        onHoveredChanged: {
-            showMenus2.running = true;
-        }
-        onMousePositionChanged: {
-            showHideTimer.restart();
-        }
-    }
 
 Rectangle{      //PRES INTERFACE
 
@@ -264,6 +246,18 @@ Rectangle{      //PRES INTERFACE
         width: window.width
         height: window.width/15.0
         color: "#dbdea5"
+
+        MouseArea{
+            id: presShowHideMouseArea
+            hoverEnabled : true
+            anchors.fill: parent
+            onHoveredChanged: {
+                showMenus2.running = true;
+            }
+            onMousePositionChanged: {
+                showHideTimer.restart();
+            }
+        }
 
         PropertyAnimation { id: presVisualsReveal; target:presPagingVisualsRect; property: "opacity"; to: 1; duration: 300 }
         PropertyAnimation { id: presVisualsHide; target:presPagingVisualsRect; property: "opacity"; to: 0; duration: 300 }
@@ -660,6 +654,17 @@ Rectangle{          //MM INTERFACE
         anchors.bottom: bottomMenu.top
         property int fullLength: 1123;   //TODO: Assign video length in sec.
 
+        MouseArea{
+            id: multShowHideMouseArea
+            hoverEnabled : true
+            anchors.fill: parent
+            onHoveredChanged: {
+                showMenus2.running = true;
+            }
+            onMousePositionChanged: {
+                showHideTimer.restart();
+            }
+        }
 
         Image{
             anchors.horizontalCenter: multInterface.horizontalCenter
@@ -878,6 +883,18 @@ Rectangle{          //WEB INTERFACE
     height: window.width/20.0
     color: "#a8b3c7"
     anchors.bottom: bottomMenu.top
+
+    MouseArea{
+        id: webShowHideMouseArea
+        hoverEnabled : true
+        anchors.fill: parent
+        onHoveredChanged: {
+            showMenus2.running = true;
+        }
+        onMousePositionChanged: {
+            showHideTimer.restart();
+        }
+    }
 
         PropertyAnimation { id: favListReveal; targets: [favsBackgroundImg, favListContent]; property: "opacity"; to: 1; duration: 300 }
         PropertyAnimation { id: favListHide; targets: [favsBackgroundImg, favListContent]; property: "opacity"; to: 0; duration: 300 }
