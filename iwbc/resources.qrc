@@ -125,5 +125,8 @@
         <file>qml/images/webImages/next.png</file>
         <file>qml/images/webImages/prev.png</file>
         <file>qml/images/webImages/refresh.png</file>
+        <file>qml/images/mainmenu/fullscreenOff.png</file>
+        <file>qml/images/mainmenu/fullscreenOn.png</file>
+        <file>qml/images/webImages/addressbarloading.png</file>
     </qresource>
 </RCC>

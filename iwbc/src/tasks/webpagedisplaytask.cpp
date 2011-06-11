@@ -32,9 +32,7 @@ WebPageDisplayTask::WebPageDisplayTask(QWidget *parent) :
 
     connect(m_webDisplay, SIGNAL(requestReadOnlyAnnotation(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
     connect(m_webDisplay, SIGNAL(webPageUrlChanged(QUrl)), this, SLOT(urlChanged(QUrl)));
-
-    // TODO IMPORTANT remove this when QML progressbar is ready
-    connect(m_webDisplay, SIGNAL(webPageLoadProgress(int)), m_webControlPanel, SLOT(loadProgress(int)));
+    connect(m_webDisplay, SIGNAL(webPageLoadProgress(int)), this, SLOT(loadProgress(int)));
 
     /*connect(m_webControlPanel, SIGNAL(locationChanged(QUrl)), m_webDisplay, SLOT(loadWebPage(QUrl)));
     connect(m_webControlPanel, SIGNAL(requestReadOnly(bool)), m_webDraw, SLOT(requestReadOnlyStatus(bool)));
@@ -104,6 +102,7 @@ void WebPageDisplayTask::deactivate()
     disconnect(m_panel, SIGNAL(gotoBookmark(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
     disconnect(m_panel, SIGNAL(bookmarkRequest(QString)), this, SLOT(bookmarkRequest(QString)));
     disconnect(m_panel, SIGNAL(deleteBookmarkRequest(QString,int)), this, SLOT(deleteBookmarkRequest(QString,int)));
+    disconnect(m_webDisplay, SIGNAL(webPageLoadProgress(int)), m_panel, SLOT(webLoadingBar(int)));
 
     // save the bookmarks list at this point
     bookmarkList->writeToStorage();
@@ -173,4 +172,11 @@ void WebPageDisplayTask::updateBookmarksList()
 void WebPageDisplayTask::webGuiClearBookmarks()
 {
     QMetaObject::invokeMethod(m_panel, "clearBookmarkList");
+}
+
+void WebPageDisplayTask::loadProgress(int progress)
+{
+    QVariant iProgress = QVariant::fromValue(progress);
+
+    QMetaObject::invokeMethod(m_panel, "webLoadingBar", Q_ARG(QVariant, iProgress));
 }

@@ -38,6 +38,7 @@ protected:
 
 protected slots:
     void urlChanged(QUrl newUrl);
+    void loadProgress(int progress);
 
 signals:
 

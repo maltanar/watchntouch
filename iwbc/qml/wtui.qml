@@ -75,7 +75,7 @@ Rectangle {
             webLoadingHide.running=true;
         }
         else if(webLoadingImg.opacity!=1){
-            webLoadingShow.opacity=1;
+            webLoadingShow.running=true;
         }
     }
 
