@@ -91,6 +91,15 @@ Rectangle {
     signal webPressed()
     signal multimediaPressed()
     signal sketchPressed()
+    signal fullscreenStateChange()
+
+    function fullscreenImgOn(){
+        fullscreenImg.source = "images/mainmenu/fullscreenOn.png";
+    }
+
+    function fullscreenImgOff(){
+        fullscreenImg.source = "images/mainmenu/fullscreenOff.png";
+    }
 
     //MULTIMEDIA SIGNALS AND FUNCTIONS
 
@@ -1895,26 +1904,60 @@ Row{                //BOTTOM MENU
            }*/
         }
 
-
-        Rectangle {     // EXIT BUTTON
-            id: rectExit
-            color: "#f9bdbd";
+        Rectangle {
+            id: rectLast
+            color: "transparent";
             width: window.width/23
             height: window.width*0.134
-            Image{
-                anchors.centerIn: parent
-                width: window.width/26.94; height: window.width/26.94    // CALCULATION: width: window.width/ (1024/ImageWidth)
-                fillMode: Image.PreserveAspectFit
-                smooth: true
-                source: "images/mainmenu/exit2.png"
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
 
-                    exitPressed()
+            Rectangle{
+                id: rectExit
+                color: "#f9bdbd";
+                width: window.width/23
+                height: window.width*0.067
+                anchors.bottom: rectLast.bottom
+                Image{
+                    anchors.centerIn: parent
+                    width: window.width/26.94; height: window.width/26.94    // CALCULATION: width: window.width/ (1024/ImageWidth)
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                    source: "images/mainmenu/exit2.png"
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        exitPressed()
+                    }
+                }
+
             }
+
+
+            Rectangle{
+                color: "#e6e8c2";
+                width: window.width/23
+                height: window.width*0.067
+                anchors.bottom: rectExit.top
+                Image{
+                    id: fullscreenImg
+                    anchors.centerIn: parent
+                    width: window.width/26.94; height: window.width/26.94    // CALCULATION: width: window.width/ (1024/ImageWidth)
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                    source: "images/mainmenu/fullscreenOn.png"
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        console.log("fullscreenStateChange");
+                        fullscreenStateChange();
+
+                    }
+                }
+
+            }
+
+
         }
 
     }
