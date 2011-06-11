@@ -29,6 +29,8 @@ void EventGenerator::handleStateChange()
 {
     //TODO
 
+    qWarning() << "prevstate" << m_currentState;
+
     if(m_currentState == STATE_NOTHING && m_visibleCount == 1) {
         // start timer and move to buffering state
         m_currentState = STATE_FIRST_VISIBLE;
@@ -38,6 +40,8 @@ void EventGenerator::handleStateChange()
         // start regular drawing
         m_currentState = STATE_NORMAL_DRAW;
         m_timeoutFlag = false;
+    } else if(m_currentState == STATE_FIRST_VISIBLE && m_visibleCount == 0) {
+        m_currentState = STATE_DRAW_RELEASE;
     } else if(m_currentState == STATE_NORMAL_DRAW && m_visibleCount == 0) {
         // stop drawing
         m_currentState = STATE_DRAW_RELEASE;
@@ -45,12 +49,14 @@ void EventGenerator::handleStateChange()
         // go back to initial state
         m_currentState = STATE_NOTHING;
     }
+
+    qWarning() << "currentsate" << m_currentState;
 }
 
 // will be executed when a new calibration point data is received
 void EventGenerator::processInputData(QPoint *newpoints, int i,int type,int visibleCount)
 {
-    newpoints[0] = applySmoothing(newpoints[0]);
+    //newpoints[0] = applySmoothing(newpoints[0]);
 
     for(int i = 0; i < 4; i++) {
         if(newpoints[i].x() < 0)
@@ -84,6 +90,15 @@ void EventGenerator::processInputData(QPoint *newpoints, int i,int type,int visi
             mouseMove(Button1, newpoints[0]);
             break;
         case STATE_DRAW_RELEASE:
+            if(m_pointBuffer.size() > 0) {
+                for(int i=0; i < m_pointBuffer.count(); i++) {
+                    if(i == 0)
+                        mousePress(Button1, m_pointBuffer.at(i));
+                    else
+                        mouseMove(Button1, m_pointBuffer.at(i));
+                }
+                m_pointBuffer.clear();
+            }
             mouseRelease(Button1, newpoints[0]);
             break;
         case  STATE_SECOND_VISIBLE:

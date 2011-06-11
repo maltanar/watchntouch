@@ -18,8 +18,9 @@
 #define STATE_SECOND_VISIBLE    4
 #define STATE_GESTURING         5
 #define STATE_SINGLE_IGNORE     6
+#define STATE_FV_RELEASE        7
 
-#define GESTURE_START_DELAY     300
+#define GESTURE_START_DELAY     100
 
 class EventGenerator : public QObject
 {
