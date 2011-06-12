@@ -22,6 +22,17 @@ Rectangle {
        // taskHighlightRect.color=  highlightColor;
     }
 
+    function taskManagerShowHideExternal(showHide){
+        if(!showHide){
+            hideMenus.target=taskManagerRect;
+            hideMenus.running=true;
+        }
+        else{
+            showMenus.target=taskManagerRect;
+            showMenus.running=true;
+        }
+    }
+
     function taskManagerShowHide(){
         if(taskManagerRect.opacity==1){
             hideMenus.target=taskManagerRect;

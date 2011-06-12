@@ -46,6 +46,7 @@ protected:
     void deleteGlobals();
     void createAppSubdir(QString subdirName);
     void connectMainMenuSignals();
+    void clearCache();
 
     QString openContent(ContentType type);
     void openPresentation();
@@ -79,6 +80,7 @@ private slots:
     void MainGui_alignTaskScrollerToSelectedTask(QString taskID);
     void MainGui_addToTaskManagerScroller(QString pathOfTheImage, QString taskId);
     void MainGui_clearTaskManagerScroller();
+    void MainGui_taskManagerShowHide(bool show);
 
 };
 

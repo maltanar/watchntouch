@@ -72,10 +72,6 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(exitPressed()), this, SLOT(exitPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(recordPressed(bool)), this, SLOT(recordPressed(bool)));
     connect(m_qmlMenu->rootObject(), SIGNAL(notificationsPressed()), this, SLOT(notificationsPressed()));
-    //connect(m_qmlMenu->rootObject(), SIGNAL(presentationPressed()), this, SLOT(taskManagerShowHide()));
-    //connect(m_qmlMenu->rootObject(), SIGNAL(webPressed()), this, SLOT(taskManagerShowHide()));
-    //connect(m_qmlMenu->rootObject(), SIGNAL(multimediaPressed()), this, SLOT(taskManagerShowHide()));
-    connect(m_qmlMenu->rootObject(), SIGNAL(sketchPressed()), this, SLOT(sketchPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(fullscreenStateChange()), this, SLOT(fullscreenStateChange()));
     connect(m_qmlMenu->rootObject(), SIGNAL(newTask(int)), this, SLOT(newTask(int)));
     connect(m_qmlMenu->rootObject(), SIGNAL(openTaskManager(int)), this, SLOT(updateTaskScroller(int)));
@@ -89,6 +85,12 @@ void MainWindow::fullscreenStateChange()
         showMaximized();
     else
         showFullScreen();
+}
+
+void MainWindow::MainGui_taskManagerShowHide(bool show)
+{
+    QVariant bShow = QVariant::fromValue(show);
+    QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "taskManagerShowHideExternal", Q_ARG(QVariant, bShow));
 }
 
 void MainWindow::mainMenuShowHide(bool newStatus)
@@ -175,7 +177,7 @@ void MainWindow::deleteGlobals()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     // TODO add save function to drawing
-    // TODO clear some of the cache here?
+    clearCache();
     // do an empty content change to save any modified items
     //draw->contentChanged("");
     //videoDraw->contentChanged("");
@@ -398,6 +400,9 @@ void MainWindow::newTask(int id)
         } else if(m_selectedContent != "") {
             newTask->getContentDisplay()->selectContent(m_selectedContent);
         }
+
+        // use the last provided type for the task scroller
+        updateTaskScroller(m_taskScrollerTaskType);
     }
 }
 
@@ -462,4 +467,16 @@ void MainWindow::killTask(QString taskID)
         // use the last provided type for the task scroller
         updateTaskScroller(m_taskScrollerTaskType);
     }
+}
+
+void MainWindow::clearCache()
+{
+    // remove all task thumbnail PNG files from inside the cache dir
+    QDir cache_dir(CACHE_DIR);
+    QStringList filters;
+    filters << "*.png";
+    cache_dir.setNameFilters(filters);
+    QStringList files = cache_dir.entryList();
+    for(int i=0; i < files.count(); i++)
+        QFile::remove(CACHE_DIR + "/" + files.at(i));
 }
