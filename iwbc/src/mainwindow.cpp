@@ -441,7 +441,8 @@ void MainWindow::updateTaskScroller(int taskType)
         currentTask = m_tasks.value(currentTaskID, NULL);
         if(currentTask->getTaskType() == taskType) {
             qWarning() << taskIDs.at(i) << "is of desired type";
-            imgFileName = CACHE_DIR + "/" + currentTaskID + ".png";
+            // TODO we couldn't disable image caching in QML so we had to resort to this workaround - fix it!
+            imgFileName = CACHE_DIR + "/" + currentTaskID + "_" + QDateTime::currentDateTime().toString() + ".png";
             currentTask->getTaskScreenshot().save(imgFileName);
             MainGui_addToTaskManagerScroller(imgFileName, currentTaskID);
         }

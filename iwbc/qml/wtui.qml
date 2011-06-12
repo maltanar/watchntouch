@@ -370,7 +370,7 @@ Rectangle {
     }
 
     function addToTaskManagerScroller(pathOfTheImage, taskId){
-        taskPagingVisualsListModel.append({"name": taskId, "taskId": taskId,"file": pathOfTheImage })
+        taskPagingVisualsListModel.append({"name": taskId, "taskId": taskId,"file": pathOfTheImage})
     }
 
     function clearTaskManagerScroller(){
