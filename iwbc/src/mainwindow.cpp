@@ -80,6 +80,7 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(newTask(int)), this, SLOT(newTask(int)));
     connect(m_qmlMenu->rootObject(), SIGNAL(openTaskManager(int)), this, SLOT(updateTaskScroller(int)));
     connect(m_qmlMenu->rootObject(), SIGNAL(switchToTask(QString)), this, SLOT(switchToTask(QString)));
+    connect(m_qmlMenu->rootObject(), SIGNAL(killTask(QString)), this, SLOT(killTask(QString)));
 }
 
 void MainWindow::fullscreenStateChange()
@@ -236,9 +237,9 @@ void MainWindow::setActiveTask(QString taskID)
             // deactivate previous task
             m_activeTask->deactivate();
             // disconnect mouse event signals and slots
-            disconnect(m_qmlMenu, SIGNAL(mousePressSignal(QPoint,int)), m_activeTask, SLOT(mousePress(QPoint,int,int)));
-            disconnect(m_qmlMenu, SIGNAL(mouseMoveSignal(QPoint,int)), m_activeTask, SLOT(mouseMove(QPoint,int,int)));
-            disconnect(m_qmlMenu, SIGNAL(mouseReleaseSignal(QPoint,int)), m_activeTask, SLOT(mouseRelease(QPoint,int,int)));
+            disconnect(m_qmlMenu, SIGNAL(mousePressSignal(QPoint,int,int)), m_activeTask, SLOT(mousePress(QPoint,int,int)));
+            disconnect(m_qmlMenu, SIGNAL(mouseMoveSignal(QPoint,int,int)), m_activeTask, SLOT(mouseMove(QPoint,int,int)));
+            disconnect(m_qmlMenu, SIGNAL(mouseReleaseSignal(QPoint,int,int)), m_activeTask, SLOT(mouseRelease(QPoint,int,int)));
             m_activeTask->hide();
         }
         // TODO let the menu know that the active task changed
@@ -249,6 +250,7 @@ void MainWindow::setActiveTask(QString taskID)
        m_activeTask->show();
        // let the active widget know it's been activated
        m_activeTask->activate();
+       MainGui_alignTaskScrollerToSelectedTask(taskID);
         // connect mouse event signals and slots
        connect(m_qmlMenu, SIGNAL(mousePressSignal(QPoint,int,int)), m_activeTask, SLOT(mousePress(QPoint,int,int)));
        connect(m_qmlMenu, SIGNAL(mouseMoveSignal(QPoint,int,int)), m_activeTask, SLOT(mouseMove(QPoint,int,int)));
@@ -399,10 +401,10 @@ void MainWindow::newTask(int id)
     }
 }
 
-void MainWindow::MainGui_alignTaskScrollerToSelectedTask(int index)
+void MainWindow::MainGui_alignTaskScrollerToSelectedTask(QString taskID)
 {
-    QVariant iIndex = QVariant::fromValue(index);
-    QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "alignTaskScrollerToSelectedTask", Q_ARG(QVariant, iIndex));
+    QVariant sID = QVariant::fromValue(taskID);
+    QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "alignTaskScrollerToSelectedTask", Q_ARG(QVariant, sID));
 }
 
 void MainWindow::MainGui_addToTaskManagerScroller(QString pathOfTheImage, QString taskId)
@@ -421,6 +423,7 @@ void MainWindow::MainGui_clearTaskManagerScroller()
 
 void MainWindow::updateTaskScroller(int taskType)
 {
+    m_taskScrollerTaskType = taskType;
     qWarning() << "updateTaskScroller" << taskType;
     // clear the task list..
     MainGui_clearTaskManagerScroller();
@@ -443,4 +446,20 @@ void MainWindow::updateTaskScroller(int taskType)
 void MainWindow::switchToTask(QString taskID)
 {
     setActiveTask(taskID);
+}
+
+void MainWindow::killTask(QString taskID)
+{
+    ContentDisplayTask *theTask = m_tasks.value(taskID,NULL);
+
+    if(theTask) {
+        theTask->deactivate();
+        theTask->hide();
+        if(m_activeTask == theTask)
+            m_activeTask = NULL;
+        delete theTask;
+        m_tasks.remove(taskID);
+        // use the last provided type for the task scroller
+        updateTaskScroller(m_taskScrollerTaskType);
+    }
 }

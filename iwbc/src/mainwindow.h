@@ -74,8 +74,9 @@ private slots:
     void receiveScreenshot(QPixmap img);
     void updateTaskScroller(int taskType);
     void switchToTask(QString taskID);
+    void killTask(QString taskID);
 
-    void MainGui_alignTaskScrollerToSelectedTask(int index);
+    void MainGui_alignTaskScrollerToSelectedTask(QString taskID);
     void MainGui_addToTaskManagerScroller(QString pathOfTheImage, QString taskId);
     void MainGui_clearTaskManagerScroller();
 

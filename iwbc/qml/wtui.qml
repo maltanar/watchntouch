@@ -340,13 +340,22 @@ Rectangle {
 
     signal newTask(int taskType);  //taskType: 0-collaboration 1-sketch 2-presentation 3-web 4-multimedia
     signal switchToTask(string taskId);
-    signal killTask(int taskId);
+    signal killTask(string taskId);
     signal openTaskManager(int taskType);
 
 
-    function alignTaskScrollerToSelectedTask(index){
-        taskPagingVisualsView.currentIndex = index;
-        taskPagingVisualsView.positionViewAtIndex(index,ListView.Center);
+    function alignTaskScrollerToSelectedTask(taskID){
+
+        var i = 0;
+        for(i = 0; i < taskPagingVisualsListModel.count; i++)
+        {
+            if(taskPagingVisualsListModel.get(i).taskId == taskID) {
+                taskPagingVisualsView.currentIndex = i;
+                taskPagingVisualsView.positionViewAtIndex(i,ListView.Center);
+            }
+        }
+
+
     }
 
     function addToTaskManagerScroller(pathOfTheImage, taskId){
@@ -355,6 +364,15 @@ Rectangle {
 
     function clearTaskManagerScroller(){
         taskPagingVisualsListModel.clear();
+    }
+
+    function removeTaskFromScroller(taskID) {
+        var i = 0;
+        for(i = 0; i < taskPagingVisualsListModel.count; i++)
+        {
+            if(taskPagingVisualsListModel.get(i).taskId == taskID)
+                taskPagingVisualsListModel.remove(i);
+        }
     }
 
 
