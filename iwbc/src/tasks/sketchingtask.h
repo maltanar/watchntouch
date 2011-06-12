@@ -16,6 +16,7 @@ public:
 
     void newSketch(QString id);
     void sketchFromImage(QString id, QPixmap img);
+    int getTaskType();
 
 protected:
     void showHidePanel(bool show);

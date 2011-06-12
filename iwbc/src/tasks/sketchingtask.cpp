@@ -23,6 +23,11 @@ SketchingTask::SketchingTask(QWidget *parent) :
     connect(m_contextMenu, SIGNAL(penWidthDecrease()), m_sketchingWidget, SLOT(decreasePenWidth()));
 }
 
+int SketchingTask::getTaskType()
+{
+    return TASK_SKETCHING;
+}
+
 ContentType SketchingTask::getContentType() {
     return CONTENTTYPE_SKETCH;
 }

@@ -14,11 +14,12 @@ typedef enum _ContentType {
     CONTENTTYPE_SKETCH
 } ContentType;
 
-//W&T Drawing groups, this numbers directly depend on the order they have been put into the widgetStack vairable. See mainwindow.cpp, constructor.
-#define PRESENTATION_ANNOTATION 0
-#define SKETCHING_WIDGET 1
-#define VIDEO_ANNOTATION 2
-#define WEBPAGE_ANNOTATION 3
+#define TASK_COLALBORATION    0
+#define TASK_SKETCHING        1
+#define TASK_PRESENTATION     2
+#define TASK_WEBPAGE          3
+#define TASK_VIDEO            4
+
 
 // W&T specific directories
 #define CONFIG_DIR              qApp->applicationDirPath() + "/" + QString("configuration")

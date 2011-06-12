@@ -19,6 +19,8 @@ public:
     void activate();
     void deactivate();
 
+    int getTaskType();
+
 protected:
     QStackedLayout m_layout;
     QStringList m_thumbs;

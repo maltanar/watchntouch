@@ -33,13 +33,14 @@ public:
 protected:
     QStackedWidget *m_widgetStack;
     QMLMenuLayer *m_qmlMenu;
-    QScrollArea *m_currentTaskContainer;
+    QWidget *m_currentTaskContainer;
     Ui::MainWindow *ui;
     QString m_selectedContent;
     QHash<QString, ContentDisplayTask *> m_tasks;
     ContentDisplayTask * m_activeTask;
     Screenshot m_screenshot;
     Screencasting m_screencast;
+    int m_taskScrollerTaskType;
 
     void initGlobals();
     void deleteGlobals();
@@ -56,6 +57,8 @@ protected:
     void closeEvent(QCloseEvent *);
     void resizeEvent(QResizeEvent *);
 
+
+
 private slots:
     void mainMenuShowHide(bool newStatus);
     void exitPressed();
@@ -66,8 +69,15 @@ private slots:
     void multimediaPressed();
     void sketchPressed();
     void fullscreenStateChange();
+    void taskManagerShowHide();
+    void newTask(int id);
     void receiveScreenshot(QPixmap img);
+    void updateTaskScroller(int taskType);
+    void switchToTask(QString taskID);
 
+    void MainGui_alignTaskScrollerToSelectedTask(int index);
+    void MainGui_addToTaskManagerScroller(QString pathOfTheImage, QString taskId);
+    void MainGui_clearTaskManagerScroller();
 
 };
 

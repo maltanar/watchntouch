@@ -10,6 +10,11 @@ ContentDisplayTask::ContentDisplayTask(QWidget *parent) :
     m_panel = NULL;
 }
 
+int ContentDisplayTask::getTaskType()
+{
+    return -1;
+}
+
 void ContentDisplayTask::setPanel(QObject *panel)
 {
     m_panel = panel;
@@ -43,6 +48,7 @@ void ContentDisplayTask::activate()
     // make this task the active task
     // at the base level this means the associated ContentDisplay will grab the keyboard
     // and the menu opening gesture (pinch)
+    setEnabled(true);
 
     if(m_contentDisplay) {
         // TODO do we really need to grab the keyboard? find a better way
@@ -56,7 +62,7 @@ void ContentDisplayTask::activate()
 void ContentDisplayTask::deactivate()
 {
     // we are no longer the active task
-    // for the base implementation, release the grabbed keyboard and gesture focus
+    setEnabled(false);
 
     if(m_contentDisplay) {
         // m_contentDisplay->releaseKeyboard();

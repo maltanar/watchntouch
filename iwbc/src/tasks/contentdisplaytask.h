@@ -24,6 +24,8 @@ public:
     virtual void activate();
     virtual void deactivate();
 
+    virtual int getTaskType();
+
 protected:
     ContextMenu * m_contextMenu;
     AnnotationWidget * m_annotationWidget;

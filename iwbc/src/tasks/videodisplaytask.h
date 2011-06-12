@@ -23,6 +23,8 @@ public:
     void activate();
     void deactivate();
 
+    int getTaskType();
+
 protected:
     QWidget * m_videoCanvas;
     VideoUnderlay * m_videoPlayer;

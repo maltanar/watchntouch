@@ -34,6 +34,11 @@ WebPageDisplayTask::WebPageDisplayTask(QWidget *parent) :
     m_annotationWidget->raise();
 }
 
+int WebPageDisplayTask::getTaskType()
+{
+    return TASK_WEBPAGE;
+}
+
 void WebPageDisplayTask::urlChanged(QUrl newUrl)
 {
     setWebGuiURLText(newUrl.toString());

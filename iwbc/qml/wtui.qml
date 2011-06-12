@@ -339,7 +339,7 @@ Rectangle {
     //TASK MANAGER SIGNALS AND FUNCTIONS
 
     signal newTask(int taskType);  //taskType: 0-collaboration 1-sketch 2-presentation 3-web 4-multimedia
-    signal switchToTask(int taskId);
+    signal switchToTask(string taskId);
     signal killTask(int taskId);
     signal openTaskManager(int taskType);
 

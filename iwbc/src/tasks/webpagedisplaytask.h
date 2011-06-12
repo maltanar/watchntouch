@@ -18,6 +18,8 @@ public:
     void activate();
     void deactivate();
 
+    int getTaskType();
+
 protected:
     QWidget * m_webCanvas;
     WebpageDisplayWidget * m_webDisplay;

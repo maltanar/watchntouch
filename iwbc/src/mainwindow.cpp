@@ -35,12 +35,13 @@ MainWindow::MainWindow(QWidget *parent) :
     // setup the global variables and create the subdirs (if needed)
     initGlobals();
     m_activeTask = NULL;
+    m_taskScrollerTaskType = -1;
     // create the central stacked layout
     QVBoxLayout * centralStretcher = new QVBoxLayout();
     QStackedLayout * centralStack = new QStackedLayout();
     // create the QML main menu
     m_qmlMenu = new QMLMenuLayer(this);
-    m_currentTaskContainer = new QScrollArea(this);
+    m_currentTaskContainer = new QWidget(this);
     centralStretcher->setContentsMargins(1,1,1,1);
     centralStack->setContentsMargins(1,1,1,1);
     centralStack->addWidget(m_currentTaskContainer);
@@ -48,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     centralStack->setStackingMode(QStackedLayout::StackAll);
     centralStretcher->addLayout(centralStack);
 
-    m_currentTaskContainer->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    //m_currentTaskContainer->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
     connectMainMenuSignals();
 
@@ -57,7 +58,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->theCentralWidget->setLayout(centralStretcher);
 
     connect(&m_screenshot, SIGNAL(acquiredScreenshot(QPixmap)), this, SLOT(receiveScreenshot(QPixmap)));
+}
 
+void MainWindow::taskManagerShowHide()
+{
+    //QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "taskManagerShowHide");
 }
 
 void MainWindow::connectMainMenuSignals()
@@ -67,12 +72,14 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(exitPressed()), this, SLOT(exitPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(recordPressed(bool)), this, SLOT(recordPressed(bool)));
     connect(m_qmlMenu->rootObject(), SIGNAL(notificationsPressed()), this, SLOT(notificationsPressed()));
-    connect(m_qmlMenu->rootObject(), SIGNAL(presentationPressed()), this, SLOT(presentationPressed()));
-    connect(m_qmlMenu->rootObject(), SIGNAL(webPressed()), this, SLOT(webPressed()));
-    connect(m_qmlMenu->rootObject(), SIGNAL(multimediaPressed()), this, SLOT(multimediaPressed()));
+    //connect(m_qmlMenu->rootObject(), SIGNAL(presentationPressed()), this, SLOT(taskManagerShowHide()));
+    //connect(m_qmlMenu->rootObject(), SIGNAL(webPressed()), this, SLOT(taskManagerShowHide()));
+    //connect(m_qmlMenu->rootObject(), SIGNAL(multimediaPressed()), this, SLOT(taskManagerShowHide()));
     connect(m_qmlMenu->rootObject(), SIGNAL(sketchPressed()), this, SLOT(sketchPressed()));
     connect(m_qmlMenu->rootObject(), SIGNAL(fullscreenStateChange()), this, SLOT(fullscreenStateChange()));
-    // TODO remove adjustInteractiveHeight code
+    connect(m_qmlMenu->rootObject(), SIGNAL(newTask(int)), this, SLOT(newTask(int)));
+    connect(m_qmlMenu->rootObject(), SIGNAL(openTaskManager(int)), this, SLOT(updateTaskScroller(int)));
+    connect(m_qmlMenu->rootObject(), SIGNAL(switchToTask(QString)), this, SLOT(switchToTask(QString)));
 }
 
 void MainWindow::fullscreenStateChange()
@@ -167,6 +174,7 @@ void MainWindow::deleteGlobals()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     // TODO add save function to drawing
+    // TODO clear some of the cache here?
     // do an empty content change to save any modified items
     //draw->contentChanged("");
     //videoDraw->contentChanged("");
@@ -231,10 +239,14 @@ void MainWindow::setActiveTask(QString taskID)
             disconnect(m_qmlMenu, SIGNAL(mousePressSignal(QPoint,int)), m_activeTask, SLOT(mousePress(QPoint,int,int)));
             disconnect(m_qmlMenu, SIGNAL(mouseMoveSignal(QPoint,int)), m_activeTask, SLOT(mouseMove(QPoint,int,int)));
             disconnect(m_qmlMenu, SIGNAL(mouseReleaseSignal(QPoint,int)), m_activeTask, SLOT(mouseRelease(QPoint,int,int)));
+            m_activeTask->hide();
         }
         // TODO let the menu know that the active task changed
-       m_currentTaskContainer->setWidget(theTask);
+       //m_currentTaskContainer->setWidget(theTask);
+
        m_activeTask = theTask;
+       m_activeTask->setParent(m_currentTaskContainer);
+       m_activeTask->show();
        // let the active widget know it's been activated
        m_activeTask->activate();
         // connect mouse event signals and slots
@@ -312,34 +324,123 @@ QString MainWindow::openContent(ContentType type)
 
 void MainWindow::sketchPressed()
 {
-    SketchingTask * newTask;
+
+}
+
+void MainWindow::receiveScreenshot(QPixmap img)
+{
+    ((SketchingTask*)m_activeTask)->sketchFromImage("screenshot- " + QDateTime::currentDateTime().toString(), img);
+}
+
+void MainWindow::newTask(int id)
+{
+    ContentDisplayTask * newTask;
     QString newTaskID;
 
-    m_selectedContent = openContent(CONTENTTYPE_SKETCH);
+    switch(id) {
+    case TASK_PRESENTATION:
+        m_selectedContent = openContent(CONTENTTYPE_PRESENTATION);
 
-    if(m_selectedContent != "") {
-        // create and insert new task into the list of active tasks
-        newTask = new SketchingTask(this);
+        if(m_selectedContent != "") {
+            // create and insert new task into the list of active tasks
+            newTask = new PresentationDisplayTask(this);
+            newTaskID = "presentation_" + QString::number(QDateTime::currentMSecsSinceEpoch());
+        }
+        break;
+    case TASK_SKETCHING:
+        m_selectedContent = openContent(CONTENTTYPE_SKETCH);
+
+        if(m_selectedContent != "") {
+            // create and insert new task into the list of active tasks
+            newTask = new SketchingTask(this);
+            newTaskID = "sketch_" + QString::number(QDateTime::currentMSecsSinceEpoch());
+        }
+        break;
+    case TASK_WEBPAGE:
+        m_selectedContent = openContent(CONTENTTYPE_WEBPAGE);
+
+        if(m_selectedContent != "") {
+            // create and insert new task into the list of active tasks
+            newTask = new WebPageDisplayTask(this);
+            newTaskID = "webpage_" + QString::number(QDateTime::currentMSecsSinceEpoch());
+        }
+        break;
+    case TASK_VIDEO:
+        m_selectedContent = openContent(CONTENTTYPE_VIDEO);
+
+        if(m_selectedContent != "") {
+            // create and insert new task into the list of active tasks
+            newTask = new VideoDisplayTask(this);
+            newTaskID = "video_" + QString::number(QDateTime::currentMSecsSinceEpoch());
+        }
+        break;
+    default:
+        qWarning() << "task handler for" << id << "is not yet implemented!";
+    }
+
+    if(newTaskID != "") {
+        qWarning() << "new task identifier:" << newTaskID;
+
         // set the task panel as the QML menu root object
         newTask->setPanel(m_qmlMenu->rootObject());
-        newTaskID = "sketch_" + QString::number(QDateTime::currentMSecsSinceEpoch());
-        qWarning() << "new task identifier:" << newTaskID;
+
         m_tasks.insert(newTaskID, newTask);
         // set this as the active task
         setActiveTask(newTaskID);
 
         if(m_selectedContent == "$newsketch$") {
             // TODO IMPORTANT add to recently used list
-            newTask->newSketch("sketch - " + QDateTime::currentDateTime().toString());
-        } else if(m_selectedContent == "$screenshot$")
-        {
+            ((SketchingTask*)newTask)->newSketch("sketch - " + QDateTime::currentDateTime().toString());
+        } else if(m_selectedContent == "$screenshot$") {
             m_screenshot.show();
+        } else if(m_selectedContent != "") {
+            newTask->getContentDisplay()->selectContent(m_selectedContent);
         }
-
     }
 }
 
-void MainWindow::receiveScreenshot(QPixmap img)
+void MainWindow::MainGui_alignTaskScrollerToSelectedTask(int index)
 {
-    ((SketchingTask*)m_activeTask)->sketchFromImage("screenshot- " + QDateTime::currentDateTime().toString(), img);
+    QVariant iIndex = QVariant::fromValue(index);
+    QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "alignTaskScrollerToSelectedTask", Q_ARG(QVariant, iIndex));
+}
+
+void MainWindow::MainGui_addToTaskManagerScroller(QString pathOfTheImage, QString taskId)
+{
+    QVariant sTaskID = QVariant::fromValue(taskId);
+    QVariant sPath = QVariant::fromValue("file://"+pathOfTheImage);
+    QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "addToTaskManagerScroller",
+                              Q_ARG(QVariant, sPath),
+                              Q_ARG(QVariant, sTaskID));
+}
+
+void MainWindow::MainGui_clearTaskManagerScroller()
+{
+    QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "clearTaskManagerScroller");
+}
+
+void MainWindow::updateTaskScroller(int taskType)
+{
+    qWarning() << "updateTaskScroller" << taskType;
+    // clear the task list..
+    MainGui_clearTaskManagerScroller();
+    // .. and insert task instances of the desired type
+    ContentDisplayTask * currentTask;
+    QList<QString> taskIDs = m_tasks.keys();
+    QString imgFileName, currentTaskID;
+    for(int i=0; i < taskIDs.count(); i++) {
+        currentTaskID = taskIDs.at(i);
+        currentTask = m_tasks.value(currentTaskID, NULL);
+        if(currentTask->getTaskType() == taskType) {
+            qWarning() << taskIDs.at(i) << "is of desired type";
+            imgFileName = CACHE_DIR + "/" + currentTaskID + ".png";
+            currentTask->getTaskScreenshot().save(imgFileName);
+            MainGui_addToTaskManagerScroller(imgFileName, currentTaskID);
+        }
+    }
+}
+
+void MainWindow::switchToTask(QString taskID)
+{
+    setActiveTask(taskID);
 }
