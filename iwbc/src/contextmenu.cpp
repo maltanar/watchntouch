@@ -30,6 +30,11 @@ ContextMenu::~ContextMenu()
 
 void ContextMenu::on_close_clicked()
 {
+    hideContextMenu();
+}
+
+void ContextMenu::hideContextMenu()
+{
     m_colorPicker->hide();
     hide();
 }

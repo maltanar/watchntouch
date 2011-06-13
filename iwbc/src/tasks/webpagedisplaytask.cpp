@@ -102,7 +102,6 @@ void WebPageDisplayTask::deactivate()
     disconnect(m_panel, SIGNAL(gotoBookmark(QString)), m_webDisplay, SLOT(loadWebPage(QString)));
     disconnect(m_panel, SIGNAL(bookmarkRequest(QString)), this, SLOT(bookmarkRequest(QString)));
     disconnect(m_panel, SIGNAL(deleteBookmarkRequest(QString,int)), this, SLOT(deleteBookmarkRequest(QString,int)));
-    disconnect(m_webDisplay, SIGNAL(webPageLoadProgress(int)), m_panel, SLOT(webLoadingBar(int)));
 
     // save the bookmarks list at this point
     bookmarkList->writeToStorage();

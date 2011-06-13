@@ -1,4 +1,5 @@
 #include <QResizeEvent>
+#include <QFileDialog>
 #include "contentdisplaytask.h"
 #include "eventgenerator.h"
 
@@ -39,6 +40,7 @@ void ContentDisplayTask::setContextMenu(ContextMenu *newMenu)
         connect(m_contextMenu, SIGNAL(eraserSize(int)), m_annotationWidget, SLOT(setEraserSize(int)));
         connect(m_contextMenu, SIGNAL(erasePage()), m_annotationWidget, SLOT(clear()));
         connect(m_contextMenu, SIGNAL(eraseAll()), m_annotationWidget, SLOT(clearAll()));
+        connect(m_contextMenu, SIGNAL(print()), this, SLOT(print()));
     }
 }
 
@@ -140,11 +142,17 @@ void ContentDisplayTask::resizeEvent(QResizeEvent *e)
     }
 }
 
-QImage ContentDisplayTask::getTaskScreenshot()
+QImage ContentDisplayTask::getTaskScreenshot(int maxHeight)
 {
     QImage resultImage;
+    QPixmap resultPixmap;
 
-    resultImage = QPixmap::grabWidget(this).toImage().scaledToHeight(120, Qt::SmoothTransformation);
+    resultPixmap = QPixmap::grabWidget(this);
+
+    if(resultPixmap.height() > maxHeight && maxHeight != -1)
+        resultImage = resultPixmap.toImage().scaledToHeight(maxHeight, Qt::SmoothTransformation);
+    else
+        resultImage = resultPixmap.toImage();
 
     return resultImage;
 }
@@ -181,4 +189,18 @@ void ContentDisplayTask::pinchGesture(QPoint center, bool inOut)
 {
     qWarning() << this << "received pinchGesture at" << center << "type" << inOut;
     showContextMenu(center);
+}
+
+void ContentDisplayTask::print()
+{
+    m_contextMenu->hideContextMenu();
+
+    QImage thePrint = getTaskScreenshot(-1);
+    QString fileName = QFileDialog::getSaveFileName(this, "Save annotated content", "",  "PNG files (*.png)");
+
+    if(fileName != "") {
+        if(!fileName.endsWith(".png")) fileName += ".png";
+        thePrint.save(fileName, "PNG");
+        displayInfoMessage("Annotated content saved to:\n"+fileName);
+    }
 }

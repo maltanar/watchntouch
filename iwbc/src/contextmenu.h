@@ -19,6 +19,8 @@ public:
     explicit ContextMenu(QWidget *parent = 0);
     ~ContextMenu();
 
+    void hideContextMenu();
+
 private:
     Ui::ContextMenu *ui;
     void hideSubmenus();

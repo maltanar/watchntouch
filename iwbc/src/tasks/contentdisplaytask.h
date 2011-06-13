@@ -26,6 +26,8 @@ public:
 
     virtual int getTaskType();
 
+    QImage getTaskScreenshot(int maxHeight = 120);
+
 protected:
     ContextMenu * m_contextMenu;
     AnnotationWidget * m_annotationWidget;
@@ -44,10 +46,10 @@ protected:
 signals:
 
 public slots:
-    QImage getTaskScreenshot();
     void mousePress(QPoint p, int button, int buttons);
     void mouseMove(QPoint p, int button, int buttons);
     void mouseRelease(QPoint p, int button, int buttons);
+    void print();
 
 protected slots:
     void showContextMenu(QPoint p);
