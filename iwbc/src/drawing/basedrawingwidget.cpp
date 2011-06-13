@@ -85,6 +85,14 @@ QBrush BaseDrawingWidget::getDrawingBrush()
 void BaseDrawingWidget::setDrawingMode(DrawingMode mode)
 {
     drawingMode = mode;
+
+    if(mode == DRAWINGMODE_RECTANGLE || mode == DRAWINGMODE_ELLIPSE) {
+        // draw filled shapes
+        drawingBrush = QBrush(drawingPen.color(), Qt::SolidPattern);
+    } else {
+        // draw only shape contours
+        drawingBrush = DEFAULT_DRAWING_BRUSH;
+    }
 }
 
 DrawingMode BaseDrawingWidget::getDrawingMode()
@@ -171,6 +179,7 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
             break;
 
         case DRAWINGMODE_RECTANGLE:
+        case DRAWINGMODE_EMPTYRECTANGLE:
             if(state == DRAWINGSTATE_START) {
                 // create a temporary QGraphicsItem
                 // will be committed to the drawing when the mouse is released
@@ -217,6 +226,7 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
             break;
 
         case DRAWINGMODE_ELLIPSE:
+        case DRAWINGMODE_EMPTYELLIPSE:
             if(state == DRAWINGSTATE_START) {
                 // create a temporary QGraphicsItem
                 // will be committed to the drawing when the mouse is released
@@ -295,6 +305,10 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
 void BaseDrawingWidget::setDrawingColor(QColor color)
 {
     drawingPen.setColor(color);
+
+    if(drawingMode == DRAWINGMODE_RECTANGLE || drawingMode == DRAWINGMODE_ELLIPSE) {
+        drawingBrush.setColor(color);
+    }
 }
 
 void BaseDrawingWidget::increasePenWidth()

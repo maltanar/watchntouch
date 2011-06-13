@@ -398,12 +398,6 @@ Rectangle {
         }
     }
 
-
-
-
-
-
-
     PropertyAnimation { id: showMenus; target: []; property: "opacity"; to: 1; duration: 300 }
     PropertyAnimation { id: hideMenus; target: []; property: "opacity"; to: 0; duration: 300 }
     PropertyAnimation { id: showMenus2; target: []; property: "opacity"; to: 1; duration: 300 }
@@ -411,7 +405,7 @@ Rectangle {
 
     Timer {
         id:showHideTimer
-        interval: 3000; running: false; repeat: true
+        interval: 2000; running: false; repeat: true
              onTriggered: {
                  hideMenus2.running = true;
              }

@@ -54,7 +54,7 @@ void ContextMenu::on_shape_toggled(bool checked)
     }
 }
 
-void ContextMenu::on_color_toggled(bool checked)
+void ContextMenu::on_color_clicked()
 {
     /*hideSubmenus();
     ui->colorBox->setVisible(checked);
