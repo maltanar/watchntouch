@@ -58,6 +58,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->theCentralWidget->setLayout(centralStretcher);
 
     connect(&m_screenshot, SIGNAL(acquiredScreenshot(QPixmap)), this, SLOT(receiveScreenshot(QPixmap)));
+    connect(&m_taskManagerUpdateTimer, SIGNAL(timeout()), this, SLOT(taskManagerUpdateTimeout()));
+
+    m_taskManagerUpdateTimer.start(2000);
 }
 
 void MainWindow::taskManagerShowHide()
@@ -430,6 +433,7 @@ void MainWindow::MainGui_clearTaskManagerScroller()
 void MainWindow::updateTaskScroller(int taskType)
 {
     m_taskScrollerTaskType = taskType;
+    clearCache();
     qWarning() << "updateTaskScroller" << taskType;
     // clear the task list..
     MainGui_clearTaskManagerScroller();
@@ -482,4 +486,18 @@ void MainWindow::clearCache()
     QStringList files = cache_dir.entryList();
     for(int i=0; i < files.count(); i++)
         QFile::remove(CACHE_DIR + "/" + files.at(i));
+}
+
+void MainWindow::taskManagerUpdateTimeout()
+{
+    if(MainGui_isTaskScrollerVisible())
+        updateTaskScroller(m_taskScrollerTaskType);
+}
+
+bool MainWindow::MainGui_isTaskScrollerVisible()
+{
+    QVariant ret;
+    QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "isTaskScrollerVisible", Q_RETURN_ARG(QVariant, ret));
+
+    return ret.toBool();
 }

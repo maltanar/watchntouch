@@ -30,10 +30,18 @@ Rectangle {
         if(!showHide){
             hideMenus.target=taskManagerRect;
             hideMenus.running=true;
+
+            presInterface.anchors.bottom = bottomMenu.top;
+            webInterface.anchors.bottom = bottomMenu.top;
+            multInterface.anchors.bottom = bottomMenu.top;
         }
         else{
             showMenus.target=taskManagerRect;
             showMenus.running=true;
+
+            presInterface.anchors.bottom = taskManagerRect.top;
+            webInterface.anchors.bottom = taskManagerRect.top;
+            multInterface.anchors.bottom = taskManagerRect.top;
         }
     }
 
@@ -396,6 +404,10 @@ Rectangle {
             if(taskPagingVisualsListModel.get(i).taskId == taskID)
                 taskPagingVisualsListModel.remove(i);
         }
+    }
+
+    function isTaskScrollerVisible() {
+        return taskManagerRect.opacity;
     }
 
     PropertyAnimation { id: showMenus; target: []; property: "opacity"; to: 1; duration: 300 }

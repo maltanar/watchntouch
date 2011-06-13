@@ -6,6 +6,7 @@
 #include <QDeclarativeView>
 #include <QScrollArea>
 #include <QHash>
+#include <QTimer>
 #include "presentationdisplaytask.h"
 #include "videodisplaytask.h"
 #include "webpagedisplaytask.h"
@@ -41,6 +42,7 @@ protected:
     QString m_activeTaskID;
     Screenshot m_screenshot;
     Screencasting m_screencast;
+    QTimer m_taskManagerUpdateTimer;
     int m_taskScrollerTaskType;
 
     void initGlobals();
@@ -80,6 +82,9 @@ private slots:
     void MainGui_addToTaskManagerScroller(QString pathOfTheImage, QString taskId);
     void MainGui_clearTaskManagerScroller();
     void MainGui_taskManagerShowHide(bool show);
+    bool MainGui_isTaskScrollerVisible();
+
+    void taskManagerUpdateTimeout();
 
 };
 
