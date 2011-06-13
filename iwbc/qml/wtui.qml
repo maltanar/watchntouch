@@ -15,9 +15,13 @@ Rectangle {
     signal mouseReleased(int x, int y, int buttons, int buttons)
 
     function taskManagerPreparation(rectColor, highlightColor, taskType){
-        if(!(taskManagerRect.opacity==1 && taskManagerRect.taskManagerTaskType!=taskType))
-            taskManagerRect.color = rectColor;
+        console.log("taskmanagerprep " + taskType + " " + taskManagerRect.taskManagerTaskType + " " + taskManagerRect.opacity);
+        if((taskManagerRect.opacity==1 && taskManagerRect.taskManagerTaskType!=taskType)) {
 
+            taskManagerRect.opacity=0;
+        }
+
+        taskManagerRect.color = rectColor;
         taskManagerRect.taskManagerTaskType = taskType;
        // taskHighlightRect.color=  highlightColor;
     }
