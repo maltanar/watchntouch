@@ -22,6 +22,9 @@ PresentationDisplayTask::PresentationDisplayTask(QWidget *parent) :
     connect(m_contentDisplay, SIGNAL(pageThumbnailReady(QString, int)), this, SLOT(pageThumbReady(QString,int)));
 
     m_annotationWidget->raise();
+
+    m_currentPage = 0;
+    m_pageCount = 0;
 }
 
 int PresentationDisplayTask::getTaskType()
@@ -49,6 +52,8 @@ void PresentationDisplayTask::activate()
 
     // TODO IMPORTANT clear and insert the thumbnails, align to current page
     updateThumbnails();
+    setSlideNumberDisplay(QString::number(m_currentPage) + " / " + QString::number(m_pageCount));
+    PresentationGui_alignPageScrollerToPageNumber(m_currentPage);
 }
 
 void PresentationDisplayTask::deactivate()
@@ -87,6 +92,8 @@ void PresentationDisplayTask::showHidePanel(bool show)
 
 void PresentationDisplayTask::pageNumberChanged(int pageNo, int pageCount)
 {
+    m_currentPage = pageNo;
+    m_pageCount = pageCount;
     qWarning() << "page change:" << pageNo << "of" << pageCount;
     setSlideNumberDisplay(QString::number(pageNo) + " / " + QString::number(pageCount));
     PresentationGui_alignPageScrollerToPageNumber(pageNo);
@@ -142,7 +149,7 @@ void PresentationDisplayTask::updateThumbnails()
 
     for(int i = 0; i < m_thumbs.count(); i++) {
         qWarning() << "zelelelele" << i;
-        PresentationGui_addToPageScroller(m_thumbs.at(i), i);
+        PresentationGui_addToPageScroller(m_thumbs.at(i), i+1);
     }
 }
 

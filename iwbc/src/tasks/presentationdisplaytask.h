@@ -25,6 +25,7 @@ public:
 protected:
     QStackedLayout m_layout;
     QStringList m_thumbs;
+    int m_currentPage, m_pageCount;
 
     void showHidePanel(bool show);
     int getPanelHeight();
