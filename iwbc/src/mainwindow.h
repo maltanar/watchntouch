@@ -38,6 +38,7 @@ protected:
     QString m_selectedContent;
     QHash<QString, ContentDisplayTask *> m_tasks;
     ContentDisplayTask * m_activeTask;
+    QString m_activeTaskID;
     Screenshot m_screenshot;
     Screencasting m_screencast;
     int m_taskScrollerTaskType;

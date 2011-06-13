@@ -41,6 +41,8 @@ VideoDisplayTask::VideoDisplayTask(QWidget *parent) :
     */
 
     m_annotationWidget->raise();
+
+    m_currentMediaLen = m_currentPos = 0;
 }
 
 int VideoDisplayTask::getTaskType()
@@ -70,6 +72,8 @@ void VideoDisplayTask::activate()
     connect(m_panel, SIGNAL(volumeMouseUp(int)),this, SLOT(volumeMouseUp(int)));
 
     // TODO update panel information - current volume level, timeline pos
+    mediaLengthUpdate(m_currentMediaLen);
+    timelineUpdate(m_currentPos);
 }
 
 void VideoDisplayTask::deactivate()
@@ -172,6 +176,7 @@ void VideoDisplayTask::mediaLengthUpdate(float newLength)
 
 void VideoDisplayTask::timelineUpdate(float newPos)
 {
+    m_currentPos = newPos;
     QTime remaining(0,0,0), elapsed(0,0,0);
     elapsed = elapsed.addMSecs(newPos);
     remaining = remaining.addMSecs(m_currentMediaLen - newPos);

@@ -137,7 +137,6 @@ void PresentationDisplayTask::PresentationGui_setPageScrollerImageAtIndex(QStrin
 
 void PresentationDisplayTask::pageThumbReady(QString path, int pageNo)
 {
-    qWarning() << "thumb ready" << path << pageNo;
     m_thumbs.append(path);
     PresentationGui_addToPageScroller(path, pageNo);
 }
@@ -148,7 +147,6 @@ void PresentationDisplayTask::updateThumbnails()
     PresentationGui_clearPageScroller();
 
     for(int i = 0; i < m_thumbs.count(); i++) {
-        qWarning() << "zelelelele" << i;
         PresentationGui_addToPageScroller(m_thumbs.at(i), i+1);
     }
 }

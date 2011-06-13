@@ -248,6 +248,7 @@ void MainWindow::setActiveTask(QString taskID)
        //m_currentTaskContainer->setWidget(theTask);
 
        m_activeTask = theTask;
+       m_activeTaskID = taskID;
        m_activeTask->setParent(m_currentTaskContainer);
        m_activeTask->show();
        // let the active widget know it's been activated
@@ -440,13 +441,14 @@ void MainWindow::updateTaskScroller(int taskType)
         currentTaskID = taskIDs.at(i);
         currentTask = m_tasks.value(currentTaskID, NULL);
         if(currentTask->getTaskType() == taskType) {
-            qWarning() << taskIDs.at(i) << "is of desired type";
             // TODO we couldn't disable image caching in QML so we had to resort to this workaround - fix it!
             imgFileName = CACHE_DIR + "/" + currentTaskID + "_" + QDateTime::currentDateTime().toString() + ".png";
             currentTask->getTaskScreenshot(120).save(imgFileName);
             MainGui_addToTaskManagerScroller(imgFileName, currentTaskID);
         }
     }
+    if(m_activeTaskID != "")
+        MainGui_alignTaskScrollerToSelectedTask(m_activeTaskID);
 }
 
 void MainWindow::switchToTask(QString taskID)

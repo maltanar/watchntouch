@@ -29,7 +29,7 @@ protected:
     QWidget * m_videoCanvas;
     VideoUnderlay * m_videoPlayer;
     AnnotationWidget * m_videoDraw;
-    float m_currentMediaLen;
+    float m_currentMediaLen, m_currentPos;
 
     // QML outgoing connection slots (pass data/notification to QML)
     void setSliderPosition(float position);
