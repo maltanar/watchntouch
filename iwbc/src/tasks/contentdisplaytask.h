@@ -51,6 +51,7 @@ public slots:
 
 protected slots:
     void showContextMenu(QPoint p);
+    void pinchGesture(QPoint center, bool inOut);
 
 };
 

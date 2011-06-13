@@ -39,6 +39,7 @@ protected:
 protected slots:
     void urlChanged(QUrl newUrl);
     void loadProgress(int progress);
+    void swipeGesture(int direction, int dx, int dy);
 
 signals:
 

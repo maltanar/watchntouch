@@ -58,8 +58,6 @@ protected:
     void closeEvent(QCloseEvent *);
     void resizeEvent(QResizeEvent *);
 
-
-
 private slots:
     void mainMenuShowHide(bool newStatus);
     void exitPressed();

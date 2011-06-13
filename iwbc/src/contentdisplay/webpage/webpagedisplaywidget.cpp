@@ -100,3 +100,8 @@ QUrl WebpageDisplayWidget::getCurrentURL()
 {
     return mWebView->url();
 }
+
+void WebpageDisplayWidget::scrollWebPage(int dx, int dy)
+{
+    mWebView->page()->mainFrame()->scroll(dx,dy);
+}

@@ -81,5 +81,12 @@ void displayErrorMessage(QString messageText, QString messageTitle = "Error");
 void displayInfoMessage(QString messageText, QString messageTitle = "Information");
 bool displayYesNoMessage(QString messageText, QString messageTitle = "Confirmation");
 
+// directions for swipe gestures
+#define GESTURE_DIR_UP      1
+#define GESTURE_DIR_LEFT    2
+#define GESTURE_DIR_DOWN    3
+#define GESTURE_DIR_RIGHT   4
+
+
 
 #endif // APPGLOBALS_H

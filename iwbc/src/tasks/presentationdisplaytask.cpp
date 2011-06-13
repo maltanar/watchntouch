@@ -1,5 +1,6 @@
-#include "presentationdisplaytask.h"
 #include <QUrl>
+#include "presentationdisplaytask.h"
+#include "eventgenerator.h"
 
 PresentationDisplayTask::PresentationDisplayTask(QWidget *parent) :
     ContentDisplayTask(parent)
@@ -37,7 +38,8 @@ void PresentationDisplayTask::activate()
 {
     ContentDisplayTask::activate();
 
-    // TODO connect qml menu signals
+    // connect swipe gesture
+    connect(eventGenerator, SIGNAL(swipeGesture(int,int,int)), this, SLOT(swipeGesture(int,int,int)));
 
     connect(m_panel, SIGNAL(goToFirstPage()), m_contentDisplay, SLOT(gotoFirstSlide()));
     connect(m_panel, SIGNAL(goToLastPage()), m_contentDisplay, SLOT(gotoLastSlide()));
@@ -53,7 +55,9 @@ void PresentationDisplayTask::deactivate()
 {
     ContentDisplayTask::deactivate();
 
-    // TODO disconnect qml menu signals
+    // disconnect swipe gesture
+    disconnect(eventGenerator, SIGNAL(swipeGesture(int,int,int)), this, SLOT(swipeGesture(int,int,int)));
+
     disconnect(m_panel, SIGNAL(goToFirstPage()), m_contentDisplay, SLOT(gotoFirstSlide()));
     disconnect(m_panel, SIGNAL(goToLastPage()), m_contentDisplay, SLOT(gotoLastSlide()));
     disconnect(m_panel, SIGNAL(goToNextPage()), m_contentDisplay, SLOT(gotoNextSlide()));
@@ -140,5 +144,15 @@ void PresentationDisplayTask::updateThumbnails()
         qWarning() << "zelelelele" << i;
         PresentationGui_addToPageScroller(m_thumbs.at(i), i);
     }
+}
 
+void PresentationDisplayTask::swipeGesture(int direction, int dx, int dy)
+{
+    qWarning() << this << "got swipeGesture with direction" << direction << "and deltas" << dx << dy;
+
+    if(direction == GESTURE_DIR_RIGHT) {
+        ((PresentationDisplayWidget*)m_contentDisplay)->gotoPrevSlide();
+    } else if(direction == GESTURE_DIR_LEFT) {
+        ((PresentationDisplayWidget*)m_contentDisplay)->gotoNextSlide();
+    }
 }

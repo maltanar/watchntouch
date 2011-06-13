@@ -1,5 +1,6 @@
 #include "webpagedisplaytask.h"
 #include "bookmarklist.h"
+#include "eventgenerator.h"
 
 WebPageDisplayTask::WebPageDisplayTask(QWidget *parent) :
     ContentDisplayTask(parent)
@@ -61,6 +62,9 @@ void WebPageDisplayTask::activate()
 {
     ContentDisplayTask::activate();
 
+    // connect swipe gesture
+    connect(eventGenerator, SIGNAL(swipeGesture(int,int,int)), this, SLOT(swipeGesture(int,int,int)));
+
     // TODO connect QML slots and signals
     connect(m_panel, SIGNAL(back()), m_webDisplay, SLOT(back()));
     connect(m_panel, SIGNAL(next()), m_webDisplay, SLOT(forward()));
@@ -85,6 +89,9 @@ void WebPageDisplayTask::activate()
 void WebPageDisplayTask::deactivate()
 {
     ContentDisplayTask::deactivate();
+
+    // disconnect swipe gesture
+    disconnect(eventGenerator, SIGNAL(swipeGesture(int,int,int)), this, SLOT(swipeGesture(int,int,int)));
 
     // TODO disconnect QML slots and signals
     disconnect(m_panel, SIGNAL(back()), m_webDisplay, SLOT(back()));
@@ -172,4 +179,13 @@ void WebPageDisplayTask::loadProgress(int progress)
     QVariant iProgress = QVariant::fromValue(progress);
 
     QMetaObject::invokeMethod(m_panel, "webLoadingBar", Q_ARG(QVariant, iProgress));
+}
+
+void WebPageDisplayTask::swipeGesture(int direction, int dx, int dy)
+{
+    qWarning() << this << "got swipeGesture with direction" << direction << "and deltas" << dx << dy;
+
+    if(direction == GESTURE_DIR_DOWN) {
+        m_webDisplay->scrollWebPage(dx, dy);
+    }
 }

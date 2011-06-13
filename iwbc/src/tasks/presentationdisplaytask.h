@@ -1,12 +1,13 @@
 #ifndef PRESENTATIONDISPLAYTASK_H
 #define PRESENTATIONDISPLAYTASK_H
 
-#include "contentdisplaytask.h"
 #include <QStackedLayout>
 #include <QStringList>
 #include <presentationdisplaywidget.h>
 #include <annotationwidget.h>
 #include <contextmenu.h>
+#include "contentdisplaytask.h"
+
 
 class PresentationDisplayTask : public ContentDisplayTask
 {
@@ -39,6 +40,9 @@ protected:
     void PresentationGui_addToPageScroller(QString path, int pageNo);
 
 signals:
+
+protected slots:
+    void swipeGesture(int direction, int dx, int dy);
 
 public slots:
 

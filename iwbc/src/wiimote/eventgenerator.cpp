@@ -61,7 +61,11 @@ void EventGenerator::handleStateChange()
         m_currentState = STATE_FINISH_GESTURING;
     } else if(m_currentState == STATE_FINISH_GESTURING) {
         // ignore coming single point events after gesture
-        m_currentState = STATE_SINGLE_IGNORE;
+        if(m_visibleCount == 0)
+            m_currentState = STATE_NOTHING;
+        else if(m_visibleCount == 1)
+            m_currentState = STATE_SINGLE_IGNORE;
+
     } else if(m_currentState == STATE_SINGLE_IGNORE && m_visibleCount == 0) {
         // go back to initial state
         m_currentState = STATE_NOTHING;
@@ -86,7 +90,7 @@ void EventGenerator::handleStateChange()
 // will be executed when a new calibration point data is received
 void EventGenerator::processInputData(QPoint *newpoints, int i,int type,int visibleCount)
 {
-    newpoints[0] = applySmoothing(newpoints[0]);
+    //newpoints[0] = applySmoothing(newpoints[0]);
 
     qWarning() << "newpoint[0]" << newpoints[0];
     for(int i = 0; i < 4; i++) {
@@ -100,6 +104,8 @@ void EventGenerator::processInputData(QPoint *newpoints, int i,int type,int visi
 
     // TODO handle state changes first!
     m_visibleCount = visibleCount;
+
+    qWarning() << "new point" << newpoints[0];
     handleStateChange();
 
     switch(m_currentState) {
@@ -135,6 +141,8 @@ void EventGenerator::processInputData(QPoint *newpoints, int i,int type,int visi
             mouseRelease(Button1, newpoints[0]);
             break;
         case  STATE_SECOND_VISIBLE:
+            // set the first received point as the gesture start point
+            m_gestureStartPoint = newpoints[0];
             m_pointBuffer.clear();
             m_firstPreviousPoint = newpoints[0];
             m_secondPreviousPoint = newpoints[1];
@@ -144,8 +152,6 @@ void EventGenerator::processInputData(QPoint *newpoints, int i,int type,int visi
             break;
         case  STATE_FINISH_GESTURING:
             finishGesture();
-            m_firstPointDifferenceBuffer.clear();
-            m_secondPointDifferenceBuffer.clear();
             break;
         case  STATE_SINGLE_IGNORE:
             // just ignore coming events
@@ -168,6 +174,9 @@ void EventGenerator::recognizeGesture(QPoint *newpoints)
 
     QPoint firstDiff(newpoints[0].x() - m_firstPreviousPoint.x(),newpoints[0].y() - m_firstPreviousPoint.y());
     QPoint secondDiff(newpoints[1].x() - m_secondPreviousPoint.x(),newpoints[1].y() - m_secondPreviousPoint.y());
+
+    if(qAbs(firstDiff.y() - secondDiff.y()) < VERTICAL_SWIPE_SENSITIVITY)
+        emit swipeGesture(GESTURE_DIR_DOWN, 0, -firstDiff.y());
 
     qWarning() << "first prev point:" << m_firstPreviousPoint;
     qWarning() << "newpoints[0]:" << newpoints[0];
@@ -241,13 +250,19 @@ void EventGenerator::finishGesture()
 
     if(firstXSum > 0 && secondXSum > 0) {
         qWarning() << "both x signs' are same and positive, if presentation swipe right";
+        emit swipeGesture(GESTURE_DIR_RIGHT, 0, 0);
     }
     else if(firstXSum < 0 && secondXSum < 0) {
         qWarning() << "both x signs' are same and negative, if presentation swipe left";
+        emit swipeGesture(GESTURE_DIR_LEFT, 0, 0);
     }
     else if(firstXSum < 0 && secondXSum > 0 || firstXSum > 0 && secondXSum < 0) {
         // TODO pinch in/out nasıl ayrılır?
-        qWarning() << "both x signs' are different, open context menu";
+        if(qAbs(firstXSum) > PINCH_THRESHOLD || qAbs(secondXSum) > PINCH_THRESHOLD) {
+            qWarning() << "open context menu" << firstXSum << secondYSum;
+            emit pinchGesture(m_gestureStartPoint, false);
+        } else
+            qWarning() << "don't open context menu (too short)" << firstXSum << secondYSum;
     }
 
     if(firstYSum > 0 && secondYSum > 0) {
@@ -258,6 +273,11 @@ void EventGenerator::finishGesture()
     else if(firstYSum < 0 && secondYSum < 0) {
         qWarning() << "both y signs' are same and positive, if web_page and read_only swipe scroll up";
     }
+
+    m_firstPointDifferenceBuffer.clear();
+    m_secondPointDifferenceBuffer.clear();
+
+    handleStateChange();
 }
 
 

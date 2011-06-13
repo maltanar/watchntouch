@@ -21,6 +21,8 @@
 #define STATE_SINGLE_IGNORE     7
 #define STATE_FV_RELEASE        8 // galiba draw_release ile aynı amaçla yazılmış.
 
+#define VERTICAL_SWIPE_SENSITIVITY   30
+#define PINCH_THRESHOLD         50
 #define GESTURE_START_DELAY     300
 
 class EventGenerator : public QObject
@@ -41,6 +43,7 @@ private:
     QList<QPoint> m_secondPointDifferenceBuffer;
     QPoint m_firstPreviousPoint;
     QPoint m_secondPreviousPoint;
+    QPoint m_gestureStartPoint;
     QTimer m_timer;
     int m_visibleCount;
     bool m_timeoutFlag;
@@ -62,6 +65,8 @@ private:
     QPoint applySmoothing(QPoint inputPoint);
 
 signals:
+    void pinchGesture(QPoint center, bool inOut);
+    void swipeGesture(int direction, int dx, int dy);
 
 protected slots:
     void timeout();

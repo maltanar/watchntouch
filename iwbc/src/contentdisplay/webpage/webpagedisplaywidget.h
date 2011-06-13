@@ -37,6 +37,8 @@ public slots:
     void reload();
     void stop();
 
+    void scrollWebPage(int dx, int dy);
+
 private slots:
     void webPageLoadStartInternal();
     void webPageLoadFinishedInternal(bool ok);

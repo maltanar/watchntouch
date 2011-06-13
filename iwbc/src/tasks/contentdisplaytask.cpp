@@ -1,5 +1,6 @@
-#include "contentdisplaytask.h"
 #include <QResizeEvent>
+#include "contentdisplaytask.h"
+#include "eventgenerator.h"
 
 ContentDisplayTask::ContentDisplayTask(QWidget *parent) :
     QWidget(parent)
@@ -49,6 +50,9 @@ void ContentDisplayTask::activate()
     // at the base level this means the associated ContentDisplay will grab the keyboard
     // and the menu opening gesture (pinch)
 
+    // connect to pinch gesture source
+    connect(eventGenerator, SIGNAL(pinchGesture(QPoint,bool)), this, SLOT(pinchGesture(QPoint,bool)));
+
     if(m_contentDisplay) {
         // TODO do we really need to grab the keyboard? find a better way
         // m_contentDisplay->grabKeyboard();
@@ -61,6 +65,9 @@ void ContentDisplayTask::activate()
 void ContentDisplayTask::deactivate()
 {
     // we are no longer the active task
+
+    // disconnect from pinch gesture source
+    disconnect(eventGenerator, SIGNAL(pinchGesture(QPoint,bool)), this, SLOT(pinchGesture(QPoint,bool)));
 
     if(m_contentDisplay) {
         // m_contentDisplay->releaseKeyboard();
@@ -167,3 +174,8 @@ void ContentDisplayTask::mouseRelease(QPoint p, int button, int buttons)
         qApp->postEvent(theChild, new QMouseEvent(QEvent::MouseButtonRelease, theChild->mapFromGlobal(p), p, (Qt::MouseButton) button, (Qt::MouseButtons) buttons, 0));
 }
 
+void ContentDisplayTask::pinchGesture(QPoint center, bool inOut)
+{
+    qWarning() << this << "received pinchGesture at" << center << "type" << inOut;
+    showContextMenu(center);
+}
