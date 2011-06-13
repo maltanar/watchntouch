@@ -41,10 +41,18 @@ Rectangle {
         if(taskManagerRect.opacity==1){
             hideMenus.target=taskManagerRect;
             hideMenus.running=true;
+
+            presInterface.anchors.bottom = bottomMenu.top;
+            webInterface.anchors.bottom = bottomMenu.top;
+            multInterface.anchors.bottom = bottomMenu.top;
         }
         else if(taskManagerRect.opacity==0){
             showMenus.target=taskManagerRect;
             showMenus.running=true;
+
+            presInterface.anchors.bottom = taskManagerRect.top;
+            webInterface.anchors.bottom = taskManagerRect.top;
+            multInterface.anchors.bottom = taskManagerRect.top;
         }
     }
 
