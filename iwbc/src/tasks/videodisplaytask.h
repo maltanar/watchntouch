@@ -18,8 +18,6 @@ class VideoDisplayTask : public ContentDisplayTask
 public:
     explicit VideoDisplayTask(QWidget *parent = 0);
 
-    ContentType getContentType();
-
     void activate();
     void deactivate();
 

@@ -49,12 +49,6 @@ int VideoDisplayTask::getTaskType()
 {
     return TASK_VIDEO;
 }
-
-ContentType VideoDisplayTask::getContentType()
-{
-    return CONTENTTYPE_VIDEO;
-}
-
 void VideoDisplayTask::activate()
 {
     ContentDisplayTask::activate();

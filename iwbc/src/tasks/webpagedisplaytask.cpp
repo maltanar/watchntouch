@@ -45,11 +45,6 @@ void WebPageDisplayTask::urlChanged(QUrl newUrl)
     setWebGuiURLText(newUrl.toString());
 }
 
-ContentType WebPageDisplayTask::getContentType()
-{
-    return CONTENTTYPE_WEBPAGE;
-}
-
 void WebPageDisplayTask::showHidePanel(bool show)
 {
     QVariant showHide = QVariant::fromValue(show);

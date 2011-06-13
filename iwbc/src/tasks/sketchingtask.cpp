@@ -30,10 +30,6 @@ int SketchingTask::getTaskType()
     return TASK_SKETCHING;
 }
 
-ContentType SketchingTask::getContentType() {
-    return CONTENTTYPE_SKETCH;
-}
-
 void SketchingTask::showHidePanel(bool show) {
     // sketching has no panel so we don't need to do anything here
 }

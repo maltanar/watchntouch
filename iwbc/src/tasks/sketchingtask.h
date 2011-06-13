@@ -12,7 +12,6 @@ class SketchingTask : public ContentDisplayTask
     Q_OBJECT
 public:
     explicit SketchingTask(QWidget *parent = 0);
-    ContentType getContentType();
 
     void newSketch(QString id);
     void sketchFromImage(QString id, QPixmap img);

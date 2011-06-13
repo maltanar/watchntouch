@@ -5,6 +5,55 @@ TEMPLATE = app
 
 LIBS         += -L/usr/lib -lpoppler-qt4 -lwiiuse -lX11 -lXtst -lXext -Wall -pipe -fPIC -funroll-loops -lvlc
 
+COLLABR_SOURCES +=    src/collaboration/wtmessage.cpp \
+                      src/collaboration/wtloginmessage.cpp \
+                      src/collaboration/wtsessionlistrequest.cpp \
+                      src/collaboration/messagetransceiver.cpp \
+                      src/collaboration/wtlogoutrequest.cpp \
+                      src/collaboration/wtpicturerequest.cpp \
+                      src/collaboration/wtpictureresponse.cpp \
+		              src/collaboration/wtsessioncreaterequest.cpp \
+		              src/collaboration/wtsessioncreateresponse.cpp \
+                      src/collaboration/wtsessionjoinrequest.cpp \
+                      src/collaboration/wtsessionjoinresponse.cpp \
+                      src/collaboration/wtsessionleaverequest.cpp \
+                      src/collaboration/wtsessionleaveresponse.cpp \
+                      src/collaboration/wtsessionlistresponse.cpp \
+                      src/collaboration/wtsessionmemberupdate.cpp \
+                      src/collaboration/wtupdatedrawing.cpp \
+                      src/collaboration/wtupdatedrawingserver.cpp \
+                      src/collaboration/wtwritepermissionrequest.cpp \
+                      src/collaboration/wtwritepermissionstatus.cpp \
+                      src/collaboration/wtloginresponse.cpp \
+                      src/collaboration/protocolhandler.cpp \
+                      src/collaboration/wtpeerhandshake.cpp \
+                      src/collaboration/collaborationsession.cpp \                 
+
+COLLABR_HEADERS +=    src/collaboration/wtmessage.h \
+                      src/collaboration/wtloginmessage.h \
+                      src/collaboration/wtsessionlistrequest.h \
+                      src/collaboration/messagetransceiver.h \
+                      src/collaboration/wtlogoutrequest.h \
+                      src/collaboration/wtpicturerequest.h \
+                      src/collaboration/wtpictureresponse.h \
+		              src/collaboration/wtsessioncreaterequest.h \
+		              src/collaboration/wtsessioncreateresponse.h \
+                      src/collaboration/wtsessionjoinrequest.h \
+                      src/collaboration/wtsessionjoinresponse.h \
+                      src/collaboration/wtsessionleaverequest.h \
+                      src/collaboration/wtsessionleaveresponse.h \
+                      src/collaboration/wtsessionlistresponse.h \
+                      src/collaboration/wtsessionmemberupdate.h \
+                      src/collaboration/wtupdatedrawing.h \
+                      src/collaboration/wtupdatedrawingserver.h \
+                      src/collaboration/wtwritepermissionrequest.h \
+                      src/collaboration/wtwritepermissionstatus.h \
+                      src/collaboration/wtloginresponse.h \
+                      src/collaboration/protocolhandler.h \
+                      src/collaboration/wtpeerhandshake.h \
+                      src/collaboration/collaborationsession.h
+
+
 INCLUDEPATH  +=     src   \
                     src/contentdisplay    \
                     src/contentdisplay/core   \
@@ -18,6 +67,7 @@ INCLUDEPATH  +=     src   \
                     src/screenshot    \
                     src/wiimote \
                     src/tasks \
+                    src/collaboration \
                     /usr/include/poppler/qt4     
 
 
@@ -62,13 +112,18 @@ HEADERS +=          src/qmlmenulayer.h \
                     src/wiimote/inputcalibration.h \
                     src/wiimote/eventgenerator.h \
                     src/wiimote/calibrationwindow.h \
-    src/tasks/presentationdisplaytask.h \
-    src/tasks/contentdisplaytask.h \
-    src/tasks/videodisplaytask.h \
-    src/tasks/webpagedisplaytask.h \
-    src/contentdisplay/webpage/bookmarklist.h \
-    src/tasks/sketchingtask.h \
-    src/colorpicker.h
+                    src/tasks/presentationdisplaytask.h \
+                    src/tasks/contentdisplaytask.h \
+                    src/tasks/videodisplaytask.h \
+                    src/tasks/webpagedisplaytask.h \
+                    src/contentdisplay/webpage/bookmarklist.h \
+                    src/tasks/sketchingtask.h \
+                    src/colorpicker.h \
+                    $$COLLABR_HEADERS \
+    src/drawing/collaborativedrawingwidget.h \
+    src/tasks/collaborativedrawingtask.h \
+    src/collaboration/collaborationserver.h \
+    src/collaboration/collaborationclient.h
 
 SOURCES +=          src/qmlmenulayer.cpp \
                     src/mainwindow.cpp \
@@ -101,13 +156,18 @@ SOURCES +=          src/qmlmenulayer.cpp \
                     src/wiimote/inputcalibration.cpp \
                     src/wiimote/eventgenerator.cpp \
                     src/wiimote/calibrationwindow.cpp \
-    src/tasks/presentationdisplaytask.cpp \
-    src/tasks/contentdisplaytask.cpp \
-    src/tasks/videodisplaytask.cpp \
-    src/tasks/webpagedisplaytask.cpp \
-    src/contentdisplay/webpage/bookmarklist.cpp \
-    src/tasks/sketchingtask.cpp \
-    src/colorpicker.cpp
+                    src/tasks/presentationdisplaytask.cpp \
+                    src/tasks/contentdisplaytask.cpp \
+                    src/tasks/videodisplaytask.cpp \
+                    src/tasks/webpagedisplaytask.cpp \
+                    src/contentdisplay/webpage/bookmarklist.cpp \
+                    src/tasks/sketchingtask.cpp \
+                    src/colorpicker.cpp \
+                    $$COLLABR_SOURCES \
+    src/drawing/collaborativedrawingwidget.cpp \
+    src/tasks/collaborativedrawingtask.cpp \
+    src/collaboration/collaborationserver.cpp \
+    src/collaboration/collaborationclient.cpp
 
 RESOURCES +=        resources.qrc
 

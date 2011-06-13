@@ -32,11 +32,6 @@ int PresentationDisplayTask::getTaskType()
     return TASK_PRESENTATION;
 }
 
-ContentType PresentationDisplayTask::getContentType()
-{
-    return CONTENTTYPE_PRESENTATION;
-}
-
 void PresentationDisplayTask::activate()
 {
     ContentDisplayTask::activate();
