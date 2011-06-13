@@ -61,10 +61,15 @@ private slots:
 
     void on_eraseAll_clicked();
 
+    void on_eraseSmall_clicked();
+
+    void on_eraseBig_clicked();
+
 signals:
     void toolSelected(DrawingMode tool);
     void colorSelected(QColor color);
     void brushSelected(QBrush brush);
+    void eraserSize(int size);
     void penWidthIncrease();
     void penWidthDecrease();
     void open();

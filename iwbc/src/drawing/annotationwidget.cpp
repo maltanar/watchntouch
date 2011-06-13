@@ -119,3 +119,10 @@ bool AnnotationWidget::isReadOnly()
 {
     return m_isReadOnly;
 }
+
+void AnnotationWidget::clearAll()
+{
+    clear();
+    matcher.clearAllAnnotationsForContent(currentContent);
+    contentChanged(currentContext);
+}

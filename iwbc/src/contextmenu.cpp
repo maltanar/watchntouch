@@ -209,10 +209,24 @@ void ContextMenu::on_eraser_toggled(bool checked)
 
 void ContextMenu::on_erasePage_clicked()
 {
-    emit erasePage();
+    if(displayYesNoMessage("Remove all annotations on this page? \n(This can be reverted via undo)"))
+        emit erasePage();
 }
 
 void ContextMenu::on_eraseAll_clicked()
 {
-    emit eraseAll();
+    if(displayYesNoMessage("Remove all annotations in this content? \nThis cannot be undone!"))
+        emit eraseAll();
+}
+
+void ContextMenu::on_eraseSmall_clicked()
+{
+    emit eraserSize(10);
+    emit toolSelected(DRAWINGMODE_ERASER);
+}
+
+void ContextMenu::on_eraseBig_clicked()
+{
+    emit eraserSize(50);
+    emit toolSelected(DRAWINGMODE_ERASER);
 }

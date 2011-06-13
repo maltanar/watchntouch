@@ -36,6 +36,9 @@ void ContentDisplayTask::setContextMenu(ContextMenu *newMenu)
         connect(m_contextMenu, SIGNAL(toolSelected(DrawingMode)), m_annotationWidget, SLOT(setDrawingMode(DrawingMode)));
         connect(m_contextMenu, SIGNAL(penWidthIncrease()), m_annotationWidget, SLOT(increasePenWidth()));
         connect(m_contextMenu, SIGNAL(penWidthDecrease()), m_annotationWidget, SLOT(decreasePenWidth()));
+        connect(m_contextMenu, SIGNAL(eraserSize(int)), m_annotationWidget, SLOT(setEraserSize(int)));
+        connect(m_contextMenu, SIGNAL(erasePage()), m_annotationWidget, SLOT(clear()));
+        connect(m_contextMenu, SIGNAL(eraseAll()), m_annotationWidget, SLOT(clearAll()));
     }
 }
 

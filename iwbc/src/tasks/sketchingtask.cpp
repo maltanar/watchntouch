@@ -21,6 +21,8 @@ SketchingTask::SketchingTask(QWidget *parent) :
     connect(m_contextMenu, SIGNAL(toolSelected(DrawingMode)), m_sketchingWidget, SLOT(setDrawingMode(DrawingMode)));
     connect(m_contextMenu, SIGNAL(penWidthIncrease()), m_sketchingWidget, SLOT(increasePenWidth()));
     connect(m_contextMenu, SIGNAL(penWidthDecrease()), m_sketchingWidget, SLOT(decreasePenWidth()));
+    connect(m_contextMenu, SIGNAL(eraserSize(int)), m_sketchingWidget, SLOT(setEraserSize(int)));
+    connect(m_contextMenu, SIGNAL(erasePage()), m_sketchingWidget, SLOT(clear()));
 }
 
 int SketchingTask::getTaskType()

@@ -34,6 +34,7 @@ public slots:
     void scrollRequest(int dx, int dy);
     void requestReadOnlyStatus(bool readOnly);
     void requestSave();
+    void clearAll();
 
 };
 

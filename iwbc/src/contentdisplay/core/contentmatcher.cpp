@@ -32,3 +32,15 @@ QString ContentMatcher::matchingAnnotation(QString contentId, QString context)
 
     return contentDirPath + "/" + annotationPrefix + context + annotationExtension;
 }
+
+void ContentMatcher::clearAllAnnotationsForContent(QString contentId)
+{
+    QString contentDirPath = annotationDirPath + "/" + contentId;
+    QDir contentDir(contentDirPath);
+    if(contentDir.exists()) {
+        // remove all files inside content directory
+        QStringList fileList = contentDir.entryList();
+        for(int i = 0; i < fileList.count(); i++)
+            QFile::remove(contentDirPath + "/" + fileList.at(i));
+    }
+}

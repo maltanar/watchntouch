@@ -8,6 +8,7 @@ class ContentMatcher
 public:
     ContentMatcher();
     QString matchingAnnotation(QString contentId, QString context);
+    void clearAllAnnotationsForContent(QString contentId);
 
 private:
     QString annotationDirPath;

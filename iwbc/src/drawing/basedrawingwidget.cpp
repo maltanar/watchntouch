@@ -251,7 +251,7 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
 
         case DRAWINGMODE_ERASER:
             if(state == DRAWINGSTATE_START) {
-                QGraphicsRectItem * newEraseRect = new QGraphicsRectItem(QRectF(lastPoint, QSizeF(drawingPen.width()+5, drawingPen.width()+5)), 0, getDrawingData());
+                QGraphicsRectItem * newEraseRect = new QGraphicsRectItem(QRectF(lastPoint, QSizeF(m_eraserSize, m_eraserSize)), 0, getDrawingData());
                 currentItem = newEraseRect;
                 newEraseRect->setPen(QPen(Qt::transparent));
                 newEraseRect->setBrush(QBrush(Qt::white));
@@ -259,14 +259,14 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
 
             else if(state == DRAWINGSTATE_UPDATE) {
                 QGraphicsRectItem * newEraseRect = new QGraphicsRectItem(currentItem, getDrawingData());
-                newEraseRect->setRect(QRectF(lastPoint, QSizeF(drawingPen.width()+5, drawingPen.width()+5)));
+                newEraseRect->setRect(QRectF(lastPoint, QSizeF(m_eraserSize, m_eraserSize)));
                 newEraseRect->setPen(QPen(Qt::transparent));
                 newEraseRect->setBrush(QBrush(Qt::white));
             }
 
             else {
                 QGraphicsRectItem * newEraseRect = new QGraphicsRectItem(currentItem, getDrawingData());
-                newEraseRect->setRect(QRectF(lastPoint, QSizeF(drawingPen.width()+5, drawingPen.width()+5)));
+                newEraseRect->setRect(QRectF(lastPoint, QSizeF(m_eraserSize, m_eraserSize)));
                 newEraseRect->setPen(QPen(Qt::transparent));
                 newEraseRect->setBrush(QBrush(Qt::white));
                 // remove the temporary QGraphicsItem
@@ -278,7 +278,7 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
             prevCompMode = picturePainter.compositionMode();
             picturePainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
             // fill the region to be erased with transparent color
-            picturePainter.fillRect(QRectF(lastPoint, QSizeF(drawingPen.width()+5, drawingPen.width()+5)),Qt::transparent);
+            picturePainter.fillRect(QRectF(lastPoint, QSizeF(m_eraserSize, m_eraserSize)),Qt::transparent);
             // restore the old composition mode
             picturePainter.setCompositionMode(prevCompMode);
             break;
@@ -292,13 +292,7 @@ void BaseDrawingWidget::handleDrawingState(DrawingState state, QPointF lastPoint
     if(state == DRAWINGSTATE_END) {
         // finalize the painting on the QPicture
         picturePainter.end();
-        getDrawingData()->registerAction(picture);
-        getDrawingData()->setModified(true);
-        // update the stage
-        getDrawingData()->update(picture.boundingRect().adjusted(-drawingPen.width()-5,
-                                                             -drawingPen.width()-5,
-                                                             drawingPen.width()+5,
-                                                             drawingPen.width()+5));
+        commitDrawing(picture);
     }
 }
 
@@ -319,4 +313,34 @@ void BaseDrawingWidget::increasePenWidth()
 void BaseDrawingWidget::decreasePenWidth()
 {
     drawingPen.setWidth(drawingPen.width() > 2 ? drawingPen.width()-1 : 1);
+}
+
+void BaseDrawingWidget::setEraserSize(int size)
+{
+    m_eraserSize = size;
+}
+
+void BaseDrawingWidget::clear()
+{
+    picturePainter.begin(&picture);
+    QPainter::CompositionMode prevCompMode = picturePainter.compositionMode();
+    picturePainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    // fill the entire page with transparent color
+    picturePainter.fillRect(sceneRect(), Qt::transparent);
+    // restore the old composition mode
+    picturePainter.setCompositionMode(prevCompMode);
+    picturePainter.end();
+
+    commitDrawing(picture);
+}
+
+void BaseDrawingWidget::commitDrawing(QPicture drawingPictureData)
+{
+    getDrawingData()->registerAction(drawingPictureData);
+    getDrawingData()->setModified(true);
+    // update the stage
+    getDrawingData()->update(drawingPictureData.boundingRect().adjusted(-drawingPen.width()-5,
+                                                         -drawingPen.width()-5,
+                                                         drawingPen.width()+5,
+                                                         drawingPen.width()+5));
 }

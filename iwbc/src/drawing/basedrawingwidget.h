@@ -27,6 +27,8 @@ protected:
     void mousePressEvent (QMouseEvent * event);
     void mouseReleaseEvent (QMouseEvent * event);
     void resizeEvent (QResizeEvent * event);
+    void commitDrawing(QPicture drawingPictureData);
+
 
 private:
     QPointF mouseDownPoint;
@@ -38,6 +40,7 @@ private:
     DrawingMode drawingMode;
     QGraphicsItem * currentItem;
     QPixmap * stage;
+    int m_eraserSize;
 
     QPicture picture;
     QPainter picturePainter;
@@ -54,8 +57,10 @@ public slots:
     void setDrawingPen(QPen pen);
     void setDrawingMode(DrawingMode mode);
     void setDrawingColor(QColor color);
+    void setEraserSize(int size);
     void increasePenWidth();
     void decreasePenWidth();
+    void clear();
 
 };
 
