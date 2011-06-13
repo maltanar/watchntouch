@@ -32,7 +32,6 @@
         <file>resources/shape_circle.png</file>
         <file>resources/shape_on.png</file>
         <file>resources/shape_rectangle.png</file>
-        <file>resources/shape_triangle.png</file>
         <file>resources/undo.png</file>
         <file>resources/undo_on.png</file>
         <file>resources/wt.png</file>
@@ -45,6 +44,12 @@
         <file>resources/prev.png</file>
         <file>resources/accept.png</file>
         <file>resources/record.png</file>
+        <file>resources/color wheel.png</file>
+        <file>resources/eraser1.png</file>
+        <file>resources/eraser2.png</file>
+        <file>resources/eraser3.png</file>
+        <file>resources/shape_circle_empty.png</file>
+        <file>resources/shape_rectangle_empty.png</file>
     </qresource>
     <qresource prefix="/tools">
         <file alias="DocumentConverter.py">tools/DocumentConverter.py</file>

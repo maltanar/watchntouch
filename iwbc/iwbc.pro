@@ -28,7 +28,8 @@ FORMS    +=         forms/mainwindow.ui \
                     forms/contextmenu.ui \
                     forms/screenshot.ui \
                     forms/videocontrolpanel.ui \
-                    forms/webcontrolpanel.ui
+                    forms/webcontrolpanel.ui \
+                    forms/colorpicker.ui
 
 HEADERS +=          src/qmlmenulayer.h \
                     src/mainwindow.h \
@@ -66,7 +67,8 @@ HEADERS +=          src/qmlmenulayer.h \
     src/tasks/videodisplaytask.h \
     src/tasks/webpagedisplaytask.h \
     src/contentdisplay/webpage/bookmarklist.h \
-    src/tasks/sketchingtask.h
+    src/tasks/sketchingtask.h \
+    src/colorpicker.h
 
 SOURCES +=          src/qmlmenulayer.cpp \
                     src/mainwindow.cpp \
@@ -104,7 +106,8 @@ SOURCES +=          src/qmlmenulayer.cpp \
     src/tasks/videodisplaytask.cpp \
     src/tasks/webpagedisplaytask.cpp \
     src/contentdisplay/webpage/bookmarklist.cpp \
-    src/tasks/sketchingtask.cpp
+    src/tasks/sketchingtask.cpp \
+    src/colorpicker.cpp
 
 RESOURCES +=        resources.qrc
 

@@ -14,6 +14,11 @@ ContextMenu::ContextMenu(QWidget *parent) :
     ui->wtBox->hide();
     ui->penWidthBox->hide();
 
+    m_colorPicker = new ColorPicker(parent);
+    m_colorPicker->hide();
+
+    connect(m_colorPicker, SIGNAL(colorPicked(QColor)), this, SIGNAL(colorSelected(QColor)));
+
     resize(width(),ui->menuBox->height()+51);
     openedGroup = NULL;
 }
@@ -25,6 +30,7 @@ ContextMenu::~ContextMenu()
 
 void ContextMenu::on_close_clicked()
 {
+    m_colorPicker->hide();
     hide();
 }
 
@@ -50,15 +56,23 @@ void ContextMenu::on_shape_toggled(bool checked)
 
 void ContextMenu::on_color_toggled(bool checked)
 {
-    hideSubmenus();
+    /*hideSubmenus();
     ui->colorBox->setVisible(checked);
     if(checked) {
         openedGroup = ui->color;
         resizeToMin();
+    }*/
+    if(m_colorPicker->isHidden()) {
+        QPoint p = geometry().center();
+        m_colorPicker->move(p - QPoint(m_colorPicker->width()/2, m_colorPicker->height()/2) + QPoint(-30,0));
+        m_colorPicker->show();
+        m_colorPicker->raise();
     }
+    else
+        m_colorPicker->hide();
 }
 
-void ContextMenu::on_wt_toggled(bool checked)
+/*void ContextMenu::on_wt_toggled(bool checked)
 {
     hideSubmenus();
     ui->wtBox->setVisible(checked);
@@ -66,7 +80,7 @@ void ContextMenu::on_wt_toggled(bool checked)
         openedGroup = ui->wt;
         resizeToMin();
     }
-}
+}*/
 
 
 void ContextMenu::hideSubmenus()
@@ -153,11 +167,6 @@ void ContextMenu::on_pen_clicked()
     emit toolSelected(DRAWINGMODE_FREEHAND);
 }
 
-void ContextMenu::on_eraser_clicked()
-{
-    emit toolSelected(DRAWINGMODE_ERASER);
-}
-
 void ContextMenu::on_arrow_clicked()
 {
     emit toolSelected(DRAWINGMODE_STRAIGHTLINE);
@@ -171,4 +180,39 @@ void ContextMenu::on_redo_clicked()
 void ContextMenu::on_undo_clicked()
 {
     emit undo();
+}
+
+void ContextMenu::on_wt_clicked()
+{
+    emit print();
+}
+
+void ContextMenu::on_emptyRect_clicked()
+{
+    emit toolSelected(DRAWINGMODE_EMPTYRECTANGLE);
+}
+
+void ContextMenu::on_emptyEllipse_clicked()
+{
+    emit toolSelected(DRAWINGMODE_EMPTYELLIPSE);
+}
+
+void ContextMenu::on_eraser_toggled(bool checked)
+{
+    hideSubmenus();
+    ui->wtBox->setVisible(checked);
+    if(checked) {
+        openedGroup = ui->wt;
+        resizeToMin();
+    }
+}
+
+void ContextMenu::on_erasePage_clicked()
+{
+    emit erasePage();
+}
+
+void ContextMenu::on_eraseAll_clicked()
+{
+    emit eraseAll();
 }

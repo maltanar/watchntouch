@@ -34,7 +34,7 @@
        <height>50</height>
       </size>
      </property>
-     <widget class="QPushButton" name="open">
+     <widget class="QPushButton" name="eraseSmall">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -59,8 +59,8 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
-        <normaloff>:/images/resources/wt_open.png</normaloff>:/images/resources/wt_open.png</iconset>
+       <iconset resource="../resources.qrc">
+        <normaloff>:/images/resources/eraser1.png</normaloff>:/images/resources/eraser1.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -75,7 +75,7 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="save">
+     <widget class="QPushButton" name="eraseBig">
       <property name="geometry">
        <rect>
         <x>52</x>
@@ -100,8 +100,8 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
-        <normaloff>:/images/resources/wt_save.png</normaloff>:/images/resources/wt_save.png</iconset>
+       <iconset resource="../resources.qrc">
+        <normaloff>:/images/resources/eraser2.png</normaloff>:/images/resources/eraser2.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -116,7 +116,7 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="print">
+     <widget class="QPushButton" name="erasePage">
       <property name="geometry">
        <rect>
         <x>104</x>
@@ -141,8 +141,49 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
-        <normaloff>:/images/resources/wt_print.png</normaloff>:/images/resources/wt_print.png</iconset>
+       <iconset resource="../resources.qrc">
+        <normaloff>:/images/resources/eraser_erasepage.png</normaloff>:/images/resources/eraser_erasepage.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="eraseAll">
+      <property name="geometry">
+       <rect>
+        <x>156</x>
+        <y>0</y>
+        <width>52</width>
+        <height>52</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>52</width>
+        <height>52</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>52</width>
+        <height>52</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/images/resources/eraser_eraseallpages.png</normaloff>:/images/resources/eraser_eraseallpages.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -198,7 +239,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/penwidth_decrease.png</normaloff>:/images/resources/penwidth_decrease.png</iconset>
       </property>
       <property name="iconSize">
@@ -239,7 +280,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/penwidth_increase.png</normaloff>:/images/resources/penwidth_increase.png</iconset>
       </property>
       <property name="iconSize">
@@ -261,13 +302,13 @@
     <widget class="QWidget" name="shapeBox" native="true">
      <property name="minimumSize">
       <size>
-       <width>161</width>
+       <width>211</width>
        <height>51</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>161</width>
+       <width>211</width>
        <height>51</height>
       </size>
      </property>
@@ -296,7 +337,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/shape_rectangle.png</normaloff>:/images/resources/shape_rectangle.png</iconset>
       </property>
       <property name="iconSize">
@@ -337,7 +378,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/shape_circle.png</normaloff>:/images/resources/shape_circle.png</iconset>
       </property>
       <property name="iconSize">
@@ -353,7 +394,7 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="triangle">
+     <widget class="QPushButton" name="emptyRect">
       <property name="geometry">
        <rect>
         <x>104</x>
@@ -378,8 +419,49 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
-        <normaloff>:/images/resources/shape_triangle.png</normaloff>:/images/resources/shape_triangle.png</iconset>
+       <iconset resource="../resources.qrc">
+        <normaloff>:/images/resources/shape_rectangle_empty.png</normaloff>:/images/resources/shape_rectangle_empty.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="emptyEllipse">
+      <property name="geometry">
+       <rect>
+        <x>156</x>
+        <y>0</y>
+        <width>52</width>
+        <height>52</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>52</width>
+        <height>52</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>52</width>
+        <height>52</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/images/resources/shape_circle_empty.png</normaloff>:/images/resources/shape_circle_empty.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -435,7 +517,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/color_white.png</normaloff>:/images/resources/color_white.png</iconset>
       </property>
       <property name="iconSize">
@@ -476,7 +558,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/color_black.png</normaloff>:/images/resources/color_black.png</iconset>
       </property>
       <property name="iconSize">
@@ -517,7 +599,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/color_red.png</normaloff>:/images/resources/color_red.png</iconset>
       </property>
       <property name="iconSize">
@@ -558,7 +640,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/color_blue.png</normaloff>:/images/resources/color_blue.png</iconset>
       </property>
       <property name="iconSize">
@@ -618,7 +700,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/close.png</normaloff>:/images/resources/close.png</iconset>
       </property>
       <property name="iconSize">
@@ -659,7 +741,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/undo.png</normaloff>:/images/resources/undo.png</iconset>
       </property>
       <property name="iconSize">
@@ -700,7 +782,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/penwidth.png</normaloff>
         <selectedon>:/images/resources/penwidth_on.png</selectedon>:/images/resources/penwidth.png</iconset>
       </property>
@@ -742,7 +824,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/eraser.png</normaloff>
         <selectedon>:/images/resources/eraser_on.png</selectedon>:/images/resources/eraser.png</iconset>
       </property>
@@ -784,7 +866,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/redo.png</normaloff>:/images/resources/redo.png</iconset>
       </property>
       <property name="iconSize">
@@ -825,7 +907,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/wt.png</normaloff>
         <selectedon>:/images/resources/wt_on.png</selectedon>:/images/resources/wt.png</iconset>
       </property>
@@ -836,7 +918,7 @@
        </size>
       </property>
       <property name="checkable">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="flat">
        <bool>true</bool>
@@ -867,7 +949,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/color.png</normaloff>
         <selectedon>:/images/resources/color_on.png</selectedon>:/images/resources/color.png</iconset>
       </property>
@@ -909,7 +991,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/pen.png</normaloff>
         <selectedon>:/images/resources/pen_on.png</selectedon>:/images/resources/pen.png</iconset>
       </property>
@@ -951,7 +1033,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/shape.png</normaloff>
         <selectedon>:/images/resources/shape_on.png</selectedon>:/images/resources/shape.png</iconset>
       </property>
@@ -993,7 +1075,7 @@
        <string/>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/images/resources/arrow.png</normaloff>
         <selectedon>:/images/resources/arrow_on.png</selectedon>:/images/resources/arrow.png</iconset>
       </property>
@@ -1015,7 +1097,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../resources.qrc"/>
  </resources>
  <connections/>
 </ui>

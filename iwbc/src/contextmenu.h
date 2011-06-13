@@ -4,6 +4,7 @@
 #include "appglobals.h"
 #include <QWidget>
 #include <QPushButton>
+#include "colorpicker.h"
 
 
 namespace Ui {
@@ -23,12 +24,12 @@ private:
     void hideSubmenus();
     void resizeToMin();
     QPushButton *openedGroup;
+    ColorPicker *m_colorPicker;
 
 private slots:
     void on_undo_clicked();
     void on_redo_clicked();
     void on_arrow_clicked();
-    void on_eraser_clicked();
     void on_pen_clicked();
     void on_blue_clicked();
     void on_red_clicked();
@@ -43,11 +44,22 @@ private slots:
     void on_open_clicked();
     void on_sketch_clicked();
     void on_scrnshot_clicked();
-    void on_wt_toggled(bool checked);
     void on_color_toggled(bool checked);
     void on_shape_toggled(bool checked);
     void on_penwidth_toggled(bool checked);
     void on_close_clicked();
+
+    void on_wt_clicked();
+
+    void on_emptyRect_clicked();
+
+    void on_emptyEllipse_clicked();
+
+    void on_eraser_toggled(bool checked);
+
+    void on_erasePage_clicked();
+
+    void on_eraseAll_clicked();
 
 signals:
     void toolSelected(DrawingMode tool);
@@ -61,6 +73,9 @@ signals:
     void print();
     void undo();
     void redo();
+
+    void erasePage();
+    void eraseAll();
 };
 
 #endif // CONTEXTMENU_H
