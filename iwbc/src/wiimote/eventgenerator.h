@@ -17,10 +17,11 @@
 #define STATE_DRAW_RELEASE      3
 #define STATE_SECOND_VISIBLE    4
 #define STATE_GESTURING         5
-#define STATE_SINGLE_IGNORE     6
-#define STATE_FV_RELEASE        7
+#define STATE_FINISH_GESTURING  6
+#define STATE_SINGLE_IGNORE     7
+#define STATE_FV_RELEASE        8 // galiba draw_release ile aynı amaçla yazılmış.
 
-#define GESTURE_START_DELAY     100
+#define GESTURE_START_DELAY     300
 
 class EventGenerator : public QObject
 {
@@ -30,10 +31,16 @@ public:
     ~EventGenerator();
 
     void processInputData(QPoint* pt,int i,int type,int visibleCount);
+    void recognizeGesture(QPoint* newpoints);
+    void finishGesture();
 
 private:
     int m_currentState;
     QList<QPoint> m_pointBuffer;
+    QList<QPoint> m_firstPointDifferenceBuffer;
+    QList<QPoint> m_secondPointDifferenceBuffer;
+    QPoint m_firstPreviousPoint;
+    QPoint m_secondPreviousPoint;
     QTimer m_timer;
     int m_visibleCount;
     bool m_timeoutFlag;

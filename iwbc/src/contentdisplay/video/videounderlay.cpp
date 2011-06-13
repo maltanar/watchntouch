@@ -245,10 +245,10 @@ void VideoUnderlay::pause()
 
 void VideoUnderlay::stop()
 {
-    if(libvlc_media_player_is_playing(m_vlcMediaplayer, &m_ex)) {
+    /*if(libvlc_media_player_is_playing(m_vlcMediaplayer, &m_ex)) {
         libvlc_media_player_stop(m_vlcMediaplayer, &m_ex);
         catchException();
-    }
+    }*/
 }
 
 void VideoUnderlay::lock( struct ctx* ctx, void** pp_ret )

@@ -26,9 +26,7 @@ EventGenerator::~EventGenerator()
 }
 
 void EventGenerator::handleStateChange()
-{
-    //TODO
-
+{   
     qWarning() << "prevstate" << m_currentState;
 
     if(m_currentState == STATE_NOTHING && m_visibleCount == 1) {
@@ -42,12 +40,44 @@ void EventGenerator::handleStateChange()
         m_timeoutFlag = false;
     } else if(m_currentState == STATE_FIRST_VISIBLE && m_visibleCount == 0) {
         m_currentState = STATE_DRAW_RELEASE;
+        m_timer.stop();
+        m_timeoutFlag = false;
     } else if(m_currentState == STATE_NORMAL_DRAW && m_visibleCount == 0) {
         // stop drawing
         m_currentState = STATE_DRAW_RELEASE;
     } else if(m_currentState == STATE_DRAW_RELEASE) {
         // go back to initial state
         m_currentState = STATE_NOTHING;
+    } else if(m_currentState == STATE_FIRST_VISIBLE && m_visibleCount == 2) {
+        // discard buffer
+        m_currentState = STATE_SECOND_VISIBLE;
+        m_timer.stop();
+        m_timeoutFlag = false;
+    } else if(m_currentState == STATE_SECOND_VISIBLE) {
+        // start gesturing
+        m_currentState = STATE_GESTURING;
+    } else if(m_currentState == STATE_GESTURING && m_visibleCount == 1) {
+        // finish the gesture and trigger it
+        m_currentState = STATE_FINISH_GESTURING;
+    } else if(m_currentState == STATE_FINISH_GESTURING) {
+        // ignore coming single point events after gesture
+        m_currentState = STATE_SINGLE_IGNORE;
+    } else if(m_currentState == STATE_SINGLE_IGNORE && m_visibleCount == 0) {
+        // go back to initial state
+        m_currentState = STATE_NOTHING;
+    } else if(m_currentState == STATE_SINGLE_IGNORE && m_visibleCount == 2) {
+        // go back to initial state
+        m_currentState = STATE_NOTHING;
+    }
+    else if(m_currentState == STATE_NOTHING && m_visibleCount == 2) {
+        // if directly two points come
+        m_currentState = STATE_SECOND_VISIBLE;
+    } else if(m_currentState == STATE_GESTURING && m_visibleCount == 0) {
+        // go back to initial state
+        m_currentState = STATE_FINISH_GESTURING;
+    } else if(m_currentState == STATE_SECOND_VISIBLE && m_visibleCount == 1) {
+        // indeed, this is an unexpected condition, but we have seen it
+        m_currentState == STATE_FIRST_VISIBLE;
     }
 
     qWarning() << "currentsate" << m_currentState;
@@ -56,14 +86,17 @@ void EventGenerator::handleStateChange()
 // will be executed when a new calibration point data is received
 void EventGenerator::processInputData(QPoint *newpoints, int i,int type,int visibleCount)
 {
-    //newpoints[0] = applySmoothing(newpoints[0]);
+    newpoints[0] = applySmoothing(newpoints[0]);
 
+    qWarning() << "newpoint[0]" << newpoints[0];
     for(int i = 0; i < 4; i++) {
         if(newpoints[i].x() < 0)
             newpoints[i].setX(0);
         if(newpoints[i].y() < 0)
             newpoints[i].setY(0);
     }
+
+    qWarning() << "visibleCount:" << visibleCount;
 
     // TODO handle state changes first!
     m_visibleCount = visibleCount;
@@ -102,18 +135,136 @@ void EventGenerator::processInputData(QPoint *newpoints, int i,int type,int visi
             mouseRelease(Button1, newpoints[0]);
             break;
         case  STATE_SECOND_VISIBLE:
+            m_pointBuffer.clear();
+            m_firstPreviousPoint = newpoints[0];
+            m_secondPreviousPoint = newpoints[1];
             break;
         case  STATE_GESTURING:
+            recognizeGesture(newpoints);
+            break;
+        case  STATE_FINISH_GESTURING:
+            finishGesture();
+            m_firstPointDifferenceBuffer.clear();
+            m_secondPointDifferenceBuffer.clear();
             break;
         case  STATE_SINGLE_IGNORE:
+            // just ignore coming events
             break;
+        default:
+            qWarning() << "no state!" << visibleCount;
+
     }
 
 }
 
+void EventGenerator::recognizeGesture(QPoint *newpoints)
+{
+    // depends on the context
+    // pinch and swipe can be written without this knowledge, since it requires buffering
+    // however, scrolling will be done directly applying coming points to the scroll
+    // so, it will be written in comment, without trying it.
+
+    qWarning() << "recognizeGesture ------------------------------------------";
+
+    QPoint firstDiff(newpoints[0].x() - m_firstPreviousPoint.x(),newpoints[0].y() - m_firstPreviousPoint.y());
+    QPoint secondDiff(newpoints[1].x() - m_secondPreviousPoint.x(),newpoints[1].y() - m_secondPreviousPoint.y());
+
+    qWarning() << "first prev point:" << m_firstPreviousPoint;
+    qWarning() << "newpoints[0]:" << newpoints[0];
+    qWarning() << "first Diff:" << firstDiff;
+    qWarning() << "second prev point:" << m_secondPreviousPoint;
+    qWarning() << "newpoints[1]:" << newpoints[1];
+    qWarning() << "second Diff:" << secondDiff;
+
+    if(qAbs(firstDiff.x()) < 20)
+        m_firstPointDifferenceBuffer.append(firstDiff);
+    if(qAbs(secondDiff.x()) < 20)
+        m_secondPointDifferenceBuffer.append(secondDiff);
+
+    m_firstPreviousPoint = newpoints[0];
+    m_secondPreviousPoint = newpoints[1];
+}
+
+void EventGenerator::finishGesture()
+{
+    // this method will determine the gesture by using the buffer
+    // then it will clear the buffer
+
+    int firstLen = m_firstPointDifferenceBuffer.size();
+    int secondLen = m_secondPointDifferenceBuffer.size();
+
+    long firstXSum = 0;
+    long firstYSum = 0;
+    long secondXSum = 0;
+    long secondYSum = 0;
+
+    for(int i = 0; i < firstLen; i++) {
+        qWarning() << "first diff at" << i << ":" << m_firstPointDifferenceBuffer.at(i);
+        firstXSum += m_firstPointDifferenceBuffer.at(i).x();
+        firstYSum += m_firstPointDifferenceBuffer.at(i).y();
+    }
+
+    for(int i = 0; i < secondLen; i++) {
+        qWarning() << "second diff at" << i << ":" << m_secondPointDifferenceBuffer.at(i);
+        secondXSum += m_secondPointDifferenceBuffer.at(i).x();
+        secondYSum += m_secondPointDifferenceBuffer.at(i).y();
+    }
+
+    /*
+    int sameXSign = firstXSum > 0 && secondXSum > 0 || firstXSum < 0 && secondXSum < 0 || firstXSum == 0 && secondXSum == 0;
+    int sameYSign = firstYSum > 0 && secondYSum > 0 || firstYSum < 0 && secondYSum < 0 || firstYSum == 0 && secondYSum == 0;
+
+    if(sameXSign && sameYSign) {
+        qWarning() << "both X and Y differences have same sign, trigger swipe gesture if context is appropriate";
+        qWarning() << "firsXSum:" << firstXSum;
+        qWarning() << "secondXSum:" << secondXSum;
+        qWarning() << "firstYSum:" << firstYSum;
+        qWarning() << "secondYSum:" << secondYSum;
+        qWarning() << "sameXSign:" << sameXSign;
+        qWarning() << "sameYSign:" << sameYSign;
+    }
+    else if(!sameXSign || !sameYSign) {
+        qWarning() << "at least one of X or Y sign is different, trigger pinch gesture";
+        qWarning() << "firsXSum:" << firstXSum;
+        qWarning() << "secondXSum:" << secondXSum;
+        qWarning() << "firstYSum:" << firstYSum;
+        qWarning() << "secondYSum:" << secondYSum;
+        qWarning() << "sameXSign:" << sameXSign;
+        qWarning() << "sameYSign:" << sameYSign;
+    }
+    */
+
+    qWarning() << "firsXSum:" << firstXSum;
+    qWarning() << "secondXSum:" << secondXSum;
+    qWarning() << "firstYSum:" << firstYSum;
+    qWarning() << "secondYSum:" << secondYSum;
+
+    if(firstXSum > 0 && secondXSum > 0) {
+        qWarning() << "both x signs' are same and positive, if presentation swipe right";
+    }
+    else if(firstXSum < 0 && secondXSum < 0) {
+        qWarning() << "both x signs' are same and negative, if presentation swipe left";
+    }
+    else if(firstXSum < 0 && secondXSum > 0 || firstXSum > 0 && secondXSum < 0) {
+        // TODO pinch in/out nasıl ayrılır?
+        qWarning() << "both x signs' are different, open context menu";
+    }
+
+    if(firstYSum > 0 && secondYSum > 0) {
+        // TODO scrolling will be done directly in recognizeGesture() function
+        // This is just to check to capability of capturing y direction changes
+        qWarning() << "both y signs' are same and negative, if web_page and read_only swipe scroll down";
+    }
+    else if(firstYSum < 0 && secondYSum < 0) {
+        qWarning() << "both y signs' are same and positive, if web_page and read_only swipe scroll up";
+    }
+}
+
+
 void EventGenerator:: timeout()
 {
     // TODO handle state change
+    qWarning() << "timeout !!";
     m_timer.stop();
     m_timeoutFlag = true;
     handleStateChange();
