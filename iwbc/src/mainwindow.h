@@ -11,12 +11,15 @@
 #include "videodisplaytask.h"
 #include "webpagedisplaytask.h"
 #include "sketchingtask.h"
+#include "collaborativedrawingtask.h"
 
 #include "screencasting.h"
 #include "screenshot.h"
 
 
 #include "qmlmenulayer.h"
+
+#define COLLABORATIVE_DRAWING_TASK_ID   "collaborative_drawing"
 
 namespace Ui {
     class MainWindow;
@@ -70,6 +73,7 @@ private slots:
     void webPressed();
     void multimediaPressed();
     void sketchPressed();
+    void collaborationPressed();
     void fullscreenStateChange();
     void taskManagerShowHide();
     void newTask(int id);

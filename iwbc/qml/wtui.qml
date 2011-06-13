@@ -155,6 +155,7 @@ Rectangle {
     signal mainMenuShowHide(bool newStatus)
     signal exitPressed()
     signal recordPressed(bool newStatus)
+    signal collaborationPressed()
     signal notificationsPressed()
     signal presentationPressed()
     signal webPressed()
@@ -1711,9 +1712,10 @@ Row{                //BOTTOM MENU
                     anchors.fill: parent
                     onClicked: {
                         window.activeFunction = "collaboration"
-                        taskManagerPreparation("#de9ce4","#a900bd",0 );
-                        openTaskManager(0);
-                        taskManagerShowHide();
+                        collaborationPressed()
+                        //taskManagerPreparation("#de9ce4","#a900bd",0 );
+                        //openTaskManager(0);
+                        //taskManagerShowHide();
                         //textColl.no=textColl.no+1;
                     }
                 }

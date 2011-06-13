@@ -1,4 +1,5 @@
 #include "collaborativedrawingwidget.h"
+#include <QResizeEvent>
 
 CollaborativeDrawingWidget::CollaborativeDrawingWidget(QWidget *parent) :
     BaseDrawingWidget(parent)
@@ -39,4 +40,14 @@ void CollaborativeDrawingWidget::drawingArrived(QString sessionName, QByteArray 
 
     // commit the new data
     BaseDrawingWidget::commitDrawing(pic);
+}
+
+void CollaborativeDrawingWidget::resizeEvent(QResizeEvent *event)
+{
+    BaseDrawingWidget::resizeEvent(event);
+
+    qWarning() << "resizing scene to" << size();
+
+    getDrawingData()->setSceneRect(0,0,width(), height());
+    getDrawingData()->requestStageSize(size());
 }

@@ -29,14 +29,12 @@ BaseDrawingWidget::~BaseDrawingWidget()
 
 void BaseDrawingWidget::mouseMoveEvent (QMouseEvent * event)
 {
-    qWarning() << "mouse moveeeeee!";
     if(event->buttons() & Qt::LeftButton)
         drawingUpdate(mapToScene(event->pos()));
 }
 
 void BaseDrawingWidget::mousePressEvent (QMouseEvent * event)
 {
-    qWarning() << "mouse presss!";
     if(event->button() == Qt::LeftButton)
         drawingStart(mapToScene(event->pos()));
     else if(event->button() == Qt::RightButton)
@@ -45,7 +43,6 @@ void BaseDrawingWidget::mousePressEvent (QMouseEvent * event)
 
 void BaseDrawingWidget::mouseReleaseEvent (QMouseEvent * event)
 {
-    qWarning() << "mouse releaseee!";
     if(event->button() == Qt::LeftButton)
         drawingEnd(mapToScene(event->pos()));
 }

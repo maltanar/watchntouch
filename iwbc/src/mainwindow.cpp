@@ -68,6 +68,20 @@ void MainWindow::taskManagerShowHide()
     //QMetaObject::invokeMethod(m_qmlMenu->rootObject(), "taskManagerShowHide");
 }
 
+void MainWindow::collaborationPressed()
+{
+    CollaborativeDrawingTask * theTask;
+    // check if the collaboration task has already been created
+    if(!m_tasks.contains(COLLABORATIVE_DRAWING_TASK_ID)) {
+        qWarning() << "creating collaborative drawing task..";
+        // create the collaboration singleton task
+        theTask = new CollaborativeDrawingTask(this);
+        m_tasks.insert(COLLABORATIVE_DRAWING_TASK_ID, theTask);
+    }
+    // activate the collaborative drawing task
+    setActiveTask(COLLABORATIVE_DRAWING_TASK_ID);
+}
+
 void MainWindow::connectMainMenuSignals()
 {
     // connect the signals emitted from the QML main menu to the slots we have here
@@ -80,6 +94,7 @@ void MainWindow::connectMainMenuSignals()
     connect(m_qmlMenu->rootObject(), SIGNAL(openTaskManager(int)), this, SLOT(updateTaskScroller(int)));
     connect(m_qmlMenu->rootObject(), SIGNAL(switchToTask(QString)), this, SLOT(switchToTask(QString)));
     connect(m_qmlMenu->rootObject(), SIGNAL(killTask(QString)), this, SLOT(killTask(QString)));
+    connect(m_qmlMenu->rootObject(), SIGNAL(collaborationPressed()), this, SLOT(collaborationPressed()));
 }
 
 void MainWindow::fullscreenStateChange()

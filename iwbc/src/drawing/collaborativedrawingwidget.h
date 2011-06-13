@@ -12,6 +12,7 @@ public:
 
 protected:
     void commitDrawing(QPicture drawingData);
+    void resizeEvent(QResizeEvent *event);
 
     QString m_currentSession;
 

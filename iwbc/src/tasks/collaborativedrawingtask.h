@@ -7,6 +7,9 @@
 #include "collaborationclient.h"
 #include "collaborationserver.h"
 #include <QVBoxLayout>
+#include <QHash>
+
+#define COLLABORATION_USERNAME  "Teacher"
 
 class CollaborativeDrawingTask : public ContentDisplayTask
 {
@@ -17,14 +20,21 @@ public:
     int getTaskType();
 
 protected:
-    void showHidePanel(bool show);
-
     CollaborationClient *client;
     CollaborationServer *server;
     ProtocolHandler *ph;
     MessageTransceiver *mt;
+    CollaborativeDrawingWidget * m_collaborationWidget;
+    QVBoxLayout m_layout;
+
+    void showHidePanel(bool show);
 
 signals:
+
+protected slots:
+    void drawingCommitted(QString sessionName, QPicture pictureData);
+    void sessionJoinResult(QString sessionName, QChar result, QHash<QString, long> users);
+    void loginResult(bool result,QString msg);
 
 public slots:
 

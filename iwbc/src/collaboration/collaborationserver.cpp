@@ -18,6 +18,11 @@ CollaborationServer::CollaborationServer(QObject *parent) :
     m_serverUserName = COLLABORATION_SERVER_NAME;
     connect(&serviceBroadcastTimer, SIGNAL(timeout()), this, SLOT(serviceBroadcastTimeout()));
     serviceBroadcastTimer.start(SERVICE_BROADCAST_PERIOD_MS);
+
+    m_sessionList.append("Test");
+    m_sessionData["Test"] = new CollaborationSession();
+    m_sessionData["Test"]->setSessionName("Test");
+    m_sessionData["Test"]->setSessionPassword(QCryptographicHash::hash(QString("1234").toAscii(), QCryptographicHash::Md5));
 }
 
 void CollaborationServer::receivedLoginRequest(QString userName)
