@@ -21,7 +21,7 @@ ContentSelector::ContentSelector(ContentType desiredContentType, QWidget *parent
     // create the display labels we use for the recent items
     QVBoxLayout *layout = new QVBoxLayout();
 
-    for(int i=0; i < NUM_RECENT_ITEMS; i++) {
+    for(int i=0; i < 5; i++) {
         recentItem[i] = new QLabel(this);
         recentItem[i]->setText("");   // all items empty by default
         connect(recentItem[i], SIGNAL(linkActivated(QString)), this, SLOT(recentItemClicked(QString)));
@@ -52,10 +52,31 @@ void ContentSelector::loadRecentlyUsedList()
     // fill the contents of the recently used item labels
     QString title, url;
     QString style = "text-decoration:none; color:black;";
+    QRegExp filter;
+    switch(m_desiredContentType) {
+    case CONTENTTYPE_PRESENTATION:
+        filter = QRegExp(".pdf|.ppt|.odp");
+        break;
+    case CONTENTTYPE_VIDEO:
+        filter = QRegExp(".flv|.avi|.mp4|.mov|.mpeg|.mpg");
+        break;
+    case CONTENTTYPE_WEBPAGE:
+        filter = QRegExp("html|htm|http|php");
+        break;
+    }
+
+    int counter=0;
+
     for(int i=0; i < recentlyUsed->size(); i++) {
         recentlyUsed->getRecentItem(i, title, url);
-        recentItem[i]->setToolTip(url);
-        recentItem[i]->setText(QString("<a href='%1' style='%2'><b>&gt; %3</b><br>%4</a>").arg(url,style,title,url.length() > 50 ? url.left(47)+"..." : url));
+        qWarning() << "url" << url << url.contains(filter);
+        if(url.contains(filter)) {
+            recentItem[counter]->setToolTip(url);
+            recentItem[counter]->setText(QString("<a href='%1' style='%2'><b>&gt; %3</b><br>%4</a>").arg(url,style,title,url.length() > 50 ? url.left(47)+"..." : url));
+            counter++;
+        }
+        if(counter == 5)
+            break;
     }
 }
 

@@ -36,8 +36,8 @@ VideoUnderlay::VideoUnderlay( QWidget* parent )
     // we can easily push a QPixmap into.
     video = new QLabel( this );
     this->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-    video->setFixedSize( 640, 480 );
-    contentSize = QSize(640, 480);
+    video->setFixedSize( VIDEO_WIDTH, VIDEO_HEIGHT);
+    contentSize = QSize(VIDEO_WIDTH, VIDEO_HEIGHT);
 
     // The container will contain the main layout
     // Video + Play button

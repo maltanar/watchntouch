@@ -2104,8 +2104,6 @@ Row{                //BOTTOM MENU
                 }
 
             }
-
-
         }
 
     }

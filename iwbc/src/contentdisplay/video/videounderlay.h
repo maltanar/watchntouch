@@ -34,8 +34,8 @@
 
 #include "contentdisplay.h"
 
-#define VIDEO_WIDTH     640
-#define VIDEO_HEIGHT    480
+#define VIDEO_WIDTH     800
+#define VIDEO_HEIGHT    600
 
 // TODO add proper resizing for video
 // TODO add play pause stop functionality

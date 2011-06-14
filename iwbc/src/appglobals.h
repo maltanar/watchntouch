@@ -48,7 +48,7 @@ typedef enum _ContentType {
 #define DOC_CONVERTER_PATH      TOOLS_DIR + QString("/") + DOC_CONVERTER_FNAME
 #define DOC_CONVERTER_RES       QString(":/tools/") + DOC_CONVERTER_FNAME
 
-#define NUM_RECENT_ITEMS        5
+#define NUM_RECENT_ITEMS        20
 #define RECENT_ITEMS_STORAGE    CONFIG_DIR + QString("/recent.txt")
 #define BOOKMARKS_STORAGE       CONFIG_DIR + QString("/bookmarks.txt")
 

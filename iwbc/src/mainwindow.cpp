@@ -300,7 +300,7 @@ void MainWindow::openWebPage()
         setActiveTask(newTaskID);
         if(m_selectedContent != "$webpage$") {
             // load the content
-            newTask->getContentDisplay()->selectContent(m_selectedContent);
+            // snewTask->getContentDisplay()->selectContent(m_selectedContent);
         }
     }
 }
@@ -416,6 +416,8 @@ void MainWindow::newTask(int id)
             ((SketchingTask*)newTask)->newSketch("sketch - " + QDateTime::currentDateTime().toString());
         } else if(m_selectedContent == "$screenshot$") {
             m_screenshot.show();
+        } else if(m_selectedContent == "$webpage$") {
+            ; // nothing to do here?
         } else if(m_selectedContent != "") {
             newTask->getContentDisplay()->selectContent(m_selectedContent);
         }
