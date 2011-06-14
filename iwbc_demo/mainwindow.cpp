@@ -38,11 +38,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     groupBoxForPresentation = new QWidget(this);
 
-    qmlMenu = new QmlMenuLayer(this);
+    //qmlMenu = new QMLMenuLayer(this);
 
     QStackedLayout *layout = new QStackedLayout();
 
-    layout->addWidget(qmlMenu);
+    //layout->addWidget(qmlMenu);
     layout->addWidget(display);
     layout->addWidget(draw);
 
@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     layout->setStackingMode(QStackedLayout::StackAll);
     layout->setAlignment(display, Qt::AlignHCenter);
     layout->setAlignment(draw, Qt::AlignHCenter);
-    layout->setAlignment(qmlMenu, Qt::AlignHCenter);
+    //layout->setAlignment(qmlMenu, Qt::AlignHCenter);
 
     groupBoxForPresentation->setLayout(layout);
 
@@ -308,7 +308,7 @@ void MainWindow::openContent()
             if(widgetStack->width() < 800)
                 widgetStack->resize(800, widgetStack->height());
             draw->raise();
-            qmlMenu->raise();
+            //qmlMenu->raise();
 
         } else if(selectedContent.endsWith("mp4") || selectedContent.endsWith("avi") || selectedContent.endsWith("flv")) {
 

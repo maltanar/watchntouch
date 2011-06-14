@@ -20,7 +20,6 @@
 #include "webpagedisplaywidget.h"
 #include "webcontrolpanel.h"
 
-#include "qmlmenulayer.h"
 
 namespace Ui {
     class MainWindow;
@@ -36,7 +35,7 @@ public:
     ~MainWindow();
 
 private:
-    QmlMenuLayer *qmlMenu;
+
     Ui::MainWindow *ui;
     PresentationDisplayWidget *display;
 
