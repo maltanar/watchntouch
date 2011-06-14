@@ -1,3 +1,11 @@
+/******************************************************************************
+**
+** Copyright (C) 2011, Yaman Umuroglu, Utku Sirin, Giray Havur, Melike Ercan.
+** All rights reserved.
+** This program is distributed under the terms of the GNU General Public License
+**
+*******************************************************************************/
+
 #include <QtGui/QApplication>
 #include "appglobals.h"
 #include "mainwindow.h"
@@ -9,11 +17,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     MainWindow w;
-    CalibrationWindow c;
+    //CalibrationWindow c;
 
-    w.connect(&c, SIGNAL(initComplete()), SLOT(showFullScreen()));
+    //w.connect(&c, SIGNAL(initComplete()), SLOT(showFullScreen()));
 
-    c.showFullScreen();
+    w.showFullScreen();
 
     return a.exec();
 }

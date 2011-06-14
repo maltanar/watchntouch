@@ -1,3 +1,11 @@
+/******************************************************************************
+**
+** Copyright (C) 2011, Yaman Umuroglu, Utku Sirin, Giray Havur, Melike Ercan.
+** All rights reserved.
+** This program is distributed under the terms of the GNU General Public License
+**
+*******************************************************************************/
+
 #include <QDebug>
 #include <QPainter>
 #include <qevent.h>

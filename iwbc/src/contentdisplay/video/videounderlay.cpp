@@ -1,3 +1,12 @@
+/******************************************************************************
+**
+** Copyright (C) 2011, Yaman Umuroglu, Utku Sirin, Giray Havur, Melike Ercan.
+** All rights reserved.
+** This program is distributed under the terms of the GNU General Public License
+**
+*******************************************************************************/
+
+
 /*
  * Copyright (c) 2009 Ludovic Fauvet
  *
