@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     //w.connect(&c, SIGNAL(initComplete()), SLOT(showFullScreen()));
 
-    w.showMaximized();
+    w.showFullScreen();
 
     return a.exec();
 }

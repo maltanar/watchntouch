@@ -2088,8 +2088,8 @@ Row{                //BOTTOM MENU
                     width: window.width/26.94; height: window.width/26.94    // CALCULATION: width: window.width/ (1024/ImageWidth)
                     fillMode: Image.PreserveAspectFit
                     smooth: true
-                    source: "images/mainmenu/fullscreenOn.png"
-                    property bool fullscreenActive: false
+                    source: "images/mainmenu/fullscreenOff.png"
+                    property bool fullscreenActive: true
                 }
                 MouseArea {
                     anchors.fill: parent
